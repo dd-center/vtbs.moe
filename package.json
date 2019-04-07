@@ -10,6 +10,7 @@
   "dependencies": {
     "core-js": "^2.6.5",
     "fs-extra": "^7.0.1",
+    "level": "^5.0.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
