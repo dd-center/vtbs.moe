@@ -28,7 +28,7 @@ exports.init = async () => {
 site: 站点信息
 
 info: {mid, uname, roomid, sign, notice}
-active: [{view, follower}]
+active: [{archiveView, follower}]
 live: [{guard, online}]
 
 all: timestamp
