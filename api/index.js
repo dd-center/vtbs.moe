@@ -2,5 +2,5 @@ const { init } = require('./database')
 
 ;
 (async () => {
-  await init()
+  let { site, info, active, live } = await init()
 })()

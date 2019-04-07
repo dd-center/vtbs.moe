@@ -15,5 +15,21 @@ class LevelDatabase {
 
 exports.init = async () => {
   await fs.ensureDir('./db')
-  let sign = new LevelDatabase({ name: 'sign' })
+  let site = new LevelDatabase({ name: 'site' })
+
+  let info = new LevelDatabase({ name: 'info' })
+  let active = new LevelDatabase({ name: 'active' })
+  let live = new LevelDatabase({ name: 'live' })
+  return { site, info, active, live }
 }
+
+/*
+数据库
+site: 站点信息
+
+info: {mid, uname, roomid, sign, notice}
+active: [{view, follower}]
+live: [{guard, online}]
+
+all: timestamp
+ */
