@@ -1,4 +1,8 @@
 const biliAPI = require('bili-api')
+
+const Server = require('socket.io')
+const io = new Server(8001, { serveClient: false, path: '/' })
+
 const { init } = require('./database')
 
 const vtbs = require('./vtbs')
@@ -40,4 +44,14 @@ class Spider {
     let spider = new Spider({ db, vtbs, spiderId, PARALLEL, INTERVAL })
     spider.start()
   }
+  io.on('connection', socket => {
+    console.log('a user connected')
+    socket.on('test', (data, back) => {
+      console.log('test', data)
+      back(233)
+    })
+    socket.on('disconnect', () => {
+      console.log('user disconnected')
+    })
+  })
 })()
