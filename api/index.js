@@ -65,9 +65,9 @@ class Spider {
   }
   io.on('connection', socket => {
     console.log('a user connected')
-    socket.on('test', (data, back) => {
+    socket.on('test', (data, arc) => {
       console.log('test', data)
-      back(233)
+      arc(233)
     })
     socket.on('disconnect', () => {
       console.log('user disconnected')
