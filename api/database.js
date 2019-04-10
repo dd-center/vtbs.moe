@@ -27,9 +27,14 @@ exports.init = async () => {
 数据库
 site: 站点信息
 
-info: {mid, uname, roomid, sign, notice}
-active: [{archiveView, follower}]
-live: [{guard, online}]
+info
+mid: {mid, uname, roomid, sign, notice, recordNum, liveNum}
 
-all: timestamp
+active
+mid_recordNum: {archiveView, follower}
+
+live
+mid_liveNum: {guard, online}
+
+all: time: timestamp
  */
