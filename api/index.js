@@ -28,10 +28,28 @@ class Spider {
     }
   }
   async round() {
-    // let startTime = (new Date()).getTime()
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
-      let object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online'])
+      let time = (new Date()).getTime()
+      let object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face'])
+      let { mid, uname, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, face } = object
+
+      let info = await this.db.info.get(mid)
+      if (!info) {
+        info = {}
+      }
+      let { recordNum = 0, liveNum = 0 } = info
+
+      recordNum++
+      await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
+
+      if (liveStatus) {
+        liveNum++
+        await this.db.active.put({ mid, num: liveNum, value: { guardNum, online, time } })
+      }
+
+      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, recordNum, liveNum, time })
+
       console.log(vtb.note, object.uname)
     }
   }
@@ -39,9 +57,10 @@ class Spider {
 
 ;
 (async () => {
-  let db = await init()
+  // let { site, info, active, live } = await init()
+  let { info, active, live } = await init()
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
-    let spider = new Spider({ db, vtbs, spiderId, PARALLEL, INTERVAL })
+    let spider = new Spider({ db: { info, active, live }, vtbs, spiderId, PARALLEL, INTERVAL })
     spider.start()
   }
   io.on('connection', socket => {
