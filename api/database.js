@@ -13,13 +13,19 @@ class LevelDatabase {
   }
 }
 
+class ArrayDatabase extends LevelDatabase {
+  constructor({ name }) {
+    super({ name })
+  }
+}
+
 exports.init = async () => {
   await fs.ensureDir('./db')
   let site = new LevelDatabase({ name: 'site' })
 
   let info = new LevelDatabase({ name: 'info' })
-  let active = new LevelDatabase({ name: 'active' })
-  let live = new LevelDatabase({ name: 'live' })
+  let active = new ArrayDatabase({ name: 'active' })
+  let live = new ArrayDatabase({ name: 'live' })
   return { site, info, active, live }
 }
 
