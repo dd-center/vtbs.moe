@@ -1,0 +1,10 @@
+exports.connect = socket => {
+  console.log('a user connected')
+  socket.on('test', (data, arc) => {
+    console.log('test', data)
+    arc(2333)
+  })
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+}

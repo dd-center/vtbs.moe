@@ -2,6 +2,7 @@ const biliAPI = require('bili-api')
 
 const Server = require('socket.io')
 const io = new Server(8001, { serveClient: false, path: '/' })
+const { connect } = require('./socket')
 
 const { init } = require('./database')
 
@@ -50,7 +51,7 @@ class Spider {
 
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, recordNum, liveNum, time })
 
-      console.log(vtb.note, object.uname)
+      console.log(`UPDATED: ${uname}`)
     }
   }
 }
@@ -63,14 +64,5 @@ class Spider {
     let spider = new Spider({ db: { info, active, live }, vtbs, spiderId, PARALLEL, INTERVAL })
     spider.start()
   }
-  io.on('connection', socket => {
-    console.log('a user connected')
-    socket.on('test', (data, arc) => {
-      console.log('test', data)
-      arc(233)
-    })
-    socket.on('disconnect', () => {
-      console.log('user disconnected')
-    })
-  })
+  io.on('connection', connect)
 })()
