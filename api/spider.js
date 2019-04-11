@@ -1,5 +1,23 @@
 const biliAPI = require('bili-api')
 
+let oneHours = 1000 * 60 * 60
+
+const notable = ({ info, object, time }) => {
+  if (!info.recordNum) {
+    return true
+  }
+  if (time - info.time > oneHours) {
+    return true
+  }
+  if (Math.abs(info.archiveView - object.archiveView) * 1000 > info.archiveView) {
+    return true
+  }
+  if (Math.abs(info.follower - object.follower) * 1000 > info.follower) {
+    return true
+  }
+  return false
+}
+
 class Spider {
   constructor({ db, vtbs, spiderId, PARALLEL, INTERVAL }) {
     this.db = db
@@ -30,8 +48,10 @@ class Spider {
       }
       let { recordNum = 0, liveNum = 0 } = info
 
-      recordNum++
-      await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
+      if (notable({ info, object, time })) {
+        recordNum++
+        await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
+      }
 
       if (liveStatus) {
         liveNum++
