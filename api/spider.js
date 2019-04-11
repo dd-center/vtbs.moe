@@ -38,7 +38,7 @@ class Spider {
         await this.db.live.put({ mid, num: liveNum, value: { guardNum, online, time } })
       }
 
-      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, recordNum, liveNum, time })
+      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, time })
 
       console.log(`UPDATED: ${uname}`)
     }

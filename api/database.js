@@ -39,7 +39,7 @@ exports.init = async () => {
 site: 站点信息
 
 info
-mid: {mid, uname, roomid, sign, notice, face, recordNum, liveNum}
+mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum}
 
 active
 mid_recordNum: {archiveView, follower}
