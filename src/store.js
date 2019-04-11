@@ -11,6 +11,8 @@ export default new Vuex.Store({
 
   },
   actions: {
-
+    SOCKET_log({ commit }, data) {
+      console.log(data)
+    }
   }
 })
