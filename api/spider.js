@@ -35,7 +35,7 @@ class Spider {
 
       if (liveStatus) {
         liveNum++
-        await this.db.active.put({ mid, num: liveNum, value: { guardNum, online, time } })
+        await this.db.live.put({ mid, num: liveNum, value: { guardNum, online, time } })
       }
 
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, recordNum, liveNum, time })
@@ -46,4 +46,3 @@ class Spider {
 }
 
 exports.Spider = Spider
-
