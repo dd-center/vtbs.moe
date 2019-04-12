@@ -1,36 +1,39 @@
 <template>
 <div id="app">
-  <img src="./assets/logo.png">
-  <div>
-    {{test}}
-  </div>
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <el-container>
+    <el-header>
+      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="routerSelect">
+        <el-menu-item index="/">🍉</el-menu-item>
+        <el-menu-item index="/about">关于</el-menu-item>
+      </el-menu>
+    </el-header>
+    <router-view>
+    </router-view>
+  </el-container>
 </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
 export default {
   name: 'app',
-  components: {
-    HelloWorld
-  },
   data() {
-    return {
-      test: process.env.NODE_ENV
+    return {}
+  },
+  computed: {
+    activeIndex: function() {
+      return this.$route.path
+    }
+  },
+  methods: {
+    routerSelect(index) {
+      this.$router.push(index)
     }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 </style>
