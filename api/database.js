@@ -40,7 +40,7 @@ exports.init = async () => {
 site: 站点信息
 
 info
-mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange}
+mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online}
 
 active
 mid_recordNum: {archiveView, follower}
@@ -49,7 +49,7 @@ live
 mid_liveNum: {online}
 
 guard
-mid_liveNum: {guardNum}
+mid_liveNum: {guardNum, areaRank}
 
 all: time: timestamp
 

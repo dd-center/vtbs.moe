@@ -39,8 +39,8 @@ class Spider {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
       let time = (new Date()).getTime()
-      let object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face'])
-      let { mid, uname, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, face } = object
+      let object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank'])
+      let { mid, uname, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, face, areaRank } = object
 
       let info = await this.db.info.get(mid)
       if (!info) {
@@ -58,12 +58,12 @@ class Spider {
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
-      if (guardNum !== info.guardNum) {
+      if (guardNum !== info.guardNum || areaRank !== info.areaRank) {
         guardChange++
-        await this.db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
+        await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
-      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, time })
+      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
 
       console.log(`UPDATED: ${uname}`)
     }
