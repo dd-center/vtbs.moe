@@ -46,7 +46,7 @@ class Spider {
       if (!info) {
         info = {}
       }
-      let { recordNum = 0, liveNum = 0 } = info
+      let { recordNum = 0, liveNum = 0, guardChange = 0 } = info
 
       if (notable({ info, object, time })) {
         recordNum++
@@ -55,10 +55,15 @@ class Spider {
 
       if (liveStatus) {
         liveNum++
-        await this.db.live.put({ mid, num: liveNum, value: { guardNum, online, time } })
+        await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
-      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, time })
+      if (guardNum !== info.guardNum) {
+        guardChange++
+        await this.db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
+      }
+
+      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, time })
 
       console.log(`UPDATED: ${uname}`)
     }

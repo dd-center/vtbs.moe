@@ -31,7 +31,8 @@ exports.init = async () => {
   let info = new LevelDatabase({ name: 'info', db })
   let active = new ArrayDatabase({ name: 'active', db })
   let live = new ArrayDatabase({ name: 'live', db })
-  return { site, info, active, live }
+  let guard = new ArrayDatabase({ name: 'guard', db })
+  return { site, info, active, live, guard }
 }
 
 /*
@@ -39,13 +40,21 @@ exports.init = async () => {
 site: 站点信息
 
 info
-mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum}
+mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange}
 
 active
 mid_recordNum: {archiveView, follower}
 
 live
-mid_liveNum: {guardNum, online}
+mid_liveNum: {online}
+
+guard
+mid_liveNum: {guardNum}
 
 all: time: timestamp
+
+Increase index:
+  recordNum
+  liveNum
+  guardChange
  */
