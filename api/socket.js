@@ -1,4 +1,4 @@
-exports.connect = ({ io, info, active, live, vtbs }) => socket => {
+exports.connect = ({ io, info, active, live, vtbs }) => async socket => {
   const handler = async (target, arc) => {
     if (typeof arc !== 'function') {
       arc = () => {}
@@ -12,4 +12,8 @@ exports.connect = ({ io, info, active, live, vtbs }) => socket => {
   socket.on('disconnect', () => {
     console.log('user disconnected')
   })
+  for (let i = 0; i < vtbs.length; i++) {
+    let vtb = vtbs[i]
+    socket.emit('info', await info.get(vtb.mid))
+  }
 }

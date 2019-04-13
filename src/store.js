@@ -3,7 +3,19 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+const info = {
+  state: {},
+  mutations: {
+    SOCKET_info(state, data) {
+      state[data.mid] = data
+    }
+  }
+}
+
 export default new Vuex.Store({
+  modules: {
+    info
+  },
   state: {
     vtbs: []
   },

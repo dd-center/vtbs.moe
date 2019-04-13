@@ -1,13 +1,21 @@
 <template>
-<el-container>
+<el-container v-loading="!info">
   <el-main>
-    233
+    {{info}}
   </el-main>
 </el-container>
 </template>
 
 <script>
 export default {
-  components: {}
+  components: {},
+  props: {
+    vtb: Object
+  },
+  computed: {
+    info: function() {
+      return this.$store.state.info[this.vtb.mid]
+    }
+  }
 }
 </script>
