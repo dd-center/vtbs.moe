@@ -2,7 +2,7 @@
 <el-container>
   <el-main>
     <el-row type="flex" justify="space-around">
-      <el-col :xs="24" :sm="16" :md="12" :lg="8" :xl="7" v-loading="!vtbs.length">
+      <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
         <card v-for="vtb in vtbs" :vtb="vtb" :key="vtb.mid"></card>
       </el-col>
     </el-row>
