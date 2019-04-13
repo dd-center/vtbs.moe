@@ -18,5 +18,5 @@ const INTERVAL = 1000 * 60 * 5
     let spider = new Spider({ db: { info, active, live, guard }, vtbs, spiderId, PARALLEL, INTERVAL })
     spider.start()
   }
-  io.on('connection', connect({ io, info, active, live, guard }))
+  io.on('connection', connect({ io, vtbs, info, active, live, guard }))
 })()
