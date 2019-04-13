@@ -7,11 +7,13 @@ import './registerServiceWorker'
 
 import './plugins/element.js'
 
+import { socket } from './socket'
+
 Vue.config.productionTip = false
 
 Vue.use(new VueSocketIO({
   debug: process.env.NODE_ENV === 'development',
-  connection: process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : 'https://api.vtb.simon3k.moe',
+  connection: socket,
   vuex: {
     store,
     actionPrefix: 'SOCKET_',

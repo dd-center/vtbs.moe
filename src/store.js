@@ -1,12 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { get } from '@/socket'
+
 Vue.use(Vuex)
+
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 export default new Vuex.Store({
   state: {
     vtbs: [],
-    info: {}
+    info: {},
+    face: {}
   },
   getters: {
     followerRank: state => {
@@ -24,11 +29,21 @@ export default new Vuex.Store({
     },
     SOCKET_info(state, data) {
       state.info = { ...state.info, [data.mid]: data }
+    },
+    loadFace(state, { mid, face }) {
+      state.face = { ...state.face, [mid]: face }
     }
   },
   actions: {
     SOCKET_log({ commit }, data) {
       console.log(data)
+    },
+    async SOCKET_vtbs({ commit }, data) {
+      for (let i = 0; i < data.length; i++) {
+        let mid = data[i].mid
+        let face = `data:image/png;base64,${await get('face', mid)}`
+        commit('loadFace', { mid, face })
+      }
     }
   }
 })

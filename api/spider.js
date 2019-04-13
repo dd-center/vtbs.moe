@@ -1,4 +1,5 @@
 const biliAPI = require('bili-api')
+const got = require('got')
 
 let oneHours = 1000 * 60 * 60
 
@@ -64,6 +65,9 @@ class Spider {
       }
 
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
+
+      let faceImage = await got(face, { encoding: null })
+      await this.db.face.put(mid, faceImage.body.toString('base64'))
 
       console.log(`UPDATED: ${uname}`)
     }

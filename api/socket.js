@@ -1,12 +1,14 @@
-exports.connect = ({ io, info, active, live, vtbs }) => async socket => {
-  const handler = async (target, arc) => {
-    if (typeof arc !== 'function') {
-      arc = () => {}
+exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
+  const handler = e => async (target, arc) => {
+    if (typeof arc === 'function') {
+      if (e === 'face') {
+        arc(await face.get(target))
+      }
     }
   }
 
   console.log('a user connected')
-  socket.on('get', handler)
+  socket.on('face', handler('face'))
   socket.emit('log', 'Connected')
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {

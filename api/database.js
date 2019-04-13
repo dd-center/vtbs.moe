@@ -32,7 +32,8 @@ exports.init = async () => {
   let active = new ArrayDatabase({ name: 'active', db })
   let live = new ArrayDatabase({ name: 'live', db })
   let guard = new ArrayDatabase({ name: 'guard', db })
-  return { site, info, active, live, guard }
+  let face = new LevelDatabase({ name: 'face', db })
+  return { site, info, active, live, guard, face }
 }
 
 /*
@@ -50,6 +51,9 @@ mid_liveNum: {online}
 
 guard
 mid_liveNum: {guardNum, areaRank}
+
+face
+mid: base64
 
 all: time: timestamp
 
