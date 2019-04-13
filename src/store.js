@@ -5,8 +5,6 @@ import { get } from '@/socket'
 
 Vue.use(Vuex)
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 export default new Vuex.Store({
   state: {
     vtbs: [],
