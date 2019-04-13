@@ -9,7 +9,7 @@ exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
 
   console.log('a user connected')
   socket.on('face', handler('face'))
-  socket.emit('log', 'Connected')
+  socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
     console.log('user disconnected')

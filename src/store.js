@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     vtbs: [],
     info: {},
-    face: {}
+    face: {},
+    logs: []
   },
   getters: {
     followerRank: state => {
@@ -30,12 +31,12 @@ export default new Vuex.Store({
     },
     loadFace(state, { mid, face }) {
       state.face = { ...state.face, [mid]: face }
+    },
+    SOCKET_log(state, data) {
+      state.logs.push({ time: (new Date()).toLocaleString(), data })
     }
   },
   actions: {
-    SOCKET_log({ commit }, data) {
-      console.log(data)
-    },
     async SOCKET_vtbs({ commit }, data) {
       for (let i = 0; i < data.length; i++) {
         let mid = data[i].mid
