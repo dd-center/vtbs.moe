@@ -7,14 +7,14 @@
         <img src="@/assets/face.jpg" class="face" v-else>
       </el-col>
       <el-col :span="12" class="hidden-sm-and-up">
-        2333
+        <badge :status="status" v-if="info"></badge>
       </el-col>
       <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
         <h1>{{uname}}</h1>
         <p>{{sign}}</p>
       </el-col>
       <el-col :span="6" class="hidden-xs-only">
-        233
+        <badge :status="status" v-if="info"></badge>
       </el-col>
     </el-row>
   </el-main>
@@ -22,10 +22,14 @@
 </template>
 
 <script>
+import badge from '@/components/badge'
+
 import 'element-ui/lib/theme-chalk/display.css'
 
 export default {
-  components: {},
+  components: {
+    badge
+  },
   props: {
     vtb: Object
   },
@@ -41,6 +45,11 @@ export default {
     },
     sign: function() {
       return this.info ? this.info.sign : ''
+    },
+    status: function() {
+      let follower = this.info.follower
+      let archiveView = this.info.archiveView
+      return { follower, archiveView }
     }
   }
 }
