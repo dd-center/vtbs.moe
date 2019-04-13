@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <el-container>
+  <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
     <el-header>
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="routerSelect">
         <el-menu-item index="/">🍉</el-menu-item>
@@ -17,7 +17,17 @@
 export default {
   name: 'app',
   data() {
-    return {}
+    return {
+      fullscreenLoading: true
+    }
+  },
+  sockets: {
+    connect: function() {
+      this.fullscreenLoading = false
+    },
+    disconnect: function() {
+      this.fullscreenLoading = true
+    }
   },
   computed: {
     activeIndex: function() {
