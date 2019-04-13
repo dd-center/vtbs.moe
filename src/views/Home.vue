@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import card from '@/components/card'
 
@@ -20,6 +20,8 @@ export default {
   components: {
     card
   },
-  computed: mapState(['vtbs'])
+  computed: { ...mapState(['vtbs']),
+    ...mapGetters(['followerRank'])
+  }
 }
 </script>
