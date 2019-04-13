@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "favicon": "node favicon",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
@@ -31,6 +32,7 @@
     "babel-eslint": "^10.0.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "favicons": "^5.3.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
     "vue-cli-plugin-element": "^1.0.1",
