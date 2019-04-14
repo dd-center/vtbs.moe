@@ -57,5 +57,9 @@ module.exports = [
   { mid: 389856447, note: 'MEL' },
   { mid: 389857131, note: 'Aki' },
   { mid: 389858754, note: 'Choko' },
-  { mid: 389859190, note: 'Subaru' }
+  { mid: 389859190, note: 'Subaru' },
+  { mid: 403927583, note: '椎名唯华' },
+  { mid: 403930401, note: '绿仙' },
+  { mid: 403928672, note: '葵' },
+  { mid: 403921378, note: '凛' }
 ]
