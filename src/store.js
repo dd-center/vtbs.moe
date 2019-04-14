@@ -1,9 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import level from 'level'
 
 import { get } from '@/socket'
 
 Vue.use(Vuex)
+
+let db = level('db', { valueEncoding: 'json' })
 
 export default new Vuex.Store({
   state: {
@@ -44,8 +47,15 @@ export default new Vuex.Store({
       for (let i = 0; i < data.length; i++) {
         let mid = data[i].mid
         if (!state.face[mid]) {
-          let face = `data:image/png;base64,${await get('face', mid)}`
-          commit('loadFace', { mid, face })
+          let time = (new Date()).getTime()
+          let face = await db.get(`face_${mid}`).catch(() => undefined)
+          if (face && time - face.time < 1000 * 60 * 60 * 3) {
+            commit('loadFace', { mid, face: face.data })
+          } else {
+            face = `data:image/png;base64,${await get('face', mid)}`
+            commit('loadFace', { mid, face })
+            await db.put(`face_${mid}`, { time, data: face })
+          }
         }
       }
     }
