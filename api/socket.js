@@ -16,6 +16,9 @@ exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
   })
   for (let i = 0; i < vtbs.length; i++) {
     let vtb = vtbs[i]
-    socket.emit('info', await info.get(vtb.mid))
+    let vtbInfo = await info.get(vtb.mid)
+    if (vtbInfo) {
+      socket.emit('info', vtbInfo)
+    }
   }
 }
