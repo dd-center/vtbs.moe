@@ -77,6 +77,7 @@ class Spider {
 
       this.io.emit('log', `${mid}: UPDATED ${uname}`)
       console.log(`UPDATED: ${uname}`)
+      await this.wait(1000 * 1)
     }
   }
 }
