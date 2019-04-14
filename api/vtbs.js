@@ -7,6 +7,7 @@ module.exports = [
   { mid: 8119834, note: 'Hana' },
   { mid: 2778044, note: 'Miu' },
   { mid: 6055289, note: 'YYUT(x)' },
+  { mid: 3772162, note: '清露' },
   { mid: 380829248, note: '救救猫猫' },
   { mid: 1869304, note: 'ENA' },
   { mid: 406805563, note: 'Oto' },
