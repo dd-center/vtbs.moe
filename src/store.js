@@ -8,6 +8,19 @@ Vue.use(Vuex)
 
 let db = level('db', { valueEncoding: 'json' })
 
+const rank = target => state => [...state.vtbs].sort((a, b) => {
+  if (!state.info[a.mid] && !state.info[b.mid]) {
+    return 0
+  }
+  if (!state.info[a.mid]) {
+    return 1
+  }
+  if (!state.info[b.mid]) {
+    return -1
+  }
+  return state.info[b.mid][target] - state.info[a.mid][target]
+})
+
 export default new Vuex.Store({
   state: {
     vtbs: [],
@@ -16,20 +29,7 @@ export default new Vuex.Store({
     logs: []
   },
   getters: {
-    followerRank: state => {
-      return [...state.vtbs].sort((a, b) => {
-        if (!state.info[a.mid] && !state.info[b.mid]) {
-          return 0
-        }
-        if (!state.info[a.mid]) {
-          return 1
-        }
-        if (!state.info[b.mid]) {
-          return -1
-        }
-        return state.info[b.mid].follower - state.info[a.mid].follower
-      })
-    }
+    followerRank: rank('follower')
   },
   mutations: {
     SOCKET_vtbs(state, data) {
