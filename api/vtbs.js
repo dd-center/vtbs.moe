@@ -1,6 +1,7 @@
 module.exports = [
   { mid: 349991143, note: 'Mea' },
   { mid: 372984197, note: 'Shiori' },
+  { mid: 12362451, note: 'homolive' },
   { mid: 8119834, note: 'Hana' },
   { mid: 2778044, note: 'Miu' },
   { mid: 6055289, note: 'YYUT(x)' },
