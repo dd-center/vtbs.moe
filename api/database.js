@@ -53,7 +53,7 @@ guard
 mid_liveNum: {guardNum, areaRank}
 
 face
-mid: base64
+mid: {data: base64}
 
 all: time: timestamp
 

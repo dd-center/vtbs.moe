@@ -71,11 +71,15 @@ class Spider {
         await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
+      let currentFace = await this.db.face.get(mid)
+      if (!(time - currentFace.time < oneHours * 24)) {
+        this.log(`${mid}: FACE`)
+        let faceImage = await got(face, { encoding: null })
+        await this.db.face.put(mid, { time, data: faceImage.body.toString('base64') })
+      }
+
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
       this.io.emit('info', { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
-
-      let faceImage = await got(face, { encoding: null })
-      await this.db.face.put(mid, faceImage.body.toString('base64'))
 
       this.log(`${mid}: UPDATED ${uname}`)
       console.log(`UPDATED: ${uname}`)

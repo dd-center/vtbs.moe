@@ -2,7 +2,7 @@ exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'face') {
-        arc(await face.get(target))
+        arc((await face.get(target)).data)
       }
     }
   }
