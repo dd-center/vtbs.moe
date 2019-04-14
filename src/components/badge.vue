@@ -18,13 +18,15 @@ export default {
     name: {
       default: () => ({
         follower: '关注',
-        archiveView: '播放'
+        archiveView: '播放',
+        online: '人气'
       })
     },
     icon: {
       default: () => ({
         follower: 'el-icon-star-on',
-        archiveView: 'el-icon-caret-right'
+        archiveView: 'el-icon-caret-right',
+        online: 'el-icon-d-caret'
       })
     }
   }

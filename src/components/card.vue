@@ -10,7 +10,9 @@
         <badge :status="status" v-if="info"></badge>
       </el-col>
       <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
-        <h1>{{uname}}</h1>
+        <h1>{{uname}}
+          <el-tag size="mini" v-if="liveStatus">直播中</el-tag>
+        </h1>
         <p>{{sign}}</p>
       </el-col>
       <el-col :span="6" class="hidden-xs-only">
@@ -47,9 +49,16 @@ export default {
       return this.info ? this.info.sign : this.vtb.mid
     },
     status: function() {
-      let follower = this.info.follower
-      let archiveView = this.info.archiveView
-      return { follower, archiveView }
+      let object = {}
+      object.follower = this.info.follower
+      object.archiveView = this.info.archiveView
+      if (this.liveStatus) {
+        object.online = this.info.online
+      }
+      return object
+    },
+    liveStatus: function() {
+      return this.info ? this.info.liveStatus : false
     }
   }
 }
