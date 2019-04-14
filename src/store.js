@@ -18,8 +18,14 @@ export default new Vuex.Store({
   getters: {
     followerRank: state => {
       return [...state.vtbs].sort((a, b) => {
-        if (!state.info[a.mid] || !state.info[b.mid]) {
+        if (!state.info[a.mid] && !state.info[b.mid]) {
           return 0
+        }
+        if (!state.info[a.mid]) {
+          return 1
+        }
+        if (!state.info[b.mid]) {
+          return -1
         }
         return state.info[b.mid].follower - state.info[a.mid].follower
       })
