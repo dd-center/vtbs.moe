@@ -41,10 +41,10 @@ export default {
       return this.$store.state.face[this.vtb.mid]
     },
     uname: function() {
-      return this.info ? this.info.uname : ''
+      return this.info ? this.info.uname : this.vtb.note
     },
     sign: function() {
-      return this.info ? this.info.sign : ''
+      return this.info ? this.info.sign : this.vtb.mid
     },
     status: function() {
       let follower = this.info.follower
