@@ -10,6 +10,7 @@ export default new Router({
   routes: [
     {
       path: '/',
+      alias: '/live',
       name: 'home',
       component: Home
     },

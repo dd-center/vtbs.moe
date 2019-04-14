@@ -18,7 +18,7 @@ const rank = target => state => [...state.vtbs].sort((a, b) => {
   if (!state.info[b.mid]) {
     return -1
   }
-  return state.info[b.mid][target] - state.info[a.mid][target]
+  return target(state, a, b)
 })
 
 export default new Vuex.Store({
@@ -29,7 +29,8 @@ export default new Vuex.Store({
     logs: []
   },
   getters: {
-    followerRank: rank('follower')
+    followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
+    liveRank: rank((state, a, b) => 100000 * (state.info[b.mid].liveStatus * state.info[b.mid].online - state.info[a.mid].liveStatus * state.info[a.mid].online) + state.info[b.mid]['follower'] - state.info[a.mid]['follower'])
   },
   mutations: {
     SOCKET_vtbs(state, data) {

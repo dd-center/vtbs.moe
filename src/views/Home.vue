@@ -4,7 +4,7 @@
     <el-row type="flex" justify="space-around">
       <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
         <transition-group name="flip-list">
-          <card v-for="vtb in followerRank" :vtb="vtb" :key="vtb.mid"></card>
+          <card v-for="vtb in rank" :vtb="vtb" :key="vtb.mid"></card>
         </transition-group>
       </el-col>
     </el-row>
@@ -23,7 +23,13 @@ export default {
     card
   },
   computed: { ...mapState(['vtbs']),
-    ...mapGetters(['followerRank'])
+    ...mapGetters(['followerRank', 'liveRank']),
+    rank: function() {
+      if (this.$route.path.includes('live')) {
+        return this.liveRank
+      }
+      return this.followerRank
+    }
   }
 }
 </script>
