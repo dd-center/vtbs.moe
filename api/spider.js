@@ -72,7 +72,7 @@ class Spider {
       }
 
       let currentFace = await this.db.face.get(mid)
-      if (!(time - currentFace.time < oneHours * 24)) {
+      if (!currentFace || !(time - currentFace.time < oneHours * 24)) {
         this.log(`${mid}: FACE`)
         let faceImage = await got(face, { encoding: null })
         await this.db.face.put(mid, { time, data: faceImage.body.toString('base64') })
