@@ -1,5 +1,17 @@
 module.exports = [
   { mid: 349991143, note: 'Mea' },
+  { mid: 372984197, note: 'Shiori' },
+  { mid: 8119834, note: 'Hana' },
+  { mid: 2778044, note: 'Miu' },
+  { mid: 6055289, note: 'YYUT(x)' },
+  { mid: 380829248, note: '救救猫猫' },
+  { mid: 1869304, note: 'ENA' },
+  { mid: 406805563, note: 'Oto' },
+  { mid: 3568142, note: '果冻妹' },
+  { mid: 407067880, note: '伞' },
+  { mid: 1498668, note: 'Chisuzu' },
+  { mid: 2299184, note: 'Komori' },
+  { mid: 1429475, note: 'Chiaki' },
   { mid: 345819190, note: 'Kanna' },
   { mid: 389862071, note: 'Mio' },
   { mid: 332704117, note: 'Fubuki' },
@@ -11,5 +23,11 @@ module.exports = [
   { mid: 3149619, note: 'mana' },
   { mid: 286179206, note: 'Sora' },
   { mid: 389857640, note: 'Shion' },
-  { mid: 389858027, note: 'Oni' }
+  { mid: 389858027, note: 'Oni' },
+  { mid: 20813493, note: 'roboko' },
+  { mid: 366690056, note: 'Miko' },
+  { mid: 389856447, note: 'MEL' },
+  { mid: 389857131, note: 'Aki' },
+  { mid: 389858754, note: 'Choko' },
+  { mid: 389859190, note: 'Subaru' }
 ]
