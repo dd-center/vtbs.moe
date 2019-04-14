@@ -3,7 +3,9 @@
   <el-main>
     <el-row type="flex" justify="space-around">
       <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
-        <card v-for="vtb in followerRank" :vtb="vtb" :key="vtb.mid"></card>
+        <transition-group name="flip-list">
+          <card v-for="vtb in followerRank" :vtb="vtb" :key="vtb.mid"></card>
+        </transition-group>
       </el-col>
     </el-row>
   </el-main>
@@ -25,3 +27,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.flip-list-move {
+  transition: transform 0.5s;
+}
+</style>
