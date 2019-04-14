@@ -34,6 +34,9 @@ export default new Vuex.Store({
     },
     SOCKET_log(state, data) {
       state.logs.push({ time: (new Date()).toLocaleString(), data })
+      if (state.logs.length > 256) {
+        state.logs.shift()
+      }
     }
   },
   actions: {
