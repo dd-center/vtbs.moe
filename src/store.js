@@ -37,11 +37,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async SOCKET_vtbs({ commit }, data) {
+    async SOCKET_vtbs({ commit, state }, data) {
       for (let i = 0; i < data.length; i++) {
         let mid = data[i].mid
-        let face = `data:image/png;base64,${await get('face', mid)}`
-        commit('loadFace', { mid, face })
+        if (!state.face[mid]) {
+          let face = `data:image/png;base64,${await get('face', mid)}`
+          commit('loadFace', { mid, face })
+        }
       }
     }
   }
