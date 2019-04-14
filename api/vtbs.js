@@ -62,6 +62,5 @@ module.exports = [
   { mid: 403930401, note: '绿仙' },
   { mid: 403928672, note: '葵' },
   { mid: 403921378, note: '凛' },
-  { mid: 391875813, note: '白组' },
-  { mid: 296909317, note: 'himehina' }
+  { mid: 391875813, note: '白组' }
 ]
