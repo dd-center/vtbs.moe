@@ -21,6 +21,9 @@ class ArrayDatabase extends LevelDatabase {
   put({ mid, num, value }) {
     return super.put(`${mid}_${num}`, value)
   }
+  get({ mid, num }) {
+    return super.get(`${mid}_${num}`)
+  }
 }
 
 exports.init = async () => {

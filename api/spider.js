@@ -3,11 +3,11 @@ const got = require('got')
 
 let oneHours = 1000 * 60 * 60
 
-const notable = ({ info, object, time }) => {
-  if (!info.recordNum) {
+const notable = ({ info, object, time, currentActive }) => {
+  if (!currentActive) {
     return true
   }
-  if (time - info.time > oneHours) {
+  if (time - currentActive.time > oneHours) {
     return true
   }
   if (Math.abs(info.archiveView - object.archiveView) * 1000 > info.archiveView) {
@@ -53,7 +53,8 @@ class Spider {
       }
       let { recordNum = 0, liveNum = 0, guardChange = 0 } = info
 
-      if (notable({ info, object, time })) {
+      let currentActive = await this.db.active.get({ mid, num: recordNum })
+      if (notable({ info, object, time, currentActive })) {
         this.log(`${mid}: NOTABLE`)
         recordNum++
         await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
