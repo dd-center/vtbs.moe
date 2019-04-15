@@ -24,10 +24,10 @@ export default {
   },
   sockets: {
     connect: function() {
-      this.fullscreenLoading = false
+      this.fullscreenLoading = !this.$socket.connected
     },
     disconnect: function() {
-      this.fullscreenLoading = true
+      this.fullscreenLoading = !this.$socket.connected
     }
   },
   computed: {
