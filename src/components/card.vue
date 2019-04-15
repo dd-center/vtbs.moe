@@ -12,11 +12,14 @@
       <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
         <el-row type="flex" justify="space-between">
           <el-col :span="12">
-            <h1>{{uname}}
-              <el-tag size="mini" v-if="liveStatus">直播中</el-tag>
+            <h1>
+              <a :href="`http://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
+                <el-tag size="mini">直播中</el-tag>
+              </a>
+              {{uname}}
             </h1>
           </el-col>
-          <el-col :span="9">
+          <el-col :span="7">
             <a :href="`https://space.bilibili.com/${mid}`" target="_blank">
               <el-button type="primary" icon="el-icon-document" size="mini">空间</el-button>
             </a>
@@ -57,6 +60,9 @@ export default {
     },
     mid: function() {
       return this.vtb.mid
+    },
+    roomid: function() {
+      return this.info && this.info.roomid
     },
     uname: function() {
       return this.info ? this.info.uname : this.vtb.note
