@@ -8,6 +8,7 @@ module.exports = [
   { mid: 2778044, note: 'Miu' },
   { mid: 6055289, note: 'YYUT(x)' },
   { mid: 18149131, note: '🔨' },
+  { mid: 27534330, note: '爱酱' },
   { mid: 3772162, note: '清露' },
   { mid: 380829248, note: '救救猫猫' },
   { mid: 1869304, note: 'ENA' },
