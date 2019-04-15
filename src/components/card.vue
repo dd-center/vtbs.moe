@@ -10,10 +10,23 @@
         <badge :status="status" v-if="info"></badge>
       </el-col>
       <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
-        <h1>{{uname}}
-          <el-tag size="mini" v-if="liveStatus">直播中</el-tag>
-        </h1>
-        <p>{{sign}}</p>
+        <el-row type="flex" justify="space-between">
+          <el-col :span="12">
+            <h1>{{uname}}
+              <el-tag size="mini" v-if="liveStatus">直播中</el-tag>
+            </h1>
+          </el-col>
+          <el-col :span="9">
+            <a :href="`https://space.bilibili.com/${mid}`" target="_blank">
+              <el-button type="primary" icon="el-icon-document" size="mini">空间</el-button>
+            </a>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <p>{{sign}}</p>
+          </el-col>
+        </el-row>
       </el-col>
       <el-col :span="6" class="hidden-xs-only">
         <badge :status="status" v-if="info"></badge>
@@ -41,6 +54,9 @@ export default {
     },
     face: function() {
       return this.$store.state.face[this.vtb.mid]
+    },
+    mid: function() {
+      return this.vtb.mid
     },
     uname: function() {
       return this.info ? this.info.uname : this.vtb.note
@@ -72,5 +88,9 @@ export default {
   width: 120px;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
+h1 {
+  margin: 0;
 }
 </style>
