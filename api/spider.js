@@ -1,5 +1,6 @@
 const biliAPI = require('bili-api')
 const got = require('got')
+const fs = require('fs-extra')
 
 let oneHours = 1000 * 60 * 60
 
@@ -73,14 +74,16 @@ class Spider {
       }
 
       let currentFace = await this.db.face.get(mid)
-      if (!currentFace || !(time - currentFace.time < oneHours * 24)) {
+      if (!currentFace || !(time - currentFace < oneHours * 24)) {
         this.log(`${mid}: FACE`)
+        console.log('face')
         let faceImage = await got(face, { encoding: null })
-        await this.db.face.put(mid, { time, data: faceImage.body.toString('base64') })
+        await fs.writeFile(`./face/${mid}.jpg`, faceImage.body)
+        await this.db.face.put(mid, time)
       }
 
-      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
-      this.io.emit('info', { mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
+      await this.db.info.put(mid, { mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
+      this.io.emit('info', { mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
 
       this.log(`${mid}: UPDATED ${uname}`)
       console.log(`UPDATED: ${uname}`)

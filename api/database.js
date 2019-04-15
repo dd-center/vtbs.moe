@@ -28,6 +28,7 @@ class ArrayDatabase extends LevelDatabase {
 
 exports.init = async () => {
   await fs.ensureDir('./db')
+  await fs.ensureDir('./face')
   let db = level(`./db`, { valueEncoding: 'json' })
   let site = new LevelDatabase({ name: 'site', db })
 
@@ -44,7 +45,7 @@ exports.init = async () => {
 site: 站点信息
 
 info
-mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online}
+mid: {mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online}
 
 active
 mid_recordNum: {archiveView, follower}
@@ -56,7 +57,7 @@ guard
 mid_liveNum: {guardNum, areaRank}
 
 face
-mid: {data: base64}
+mid: time
 
 all: time: timestamp
 
