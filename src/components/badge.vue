@@ -19,14 +19,16 @@ export default {
       default: () => ({
         follower: '关注',
         archiveView: '播放',
-        online: '人气'
+        online: '人气',
+        guardNum: '舰团'
       })
     },
     icon: {
       default: () => ({
         follower: 'el-icon-star-on',
         archiveView: 'el-icon-caret-right',
-        online: 'el-icon-d-caret'
+        online: 'el-icon-d-caret',
+        guardNum: 'el-icon-location-outline'
       })
     }
   }

@@ -55,6 +55,9 @@ export default {
       if (this.liveStatus) {
         object.online = this.info.online
       }
+      if (this.$route.path.includes('live')) {
+        object.guardNum = this.info.guardNum
+      }
       return object
     },
     liveStatus: function() {
