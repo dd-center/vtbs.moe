@@ -1,14 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import level from 'level'
 
 import { get } from '@/socket'
 
 Vue.use(Vuex)
-
-let db = level('db', { valueEncoding: 'json' })
-
-const DAY = 1000 * 60 * 60 * 24
 
 const rank = target => state => [...state.vtbs].sort((a, b) => {
   if (!state.info[a.mid] && !state.info[b.mid]) {
@@ -41,9 +36,9 @@ export default new Vuex.Store({
     },
     SOCKET_info(state, data) {
       state.info = { ...state.info, [data.mid]: data }
-    },
-    loadFace(state, { mid, face }) {
-      state.face = { ...state.face, [mid]: face }
+      if (!state.face[data.mid]) {
+        state.face = { ...state.face, [data.mid]: `https://api.vtb.simon3k.moe/face/${data.mid}.jpg` }
+      }
     },
     loadPastLive(state, { mid, time }) {
       state.pastLive = { ...state.pastLive, [mid]: time }
@@ -59,17 +54,6 @@ export default new Vuex.Store({
     async SOCKET_info({ commit, state, dispatch }, { mid, liveNum }) {
       if (liveNum) {
         dispatch('updatePastLive', { mid, liveNum })
-      }
-      if (!state.face[mid]) {
-        let time = (new Date()).getTime()
-        let face = await db.get(`face_${mid}`).catch(() => undefined)
-        if (face && time - face.time < 5 * DAY) {
-          commit('loadFace', { mid, face: face.data })
-        } else {
-          face = `data:image/png;base64,${await get('face', mid)}`
-          commit('loadFace', { mid, face })
-          await db.put(`face_${mid}`, { time, data: face })
-        }
       }
     },
     async updatePastLive({ commit }, { mid, liveNum }) {

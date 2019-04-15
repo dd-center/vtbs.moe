@@ -53,7 +53,7 @@ export default {
       return this.$store.state.info[this.vtb.mid]
     },
     face: function() {
-      return this.$store.state.face[this.vtb.mid]
+      return this.$store.state.face[this.mid]
     },
     mid: function() {
       return this.vtb.mid
