@@ -77,7 +77,7 @@ class Spider {
       if (!currentFace || !(time - currentFace < oneHours * 24)) {
         this.log(`${mid}: FACE`)
         let faceImage = await got(face, { encoding: null })
-        await fs.writeFile(`./face/${mid}.jpg`, faceImage.body)
+        await fs.writeFile(`./static/face/${mid}.jpg`, faceImage.body)
         await this.db.face.put(mid, time)
       }
 
