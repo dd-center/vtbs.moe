@@ -20,6 +20,8 @@ module.exports = [
   { mid: 2299184, note: 'Komori' },
   { mid: 1429475, note: 'Chiaki' },
   { mid: 364225566, note: '战斗吧歌姬' },
+  { mid: 5570898, note: '白音小雪' },
+  { mid: 1612112, note: '魔宵' },
   { mid: 203365648, note: 'Alice' },
   { mid: 292044559, note: 'Yomemi' },
   { mid: 355167926, note: 'Englisher' },
