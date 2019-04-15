@@ -7,8 +7,11 @@ import VueSocketIO from 'vue-socket.io'
 import './registerServiceWorker'
 
 import './plugins/element.js'
+import moment from 'moment'
 
 import { socket } from './socket'
+
+moment.locale('zh-cn')
 
 Vue.config.productionTip = false
 

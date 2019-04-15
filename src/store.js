@@ -28,6 +28,7 @@ export default new Vuex.Store({
     vtbs: [],
     info: {},
     face: {},
+    pastLive: {},
     logs: []
   },
   getters: {
@@ -44,6 +45,9 @@ export default new Vuex.Store({
     loadFace(state, { mid, face }) {
       state.face = { ...state.face, [mid]: face }
     },
+    loadPastLive(state, { mid, time }) {
+      state.pastLive = { ...state.pastLive, [mid]: time }
+    },
     SOCKET_log(state, data) {
       state.logs.push({ time: (new Date()).toLocaleString(), data })
       if (state.logs.length > 256) {
@@ -52,8 +56,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async SOCKET_info({ commit, state }, data) {
-      let mid = data.mid
+    async SOCKET_info({ commit, state, dispatch }, { mid, liveNum }) {
+      if (liveNum) {
+        dispatch('updatePastLive', { mid, liveNum })
+      }
       if (!state.face[mid]) {
         let time = (new Date()).getTime()
         let face = await db.get(`face_${mid}`).catch(() => undefined)
@@ -65,6 +71,10 @@ export default new Vuex.Store({
           await db.put(`face_${mid}`, { time, data: face })
         }
       }
+    },
+    async updatePastLive({ commit }, { mid, liveNum }) {
+      let { time } = await get('live', { mid, num: liveNum })
+      commit('loadPastLive', { mid, time })
     }
   }
 })

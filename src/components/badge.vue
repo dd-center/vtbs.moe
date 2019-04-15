@@ -20,7 +20,8 @@ export default {
         follower: '关注',
         archiveView: '播放',
         online: '人气',
-        guardNum: '舰团'
+        guardNum: '舰团',
+        pastLive: '上次直播'
       })
     },
     icon: {
@@ -28,7 +29,8 @@ export default {
         follower: 'el-icon-star-on',
         archiveView: 'el-icon-caret-right',
         online: 'el-icon-d-caret',
-        guardNum: 'el-icon-location-outline'
+        guardNum: 'el-icon-location-outline',
+        pastLive: 'el-icon-time'
       })
     }
   }

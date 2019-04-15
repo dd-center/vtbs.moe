@@ -41,6 +41,7 @@
 
 <script>
 import badge from '@/components/badge'
+import moment from 'moment'
 
 import 'element-ui/lib/theme-chalk/display.css'
 
@@ -79,6 +80,8 @@ export default {
       }
       if (this.liveStatus) {
         object.online = this.info.online
+      } else if (this.$store.state.pastLive[this.vtb.mid]) {
+        object.pastLive = moment(this.$store.state.pastLive[this.vtb.mid]).fromNow()
       }
       return object
     },
