@@ -8,6 +8,8 @@ Vue.use(Vuex)
 
 let db = level('db', { valueEncoding: 'json' })
 
+const DAY = 1000 * 60 * 60 * 24
+
 const rank = target => state => [...state.vtbs].sort((a, b) => {
   if (!state.info[a.mid] && !state.info[b.mid]) {
     return 0
@@ -55,7 +57,7 @@ export default new Vuex.Store({
       if (!state.face[mid]) {
         let time = (new Date()).getTime()
         let face = await db.get(`face_${mid}`).catch(() => undefined)
-        if (face && time - face.time < 1000 * 60 * 60 * 3) {
+        if (face && time - face.time < 5 * DAY) {
           commit('loadFace', { mid, face: face.data })
         } else {
           face = `data:image/png;base64,${await get('face', mid)}`
