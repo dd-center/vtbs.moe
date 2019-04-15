@@ -74,11 +74,11 @@ export default {
       let object = {}
       object.follower = this.info.follower
       object.archiveView = this.info.archiveView
-      if (this.liveStatus) {
-        object.online = this.info.online
-      }
       if (this.$route.path.includes('live')) {
         object.guardNum = this.info.guardNum
+      }
+      if (this.liveStatus) {
+        object.online = this.info.online
       }
       return object
     },
