@@ -5,6 +5,7 @@
       {{props.name[key]}}<span :class="props.icon[key]"></span>
     </el-col>
     <el-col :span="12">
+      <span class="el-icon-loading" v-if="value === undefined"></span>
       {{value}}
     </el-col>
   </el-row>

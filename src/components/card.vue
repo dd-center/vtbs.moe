@@ -79,6 +79,8 @@ export default {
         if (typeof this.$store.state.pastLive[this.vtb.mid] === 'number') {
           object.pastLive = moment(this.$store.state.pastLive[this.vtb.mid]).fromNow()
         }
+      } else {
+        object.pastLive = undefined
       }
       return object
     },
