@@ -11,7 +11,7 @@
       <el-col :span="12">
         <h3>
           <a :href="`http://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
-            <el-tag size="mini">直播中</el-tag>
+            <el-tag size="small">直播中</el-tag>
           </a>
           {{uname}}
         </h3>
