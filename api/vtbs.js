@@ -85,8 +85,22 @@ module.exports = [
   { mid: 252599, note: '游戏部' },
   { mid: 381951501, note: 'Cocoa' },
 
+  // 2434
+  { mid: 403927583, note: '椎名唯华' },
+  { mid: 403930401, note: '绿仙' },
+  { mid: 403928672, note: '葵' },
+  { mid: 403921378, note: '凛' },
   // 上海2434
   { mid: 1631724, note: '塞塔nya' },
+
+  // Redstar
+  // TODO: alias account
+  // TODO: 397047629
+  { mid: 444559, note: 'Redstar' },
+
+  // THE MOON STUDIO
+  { mid: 265224956, note: 'Luna' },
+  { mid: 393940396, note: '巨乳可能' },
 
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
@@ -110,6 +124,8 @@ module.exports = [
   { mid: 402105315, note: '星ノ谷みやOfficial' },
   { mid: 374017536, note: '女巫Vivian' },
   { mid: 308751411, note: '東雲恵Official' },
+  { mid: 391876799, note: 'siro' },
+  { mid: 377899842, note: '纸木姐妹' },
   { mid: 20530305, note: '木糖纯和庄不纯' },
   { mid: 389052754, note: '摩提_MoChi' },
   { mid: 397222615, note: '蒼乃幽姬' },
@@ -117,11 +133,6 @@ module.exports = [
   { mid: 403768239, note: 'RukiRokiChannel' },
   { mid: 320740464, note: '兰若_Ruo' },
   { mid: 345819190, note: 'Kanna' },
-  { mid: 265224956, note: 'Luna' },
   { mid: 296909317, note: 'himehina' },
-  { mid: 403927583, note: '椎名唯华' },
-  { mid: 403930401, note: '绿仙' },
-  { mid: 403928672, note: '葵' },
-  { mid: 403921378, note: '凛' },
   { mid: 391875813, note: '白组' }
 ]
