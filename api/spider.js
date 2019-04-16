@@ -34,7 +34,9 @@ class Spider {
   async start() {
     for (;;) {
       let startTime = (new Date()).getTime()
+      this.infoArray = []
       await this.round()
+      this.io.emit('info', this.infoArray)
       let endTime = (new Date()).getTime()
       this.log(`WAIT: ${this.INTERVAL - (endTime - startTime)}`)
       await this.wait(this.INTERVAL - (endTime - startTime))
@@ -82,7 +84,7 @@ class Spider {
       }
 
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
-      this.io.emit('info', { mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
+      this.infoArray.push({ mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
 
       this.log(`${mid}: UPDATED ${uname}`)
       console.log(`UPDATED: ${uname}`)

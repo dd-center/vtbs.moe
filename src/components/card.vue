@@ -1,8 +1,7 @@
 <template>
 <el-row>
   <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
-    <img :src="face" class="face" v-if="face">
-    <img src="@/assets/face.jpg" class="face" v-else>
+    <img :src="face" class="face">
   </el-col>
   <el-col :span="12" class="hidden-sm-and-up">
     <badge :status="status" v-if="info"></badge>
@@ -53,7 +52,7 @@ export default {
       return this.$store.state.info[this.vtb.mid]
     },
     face: function() {
-      return this.$store.state.face[this.mid]
+      return `https://api.vtb.simon3k.moe/face/${this.mid}.jpg`
     },
     mid: function() {
       return this.vtb.mid
@@ -77,7 +76,9 @@ export default {
       if (this.liveStatus) {
         object.online = this.info.online
       } else if (this.$store.state.pastLive[this.vtb.mid]) {
-        object.pastLive = moment(this.$store.state.pastLive[this.vtb.mid]).fromNow()
+        if (typeof this.$store.state.pastLive[this.vtb.mid] === 'number') {
+          object.pastLive = moment(this.$store.state.pastLive[this.vtb.mid]).fromNow()
+        }
       }
       return object
     },

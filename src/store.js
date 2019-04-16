@@ -22,7 +22,6 @@ export default new Vuex.Store({
   state: {
     vtbs: [],
     info: {},
-    face: {},
     pastLive: {},
     logs: []
   },
@@ -35,10 +34,11 @@ export default new Vuex.Store({
       state.vtbs = [...data]
     },
     SOCKET_info(state, data) {
-      state.info = { ...state.info, [data.mid]: data }
-      if (!state.face[data.mid]) {
-        state.face = { ...state.face, [data.mid]: `https://api.vtb.simon3k.moe/face/${data.mid}.jpg` }
+      let info = { ...state.info }
+      for (let i = 0; i < data.length; i++) {
+        info[data[i].mid] = data[i]
       }
+      state.info = { ...info }
     },
     loadPastLive(state, { mid, time }) {
       state.pastLive = { ...state.pastLive, [mid]: time }
@@ -51,9 +51,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async SOCKET_info({ commit, state, dispatch }, { mid, liveNum }) {
-      if (liveNum) {
-        dispatch('updatePastLive', { mid, liveNum })
+    async SOCKET_info({ commit, dispatch }, info) {
+      for (let i = 0; i < info.length; i++) {
+        let { mid, liveNum, liveStatus } = info[i]
+        if (!liveNum) {
+          commit('loadPastLive', { mid, time: 'never' })
+        }
+        if (!liveStatus && liveNum) {
+          dispatch('updatePastLive', { mid, liveNum })
+        }
       }
     },
     async updatePastLive({ commit }, { mid, liveNum }) {
