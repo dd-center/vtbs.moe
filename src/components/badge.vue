@@ -21,7 +21,7 @@ export default {
         archiveView: '播放',
         online: '人气',
         guardNum: '舰团',
-        pastLive: '上次直播'
+        pastLive: '直播'
       })
     },
     icon: {
