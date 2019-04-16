@@ -64,7 +64,7 @@ export default {
       return this.info ? this.info.uname : this.vtb.note
     },
     sign: function() {
-      return this.info ? this.info.sign : this.vtb.mid
+      return this.info ? this.info.sign : this.mid
     },
     status: function() {
       let object = {}
@@ -75,9 +75,9 @@ export default {
       }
       if (this.liveStatus) {
         object.online = this.info.online
-      } else if (this.$store.state.pastLive[this.vtb.mid]) {
-        if (typeof this.$store.state.pastLive[this.vtb.mid] === 'number') {
-          object.pastLive = moment(this.$store.state.pastLive[this.vtb.mid]).fromNow()
+      } else if (this.$store.state.pastLive[this.mid]) {
+        if (typeof this.$store.state.pastLive[this.mid] === 'number') {
+          object.pastLive = moment(this.$store.state.pastLive[this.mid]).fromNow()
         }
       } else {
         object.pastLive = undefined
