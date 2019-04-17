@@ -4,17 +4,17 @@ const fs = require('fs-extra')
 
 let oneHours = 1000 * 60 * 60
 
-const notable = ({ info, object, time, currentActive }) => {
+const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
   if (time - currentActive.time > oneHours) {
     return true
   }
-  if (Math.abs(info.archiveView - object.archiveView) * 1000 > info.archiveView) {
+  if (Math.abs(currentActive.archiveView - object.archiveView) * 1000 > currentActive.archiveView) {
     return true
   }
-  if (Math.abs(info.follower - object.follower) * 1000 > info.follower) {
+  if (Math.abs(currentActive.follower - object.follower) * 1000 > currentActive.follower) {
     return true
   }
   return false
@@ -67,7 +67,7 @@ class Spider {
       let { recordNum = 0, liveNum = 0, guardChange = 0 } = info
 
       let currentActive = await this.db.active.get({ mid, num: recordNum })
-      if (notable({ info, object, time, currentActive })) {
+      if (notable({ object, time, currentActive })) {
         recordNum++
         await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
       }
