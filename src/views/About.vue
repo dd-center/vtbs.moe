@@ -13,8 +13,8 @@
       </el-col>
       <el-col :xs="24" :span="12">
         <h1>服务器数据：</h1>
-        <p>Spiders: {{spiders}}</p>
-        <p>Interval: {{interval}} ms</p>
+        <p v-loading="!spiders">Spiders: {{spiders}}</p>
+        <p v-loading="!interval">Interval: {{interval}} ms</p>
         <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
           <h4>Spiders {{spiderId}}</h4>
           <p>上次更新: {{time | parseTime}} <br>
