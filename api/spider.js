@@ -26,11 +26,16 @@ class Spider {
     this.vtbs = vtbs
     this.spiderId = spiderId
     this.io = io
-    this.log = log => io.emit('log', `spider ${spiderId}: ${log}`)
     this.PARALLEL = PARALLEL
     this.INTERVAL = INTERVAL
   }
   wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
+  log(log) {
+    (output => {
+      console.log(output)
+      this.io.emit('log', output)
+    })(`spider ${this.spiderId}: ${log}`)
+  }
   async start() {
     for (;;) {
       let startTime = (new Date()).getTime()
@@ -45,7 +50,6 @@ class Spider {
   async round() {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
-      this.log(`${vtb.mid}: START`)
       let time = (new Date()).getTime()
       let object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank'])
       let { mid, uname, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, face, areaRank } = object
@@ -58,26 +62,22 @@ class Spider {
 
       let currentActive = await this.db.active.get({ mid, num: recordNum })
       if (notable({ info, object, time, currentActive })) {
-        this.log(`${mid}: NOTABLE`)
         recordNum++
         await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
       }
 
       if (liveStatus) {
-        this.log(`${mid}: LIVE`)
         liveNum++
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
       if (guardNum !== info.guardNum || areaRank !== info.areaRank) {
-        this.log(`${mid}: GUARD/RANK UPDATE`)
         guardChange++
         await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
       let currentFace = await this.db.face.get(mid)
       if (!currentFace || !(time - currentFace < oneHours * 24)) {
-        this.log(`${mid}: FACE`)
         let faceImage = await got(face, { encoding: null })
         await fs.writeFile(`./static/face/${mid}.jpg`, faceImage.body)
         await this.db.face.put(mid, time)
@@ -86,8 +86,7 @@ class Spider {
       await this.db.info.put(mid, { mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
       this.infoArray.push({ mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
 
-      this.log(`${mid}: UPDATED ${uname}`)
-      console.log(`UPDATED: ${uname}`)
+      this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)
     }
   }
