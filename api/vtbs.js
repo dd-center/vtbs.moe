@@ -66,13 +66,25 @@ module.exports = [
   // Winks
   { mid: 337827661, note: '陆婉莹' },
 
+  { mid: 359080356, note: '惺忪喵' },
+  { mid: 359081808, note: '季毅' },
+  { mid: 359081307, note: '花音' },
   { mid: 359082339, note: 'Pro' },
+  { mid: 359082596, note: '于川流丹' },
+
   // 上面阿修的gachi
   { mid: 10829693, note: 'GachiA' },
   { mid: 12964678, note: 'GachiH' },
 
   { mid: 387108043, note: '莉姬' },
   { mid: 1826804, note: '爱夏' },
+  { mid: 387236794, note: '初颜' },
+  { mid: 387091887, note: '奈子' },
+  { mid: 387113126, note: '音仙吕' },
+  // Winks Extra
+  { mid: 536899, note: '钟老师' },
+  { mid: 353044891, note: 'Adam' },
+  { mid: 204838732, note: '鬼月' },
 
   // KMNHZ
   { mid: 2149710, note: 'KMNHZ' },
