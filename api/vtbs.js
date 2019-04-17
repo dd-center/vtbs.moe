@@ -67,6 +67,9 @@ module.exports = [
   { mid: 337827661, note: '陆婉莹' },
 
   { mid: 359082339, note: 'Pro' },
+  // 上面阿修的gachi
+  { mid: 10829693, note: 'GachiA' },
+  { mid: 12964678, note: 'GachiH' },
 
   { mid: 387108043, note: '莉姬' },
   { mid: 1826804, note: '爱夏' },
