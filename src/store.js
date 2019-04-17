@@ -23,6 +23,8 @@ export default new Vuex.Store({
     vtbs: [],
     info: {},
     pastLive: {},
+    status: {},
+    spiderUpdate: [],
     logs: []
   },
   getters: {
@@ -48,6 +50,14 @@ export default new Vuex.Store({
       if (state.logs.length > 1024) {
         state.logs.shift()
       }
+    },
+    SOCKET_status(state, data) {
+      state.status = { ...state.status, ...data }
+    },
+    SOCKET_spiderUpdate(state, { spiderId, time }) {
+      let spiderUpdate = [...state.spiderUpdate]
+      spiderUpdate[spiderId] = time
+      state.spiderUpdate = spiderUpdate
     }
   },
   actions: {

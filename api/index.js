@@ -13,10 +13,10 @@ const INTERVAL = 1000 * 60 * 5
 ;
 (async () => {
   // let { site, info, active, live } = await init()
-  let { info, active, live, guard, face } = await init()
+  let { site, info, active, live, guard, face } = await init()
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
-    let spider = new Spider({ db: { info, active, live, guard, face }, vtbs, spiderId, io, PARALLEL, INTERVAL })
+    let spider = new Spider({ db: { site, info, active, live, guard, face }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
   }
-  io.on('connection', connect({ io, vtbs, info, active, live, guard, face }))
+  io.on('connection', connect({ io, vtbs, site, info, active, live, guard, face, PARALLEL, INTERVAL }))
 })()

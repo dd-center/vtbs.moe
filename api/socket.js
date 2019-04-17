@@ -1,4 +1,4 @@
-exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
+exports.connect = ({ io, site, info, active, live, vtbs, face, PARALLEL, INTERVAL }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
       // if (e === 'face') {
@@ -27,6 +27,11 @@ exports.connect = ({ io, info, active, live, vtbs, face }) => async socket => {
     }
   }
   socket.emit('info', infoArray)
+
+  for (let i = 0; i < PARALLEL; i++) {
+    socket.emit('spiderUpdate', { spiderId: i, time: (await site.get(`update_${i}`)) })
+  }
+  socket.emit('status', { PARALLEL, INTERVAL })
 }
 
 /*
@@ -41,5 +46,9 @@ vtbs: [vtb]
 info: [info]
 
 log: String
+
+status: {}
+
+spiderUpdate: {spiderId, time}
 
  */
