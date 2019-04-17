@@ -15,9 +15,11 @@
         <h1>服务器统计数据：</h1>
         <p>Spiders: {{spiders}}</p>
         <p>Interval: {{interval}} ms</p>
-        <p v-for="(time, index) in spiderUpdate" :key="`spider_${index}`">
-          Spiders {{index}}: {{time | parseTime}}
-        </p>
+        <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
+          <h4>Spiders {{spiderId}}</h4>
+          <p>上次更新: {{time | parseTime}} <br>
+            目前负载: {{duration | load(interval)}}</p>
+        </div>
         <h1>logs:</h1>
         <el-timeline>
           <el-timeline-item v-for="(log, index) in [...logs].reverse()" :key="index" :timestamp="log.time">
@@ -47,6 +49,9 @@ export default {
     parseTime: function(time = 0) {
       let timeNow = moment(time)
       return `${timeNow.hours()}:${timeNow.minute()}`
+    },
+    load: function(duration, interval) {
+      return `${Math.round(duration / interval * 1000) / 10}%`
     }
   }
 }

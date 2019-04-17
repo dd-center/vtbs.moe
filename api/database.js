@@ -43,7 +43,7 @@ exports.init = async () => {
 /*
 数据库
 site: 站点信息
-update_spiderid: time
+spider_spiderid: {spiderId, time, duration}
 
 info
 mid: {mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}

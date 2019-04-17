@@ -54,9 +54,10 @@ export default new Vuex.Store({
     SOCKET_status(state, data) {
       state.status = { ...state.status, ...data }
     },
-    SOCKET_spiderUpdate(state, { spiderId, time }) {
+    SOCKET_spiderUpdate(state, data) {
+      let { spiderId } = data
       let spiderUpdate = [...state.spiderUpdate]
-      spiderUpdate[spiderId] = time
+      spiderUpdate[spiderId] = data
       state.spiderUpdate = spiderUpdate
     }
   },

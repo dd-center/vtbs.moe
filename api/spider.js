@@ -44,8 +44,9 @@ class Spider {
       this.io.emit('info', this.infoArray)
 
       let time = (new Date()).getTime()
-      this.io.emit('spiderUpdate', { spiderId: this.spiderId, time })
-      await this.db.site.put(`update_${this.spiderId}`, time)
+      let update = { time, spiderId: this.spiderId, duration: time - startTime }
+      this.io.emit('spiderUpdate', update)
+      await this.db.site.put(`spider_${this.spiderId}`, update)
 
       let endTime = (new Date()).getTime()
       this.log(`WAIT: ${this.INTERVAL - (endTime - startTime)}`)
