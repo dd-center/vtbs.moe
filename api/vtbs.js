@@ -134,5 +134,6 @@ module.exports = [
   { mid: 320740464, note: '兰若_Ruo' },
   { mid: 345819190, note: 'Kanna' },
   { mid: 296909317, note: 'himehina' },
-  { mid: 391875813, note: '白组' }
+  { mid: 391875813, note: '白组' },
+  { mid: 9824984, note: 'Nachoco' }
 ]
