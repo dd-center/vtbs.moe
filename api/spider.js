@@ -28,6 +28,7 @@ class Spider {
     this.io = io
     this.PARALLEL = PARALLEL
     this.INTERVAL = INTERVAL
+    this.endTime = (new Date()).getTime()
   }
   wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)) }
   log(log) {
@@ -44,6 +45,7 @@ class Spider {
       this.io.emit('info', this.infoArray)
 
       let time = (new Date()).getTime()
+      this.endTime = time
       let update = { time, spiderId: this.spiderId, duration: time - startTime }
       this.io.emit('spiderUpdate', update)
       await this.db.site.put(`spider_${this.spiderId}`, update)

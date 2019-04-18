@@ -17,6 +17,15 @@ const INTERVAL = 1000 * 60 * 5
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard, face }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
+    setInterval(() => {
+      // Auto restart when spider are dead
+      if ((new Date()).getTime() - spider.endTime > INTERVAL * 1.5) {
+        console.log(`Spider ${spiderId}, NOT OK`)
+        process.exit()
+      } else {
+        console.log(`Spider ${spiderId}, OK`)
+      }
+    }, 1000 * 60 * 2)
   }
   io.on('connection', connect({ io, vtbs, site, info, active, live, guard, face, PARALLEL, INTERVAL }))
 })()
