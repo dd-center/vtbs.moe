@@ -4,11 +4,15 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
       if (e === 'live') {
         arc(await live.get(target))
       }
+      if (e === 'liveBulk') {
+        arc(await Promise.all([...target].map(e => live.get(e))))
+      }
     }
   }
 
   console.log('a user connected')
   socket.on('live', handler('live'))
+  socket.on('liveBulk', handler('liveBulk'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {

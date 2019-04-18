@@ -70,19 +70,23 @@ export default new Vuex.Store({
   },
   actions: {
     async SOCKET_info({ commit, dispatch }, info) {
+      let pendingUpdatePastLive = []
       for (let i = 0; i < info.length; i++) {
         let { mid, liveNum, liveStatus } = info[i]
         if (!liveNum) {
           commit('loadPastLive', { mid, time: 'never' })
         }
         if (!liveStatus && liveNum) {
-          dispatch('updatePastLive', { mid, liveNum })
+          pendingUpdatePastLive.push({ mid, num: liveNum })
         }
       }
+      dispatch('updatePastLive', pendingUpdatePastLive)
     },
-    async updatePastLive({ commit }, { mid, liveNum }) {
-      let { time } = await get('live', { mid, num: liveNum })
-      commit('loadPastLive', { mid, time })
+    async updatePastLive({ commit }, bulk) {
+      let list = await get('liveBulk', bulk)
+      for (let i = 0; i < bulk.length; i++) {
+        commit('loadPastLive', { mid: bulk[i].mid, time: list[i].time })
+      }
     }
   }
 })
