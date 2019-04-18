@@ -50,7 +50,7 @@ export default {
   },
   computed: {
     info: function() {
-      return this.$store.state.info[this.vtb.mid]
+      return this.$store.state.info[this.mid] || {}
     },
     face: function() {
       return this.$store.state.face[this.mid]
@@ -59,13 +59,13 @@ export default {
       return this.vtb.mid
     },
     roomid: function() {
-      return this.info && this.info.roomid
+      return this.info.roomid
     },
     uname: function() {
-      return this.info ? this.info.uname : this.vtb.note
+      return this.info.uname || this.vtb.note
     },
     sign: function() {
-      return this.info ? this.info.sign : this.mid
+      return this.info.sign || this.mid
     },
     status: function() {
       let object = {}
@@ -86,7 +86,7 @@ export default {
       return object
     },
     liveStatus: function() {
-      return this.info ? this.info.liveStatus : false
+      return this.info.liveStatus
     }
   }
 }
