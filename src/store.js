@@ -25,7 +25,8 @@ export default new Vuex.Store({
     pastLive: {},
     status: {},
     spiderUpdate: [],
-    logs: []
+    logs: [],
+    face: {}
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
@@ -37,10 +38,16 @@ export default new Vuex.Store({
     },
     SOCKET_info(state, data) {
       let info = { ...state.info }
+      let face = { ...state.face }
       for (let i = 0; i < data.length; i++) {
+        let mid = data[i].mid
         info[data[i].mid] = data[i]
+        if (!face[mid]) {
+          face[mid] = data[i].face
+        }
       }
       state.info = { ...info }
+      state.face = { ...face }
     },
     loadPastLive(state, { mid, time }) {
       state.pastLive = { ...state.pastLive, [mid]: time }

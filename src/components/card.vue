@@ -1,7 +1,8 @@
 <template>
 <el-row>
   <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
-    <img :src="face" class="face">
+    <img :src="face" class="face" v-if="face">
+    <img src="@/assets/face.jpg" class="face" v-else>
   </el-col>
   <el-col :span="12" class="hidden-sm-and-up">
     <badge :status="status" v-if="info"></badge>
@@ -52,7 +53,7 @@ export default {
       return this.$store.state.info[this.vtb.mid]
     },
     face: function() {
-      return `https://api.vtb.simon3k.moe/face/${this.mid}.jpg`
+      return this.$store.state.face[this.mid]
     },
     mid: function() {
       return this.vtb.mid

@@ -28,7 +28,6 @@ class ArrayDatabase extends LevelDatabase {
 
 exports.init = async () => {
   await fs.ensureDir('./db')
-  await fs.ensureDir('./static/face')
   let db = level(`./db`, { valueEncoding: 'json' })
   let site = new LevelDatabase({ name: 'site', db })
 
@@ -36,8 +35,7 @@ exports.init = async () => {
   let active = new ArrayDatabase({ name: 'active', db })
   let live = new ArrayDatabase({ name: 'live', db })
   let guard = new ArrayDatabase({ name: 'guard', db })
-  let face = new LevelDatabase({ name: 'face', db })
-  return { site, info, active, live, guard, face }
+  return { site, info, active, live, guard }
 }
 
 /*
@@ -46,7 +44,7 @@ site: 站点信息
 spider_spiderid: {spiderId, time, duration}
 
 info
-mid: {mid, uname, roomid, sign, notice, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
+mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
 
 active
 mid_recordNum: {archiveView, follower, time}

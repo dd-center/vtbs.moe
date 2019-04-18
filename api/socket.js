@@ -1,9 +1,6 @@
-exports.connect = ({ io, site, info, active, live, vtbs, face, PARALLEL, INTERVAL }) => async socket => {
+exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
-      // if (e === 'face') {
-      //   arc((await face.get(target)).data)
-      // }
       if (e === 'live') {
         arc(await live.get(target))
       }
@@ -11,7 +8,6 @@ exports.connect = ({ io, site, info, active, live, vtbs, face, PARALLEL, INTERVA
   }
 
   console.log('a user connected')
-  // socket.on('face', handler('face'))
   socket.on('live', handler('live'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
