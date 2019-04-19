@@ -136,6 +136,7 @@ module.exports = [
   { mid: 17492464, note: '心斎桥オクトOfficial' },
   { mid: 205059, note: '李稍牙牙語' },
   { mid: 358695457, note: 'Siva_小虾鱼_' },
+  { mid: 373493702, note: 're' },
   { mid: 402105315, note: '星ノ谷みやOfficial' },
   { mid: 374017536, note: '女巫Vivian' },
   { mid: 308751411, note: '東雲恵Official' },
