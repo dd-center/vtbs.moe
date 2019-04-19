@@ -128,6 +128,7 @@ module.exports = [
   { mid: 125823832, note: '琥珀-虚颜' },
   { mid: 31761638, note: '8911勘测研究所' },
   { mid: 5563350, note: '虚拟次元计划' },
+  { mid: 327711614, note: '出本有望' },
   { mid: 388693909, note: 'Mendako醤Official' },
   { mid: 397723865, note: '竹轮喵Official' },
   { mid: 483231, note: '乐喵Channel' },
