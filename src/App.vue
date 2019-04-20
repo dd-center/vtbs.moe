@@ -25,9 +25,15 @@ export default {
   sockets: {
     connect: function() {
       this.fullscreenLoading = !this.$socket.connected
+      setTimeout(() => {
+        this.fullscreenLoading = !this.$socket.connected
+      }, 1000)
     },
     disconnect: function() {
       this.fullscreenLoading = !this.$socket.connected
+      setTimeout(() => {
+        this.fullscreenLoading = !this.$socket.connected
+      }, 1000)
     }
   },
   computed: {
