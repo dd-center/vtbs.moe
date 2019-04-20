@@ -10,12 +10,25 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
     }
   }
 
+  io.clients((error, clients) => {
+    if (error) {
+      console.error(error)
+    }
+    io.emit('online', clients.length)
+  })
+
   console.log('a user connected')
   socket.on('live', handler('live'))
   socket.on('liveBulk', handler('liveBulk'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
+    io.clients((error, clients) => {
+      if (error) {
+        console.error(error)
+      }
+      io.emit('online', clients.length)
+    })
     console.log('user disconnected')
   })
   let infoArray = []
@@ -40,7 +53,11 @@ Socket
 // Client Request
 live: mid -> {time, online}
 
+liveBulk: [mid] -> [{time, online}]
+
 // Server Push
+online: Number
+
 vtbs: [vtb]
 
 info: [info]

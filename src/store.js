@@ -20,6 +20,7 @@ const rank = target => state => [...state.vtbs].sort((a, b) => {
 
 export default new Vuex.Store({
   state: {
+    online: 0,
     vtbs: [],
     info: {},
     pastLive: {},
@@ -60,6 +61,9 @@ export default new Vuex.Store({
     },
     SOCKET_status(state, data) {
       state.status = { ...state.status, ...data }
+    },
+    SOCKET_online(state, data) {
+      state.online = data
     },
     SOCKET_spiderUpdate(state, data) {
       let { spiderId } = data

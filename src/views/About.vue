@@ -15,6 +15,7 @@
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>
+        <p v-if="online">目前在线: {{online}}</p>
         <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
           <h4>Spiders {{spiderId}}</h4>
           <p>上次更新: {{time | parseTime}} <br>
@@ -37,7 +38,7 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
-  computed: { ...mapState(['logs', 'status', 'spiderUpdate']),
+  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online']),
     spiders: function() {
       return this.status.PARALLEL
     },
