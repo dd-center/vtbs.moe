@@ -121,6 +121,7 @@ module.exports = [
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
   { mid: 325325965, note: 'YuNi' },
+  { mid: 90100786, note: 'AVtuber' },
   { mid: 364225566, note: '战斗吧歌姬' },
   { mid: 1612112, note: '魔宵' },
   { mid: 203365648, note: 'Alice' },
