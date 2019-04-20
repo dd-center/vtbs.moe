@@ -5,7 +5,7 @@
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :router="true">
         <el-menu-item index="/">🍉</el-menu-item>
         <el-menu-item index="/live">直播势<span class="el-icon-d-caret"></span></el-menu-item>
-        <el-menu-item index="/about">关于</el-menu-item>
+        <el-menu-item index="/about">关于<span class="el-icon-document"></span></el-menu-item>
       </el-menu>
     </el-header>
     <router-view>
