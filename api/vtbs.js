@@ -46,7 +46,7 @@ module.exports = [
 
   // 爱酱
   { mid: 1473830, note: 'KIZUNA.AI' },
-  { mid: 27534330, note: '爱酱' },
+  // { mid: 27534330, note: '爱酱' },
 
   // ENTUM
   { mid: 238537745, note: '未来明' },
