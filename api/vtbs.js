@@ -20,6 +20,7 @@ module.exports = [
 
   // Homolive
   { mid: 12362451, note: 'homolive' },
+  { mid: 405981431, note: 'snow' },
 
   // Hololive
   { mid: 286700005, note: 'hololive' },
