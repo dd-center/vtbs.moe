@@ -117,6 +117,27 @@ module.exports = [
   { mid: 265224956, note: 'Luna' },
   { mid: 393940396, note: '巨乳可能' },
 
+  // Lucca Project
+  { mid: 610390, note: '乌拉' },
+  { mid: 36690170, note: '秋明' },
+  { mid: 403894805, note: '柯里克' },
+
+  // SOW
+  { mid: 408231448, note: 'Misa' },
+  { mid: 405037911, note: '莲娜' },
+
+  { mid: 403080854, note: 'Nia' },
+  { mid: 1337624, note: '奈木' },
+  { mid: 186463, note: 'NaNa' },
+  { mid: 402105315, note: 'Miya' },
+  { mid: 3287291, note: 'Riztech' },
+  { mid: 315830968, note: '眠葉紺' },
+  { mid: 10369514, note: 'Erika' },
+  { mid: 934940, note: 'Paramecium' },
+  { mid: 61639371, note: 'Joi' },
+  { mid: 147471, note: 'YY' },
+  { mid: 2483446, note: '你也是最弱' },
+
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
@@ -140,7 +161,6 @@ module.exports = [
   { mid: 205059, note: '李稍牙牙語' },
   { mid: 358695457, note: 'Siva_小虾鱼_' },
   { mid: 373493702, note: 're' },
-  { mid: 402105315, note: '星ノ谷みやOfficial' },
   { mid: 374017536, note: '女巫Vivian' },
   { mid: 308751411, note: '東雲恵Official' },
   { mid: 391876799, note: 'siro' },
@@ -148,7 +168,6 @@ module.exports = [
   { mid: 20530305, note: '木糖纯和庄不纯' },
   { mid: 389052754, note: '摩提_MoChi' },
   { mid: 397222615, note: '蒼乃幽姬' },
-  { mid: 10369514, note: '艾麗卡・エリカチャン' },
   { mid: 403768239, note: 'RukiRokiChannel' },
   { mid: 320740464, note: '兰若_Ruo' },
   { mid: 345819190, note: 'Kanna' },
