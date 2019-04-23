@@ -44,7 +44,7 @@ site: 站点信息
 spider_spiderid: {spiderId, time, duration}
 
 info
-mid: {mid, uname, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
+mid: {mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
 
 active
 mid_recordNum: {archiveView, follower, time}
