@@ -1,6 +1,8 @@
 const { Spider } = require('./spider')
 const vtbs = require('./vtbs')
 
+const ant = require('./ant')
+
 const Server = require('socket.io')
 const io = new Server(8001, { serveClient: false, path: '/' })
 const { connect } = require('./socket')
@@ -13,7 +15,7 @@ const INTERVAL = 1000 * 60 * 5
 ;
 (async () => {
   // let { site, info, active, live } = await init()
-  let { site, info, active, live, guard } = await init()
+  let { site, num, info, active, live, guard, macro } = await init()
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
@@ -27,5 +29,6 @@ const INTERVAL = 1000 * 60 * 5
       }
     }, 1000 * 60 * 2)
   }
+  ant({ vtbs, macro, num, info, INTERVAL })
   io.on('connection', connect({ io, vtbs, site, info, active, live, guard, PARALLEL, INTERVAL }))
 })()

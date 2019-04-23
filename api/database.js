@@ -30,18 +30,24 @@ exports.init = async () => {
   await fs.ensureDir('./db')
   let db = level(`./db`, { valueEncoding: 'json' })
   let site = new ArrayDatabase({ name: 'site', db })
+  let num = new LevelDatabase({ name: 'num', db })
 
   let info = new LevelDatabase({ name: 'info', db })
   let active = new ArrayDatabase({ name: 'active', db })
   let live = new ArrayDatabase({ name: 'live', db })
   let guard = new ArrayDatabase({ name: 'guard', db })
-  return { site, info, active, live, guard }
+
+  let macro = new ArrayDatabase({ name: 'macro', db })
+  return { site, num, info, active, live, guard, macro }
 }
 
 /*
 数据库
-site: 站点信息
+site
 spider_spiderid: {spiderId, time, duration}
+
+num
+macroNum: Number
 
 info
 mid: {mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
@@ -58,10 +64,14 @@ mid_liveNum: {guardNum, areaRank, time}
 face
 mid: time
 
+macro
+record_macroNum: {video, coins, archiveView, liveStatus, online}
+
 all: time: timestamp
 
 Increase index:
   recordNum
   liveNum
   guardChange
+  macroNum
  */
