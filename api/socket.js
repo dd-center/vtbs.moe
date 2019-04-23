@@ -20,11 +20,6 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
   console.log('a user connected')
   socket.on('live', handler('live'))
   socket.on('liveBulk', handler('liveBulk'))
-
-  // StuCo Quize Master
-  socket.on('push', name => io.emit('push', name))
-  // StuCo Quize Master
-
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
