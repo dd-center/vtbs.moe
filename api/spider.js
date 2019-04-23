@@ -46,7 +46,7 @@ class Spider {
       this.endTime = time
       let update = { time, spiderId: this.spiderId, duration: time - startTime }
       this.io.emit('spiderUpdate', update)
-      await this.db.site.put(`spider_${this.spiderId}`, update)
+      await this.db.site.put({ mid: 'spider', num: this.spiderId, value: update })
 
       let endTime = (new Date()).getTime()
       this.log(`WAIT: ${this.INTERVAL - (endTime - startTime)}`)

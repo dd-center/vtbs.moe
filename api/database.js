@@ -29,7 +29,7 @@ class ArrayDatabase extends LevelDatabase {
 exports.init = async () => {
   await fs.ensureDir('./db')
   let db = level(`./db`, { valueEncoding: 'json' })
-  let site = new LevelDatabase({ name: 'site', db })
+  let site = new ArrayDatabase({ name: 'site', db })
 
   let info = new LevelDatabase({ name: 'info', db })
   let active = new ArrayDatabase({ name: 'active', db })

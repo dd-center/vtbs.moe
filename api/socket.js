@@ -42,7 +42,7 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
   socket.emit('info', infoArray)
 
   for (let i = 0; i < PARALLEL; i++) {
-    socket.emit('spiderUpdate', await site.get(`spider_${i}`))
+    socket.emit('spiderUpdate', await site.get({ mid: 'spider', num: i }))
   }
   socket.emit('status', { PARALLEL, INTERVAL })
 }
