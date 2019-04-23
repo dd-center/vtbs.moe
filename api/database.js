@@ -18,10 +18,10 @@ class ArrayDatabase extends LevelDatabase {
   constructor({ name, db }) {
     super({ name, db })
   }
-  put({ mid, num, value }) {
+  put({ mid = 0, num = 0, value }) {
     return super.put(`${mid}_${num}`, value)
   }
-  get({ mid, num }) {
+  get({ mid = 0, num = 0 }) {
     return super.get(`${mid}_${num}`)
   }
 }
