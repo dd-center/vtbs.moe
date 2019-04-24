@@ -29,6 +29,8 @@ const INTERVAL = 1000 * 60 * 5
       }
     }, 1000 * 60 * 2)
   }
-  ant({ vtbs, macro, num, info, INTERVAL, io })
+  setTimeout(() => {
+    ant({ vtbs, macro, num, info, INTERVAL, io })
+  }, 1000 * 60)
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, PARALLEL, INTERVAL }))
 })()
