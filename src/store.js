@@ -27,7 +27,8 @@ export default new Vuex.Store({
     status: {},
     spiderUpdate: [],
     logs: [],
-    face: {}
+    face: {},
+    macro: []
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
@@ -70,6 +71,14 @@ export default new Vuex.Store({
       let spiderUpdate = [...state.spiderUpdate]
       spiderUpdate[spiderId] = data
       state.spiderUpdate = spiderUpdate
+    },
+    SOCKET_macro(state, data) {
+      if (state.macro.length) {
+        state.macro.push(data)
+      }
+    },
+    insertMacro(state, macros) {
+      state.macro = [...macros]
     }
   },
   actions: {
