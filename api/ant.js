@@ -1,6 +1,6 @@
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const vup = async ({ vtbs, macro, info, num, INTERVAL }) => {
+const vup = async ({ vtbs, macro, info, num, INTERVAL, log }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -23,13 +23,13 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL }) => {
 
     await macro.put({ mid: 'vup', num: macroNum, value: sum })
     await num.put('vupMacroNum', macroNum)
-    console.log('VUP Macroeconomics Update')
+    log('VUP Macroeconomics Update')
     let endTime = (new Date()).getTime()
     await wait((INTERVAL * 12) - (endTime - startTime))
   }
 }
 
-const vtb = async ({ vtbs, macro, info, num, INTERVAL }) => {
+const vtb = async ({ vtbs, macro, info, num, INTERVAL, log }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -60,13 +60,17 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL }) => {
 
     await macro.put({ mid: 'vtb', num: macroNum, value: sum })
     await num.put('vtbMacroNum', macroNum)
-    console.log('VTB Macroeconomics Update')
+    log('VTB Macroeconomics Update')
     let endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
   }
 }
 
-module.exports = ({ vtbs, macro, info, num, INTERVAL }) => {
-  vup({ vtbs, macro, info, num, INTERVAL })
-  vtb({ vtbs, macro, info, num, INTERVAL })
+module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
+  const log = log => {
+    console.log(log)
+    io.emit('log', log)
+  }
+  vup({ vtbs, macro, info, num, INTERVAL, log })
+  vtb({ vtbs, macro, info, num, INTERVAL, log })
 }

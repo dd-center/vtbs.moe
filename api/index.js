@@ -29,6 +29,6 @@ const INTERVAL = 1000 * 60 * 5
       }
     }, 1000 * 60 * 2)
   }
-  ant({ vtbs, macro, num, info, INTERVAL })
+  ant({ vtbs, macro, num, info, INTERVAL, io })
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, PARALLEL, INTERVAL }))
 })()
