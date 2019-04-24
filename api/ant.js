@@ -26,7 +26,7 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
     io.emit('vupMacro', sum)
     log('VUP Macroeconomics Update')
     let endTime = (new Date()).getTime()
-    await wait((INTERVAL * 12) - (endTime - startTime))
+    await wait((INTERVAL * 12 * 6) - (endTime - startTime))
   }
 }
 
