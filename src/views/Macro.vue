@@ -47,6 +47,7 @@ export default {
         video: '视频数',
         archiveView: '总观看'
       },
+      yAxisName: ['视频数', '总观看'],
       xAxisType: 'time',
       scale: [true, true],
       axisSite: { right: ['archiveView'] }
@@ -58,6 +59,7 @@ export default {
         liveStatus: '直播中',
         online: '总人气'
       },
+      yAxisName: ['直播中', '总人气'],
       xAxisType: 'time',
       axisSite: { right: ['online'] }
     }
