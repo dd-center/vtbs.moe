@@ -83,7 +83,6 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
     for (let i = 0; i < vtbs.length; i++) {
       let { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
       sum.guardNum += guardNum
-      console.log(sum.guardNum)
     }
 
     let currentGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 1 })) || {}
