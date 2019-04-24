@@ -68,6 +68,41 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
+const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
+  for (;;) {
+    let startTime = (new Date()).getTime()
+
+    let macroNum = (await num.get('guardMacroNum') || 0)
+    macroNum++
+
+    let sum = {
+      guardNum: 0,
+      time: startTime
+    }
+
+    for (let i = 0; i < vtbs.length; i++) {
+      let { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
+      sum.guardNum += guardNum
+      console.log(sum.guardNum)
+    }
+
+    let currentGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 1 })) || {}
+    if (currentGuardMacro.guardNum === sum.guardNum) {
+      let beforeGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 2 })) || {}
+      if (beforeGuardMacro.guardNum === sum.guardNum) {
+        macroNum--
+      }
+    }
+
+    await macro.put({ mid: 'guard', num: macroNum, value: sum })
+    await num.put('guardMacroNum', macroNum)
+    io.emit('guardMacro', sum)
+    log('Guard Macroeconomics Update')
+    let endTime = (new Date()).getTime()
+    await wait(INTERVAL - (endTime - startTime))
+  }
+}
+
 module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
   const log = log => {
     console.log(log)
@@ -75,4 +110,5 @@ module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
   }
   vup({ vtbs, macro, info, num, INTERVAL, log, io })
   vtb({ vtbs, macro, info, num, INTERVAL, log, io })
+  guard({ vtbs, macro, info, num, INTERVAL, log, io })
 }

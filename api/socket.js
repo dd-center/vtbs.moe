@@ -15,6 +15,10 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
         let macroNum = await num.get('vtbMacroNum')
         arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
       }
+      if (e === 'guardMacro') {
+        let macroNum = await num.get('guardMacroNum')
+        arc(await macro.bulkGet({ mid: 'guard', num: macroNum }))
+      }
     }
   }
 
@@ -30,6 +34,7 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
   socket.on('liveBulk', handler('liveBulk'))
   socket.on('vupMacro', handler('vupMacro'))
   socket.on('vtbMacro', handler('vtbMacro'))
+  socket.on('guardMacro', handler('guardMacro'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -67,6 +72,7 @@ liveBulk: [mid] -> [{time, online}]
 
 vupMacro: -> [{vupMacro}]
 vtbMacro: -> [{vtbMacro}]
+guardMacro: -> [{guardMacro}]
 
 // Server Push
 online: Number
@@ -83,5 +89,6 @@ spiderUpdate: {spiderId, time, duration}
 
 vupMacro: {macro}
 vtbMacro: {macro}
+guardMacro: {macro}
 
  */
