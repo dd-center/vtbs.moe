@@ -31,6 +31,20 @@ Vue.use(new VueSocketIO({
   }
 }))
 
+Vue.mixin({
+  filters: {
+    parseNumber: value => {
+      if (value >= 1000000) {
+        return `${Math.round(value / 10000)} 万`
+      }
+      if (value >= 10000) {
+        return `${Math.round(value / 1000) / 10} 万`
+      }
+      return value
+    }
+  }
+})
+
 new Vue({
   router,
   store,
