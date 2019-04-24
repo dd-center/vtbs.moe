@@ -1,4 +1,4 @@
-# vtb.simon3k.moe
+# vtbs.moe
 
 ## Project setup
 ```
