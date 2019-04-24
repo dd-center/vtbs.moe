@@ -174,5 +174,6 @@ module.exports = [
   { mid: 345819190, note: 'Kanna' },
   { mid: 296909317, note: 'himehina' },
   { mid: 391875813, note: '白组' },
+  { mid: 2304086, note: '可能是VTB里技术最好的' },
   { mid: 9824984, note: 'Nachoco' }
 ]
