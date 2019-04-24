@@ -54,7 +54,8 @@ site
 spider_spiderid: {spiderId, time, duration}
 
 num
-macroNum: Number
+vupMacroNum: Number
+vtbMacroNum: Number
 
 info
 mid: {mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time}
@@ -72,7 +73,9 @@ face
 mid: time
 
 macro
-record_macroNum: {video, coins, archiveView, liveStatus, online}
+vup_macroNum: {video, coins, archiveView}
+
+vtb_macroNum: {liveStatus, online}
 
 all: time: timestamp
 
@@ -80,5 +83,6 @@ Increase index:
   recordNum
   liveNum
   guardChange
-  macroNum
+  vupMacroNum
+  vtbMacroNum
  */
