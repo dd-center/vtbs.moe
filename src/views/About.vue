@@ -6,10 +6,12 @@
         <h1>关于</h1>
         <p>🍉 按照关注数排列<br>
           直播势：直播中的按照人气排列，靠前，其他按照舰队排列<br>
+          宏观经济：bilibili 虚拟世界宏观走势<br>
           数据每 5 分钟更新一次<br>
-          头像每 3 天更新一次
+          宏观经济中视频势每 1 小时更新一次<br>
         </p>
-        <a href="https://github.com/simon300000/vtb.simon3k.moe/"><img alt="GitHub stars" src="https://img.shields.io/github/stars/simon300000/vtb.simon3k.moe.svg?style=social"></a>
+        <a href="https://github.com/simon300000/vtb.simon3k.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/simon300000/vtb.simon3k.moe.svg?style=social"></a> <br>
+        <a href="https://github.com/simon300000/vtb.simon3k.moe/" target="_blank">github:simon300000/vtb.simon3k.moe</a>
       </el-col>
       <el-col :xs="24" :span="12">
         <h1>服务器数据：</h1>
