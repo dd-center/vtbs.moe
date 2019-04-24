@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, INTERVAL }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'live') {
@@ -6,6 +6,10 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
       }
       if (e === 'liveBulk') {
         arc(await Promise.all([...target].map(e => live.get(e))))
+      }
+      if (e === 'macro') {
+        let macroNum = await num.get('macroNum')
+        arc(await macro.bulkGet({ mid: 'record', num: macroNum }))
       }
     }
   }
@@ -20,6 +24,7 @@ exports.connect = ({ io, site, info, active, live, vtbs, PARALLEL, INTERVAL }) =
   console.log('a user connected')
   socket.on('live', handler('live'))
   socket.on('liveBulk', handler('liveBulk'))
+  socket.on('macro', handler('macro'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -55,6 +60,8 @@ live: mid -> {time, online}
 
 liveBulk: [mid] -> [{time, online}]
 
+macro: -> [{macro}]
+
 // Server Push
 online: Number
 
@@ -67,5 +74,7 @@ log: String
 status: {}
 
 spiderUpdate: {spiderId, time, duration}
+
+// macro: {macro}
 
  */
