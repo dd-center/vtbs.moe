@@ -1,15 +1,21 @@
 <template>
 <el-container>
   <el-main>
-    <h1>VTB</h1>
+    <h1>虚拟世界宏观经济走势</h1>
+    <el-row>
+      <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
+        <h1>直播势:</h1>
+        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
+      </el-col>
+      <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
+        <h1>虚拟世界舰团:</h1>
+        <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
+      </el-col>
+    </el-row>
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
         <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
-      </el-col>
-      <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
-        <h1>直播势:</h1>
-        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
     </el-row>
   </el-main>
@@ -30,13 +36,20 @@ Vue.component(VeLine.name, VeLine)
 export default {
   async mounted() {
     if (!this.vupMacro.length) {
-      let vup = await get('vupMacro')
-      let vtb = await get('vtbMacro')
-      this.updateMacro({ vup, vtb })
+      get('vupMacro')
+        .then(vup => this.updateMacro({ vup }))
+    }
+    if (!this.vtbMacro.length) {
+      get('vtbMacro')
+        .then(vtb => this.updateMacro({ vtb }))
+    }
+    if (!this.guardMacro.length) {
+      get('guardMacro')
+        .then(guard => this.updateMacro({ guard }))
     }
   },
   methods: mapMutations(['updateMacro']),
-  computed: mapState(['vupMacro', 'vtbMacro']),
+  computed: mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
   data: function() {
     this.dataZoom = [{
       type: 'slider',
@@ -65,6 +78,16 @@ export default {
       yAxisName: ['直播中', '总人气'],
       xAxisType: 'time',
       axisSite: { right: ['online'] }
+    }
+    this.guard = {
+      dimension: ['time'],
+      metrics: ['guardNum'],
+      labelMap: {
+        guardNum: '舰团'
+      },
+      yAxisName: ['舰长+提督+总督'],
+      scale: [true],
+      xAxisType: 'time'
     }
     return {}
   }

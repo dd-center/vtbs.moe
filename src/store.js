@@ -29,7 +29,8 @@ export default new Vuex.Store({
     logs: [],
     face: {},
     vupMacro: [],
-    vtbMacro: []
+    vtbMacro: [],
+    guardMacro: []
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
@@ -83,9 +84,21 @@ export default new Vuex.Store({
         state.vtbMacro.push(data)
       }
     },
-    updateMacro(state, { vup, vtb }) {
-      state.vupMacro = [...vup]
-      state.vtbMacro = [...vtb]
+    SOCKET_guardMacro(state, data) {
+      if (state.guardMacro.length) {
+        state.guardMacro.push(data)
+      }
+    },
+    updateMacro(state, { vup, vtb, guard }) {
+      if (vup) {
+        state.vupMacro = [...vup]
+      }
+      if (vtb) {
+        state.vtbMacro = [...vtb]
+      }
+      if (guard) {
+        state.guardMacro = [...guard]
+      }
     }
   },
   actions: {
