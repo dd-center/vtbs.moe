@@ -28,7 +28,8 @@ export default new Vuex.Store({
     spiderUpdate: [],
     logs: [],
     face: {},
-    macro: []
+    vupMacro: [],
+    vtbMacro: []
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
@@ -72,13 +73,19 @@ export default new Vuex.Store({
       spiderUpdate[spiderId] = data
       state.spiderUpdate = spiderUpdate
     },
-    SOCKET_macro(state, data) {
-      if (state.macro.length) {
-        state.macro.push(data)
+    SOCKET_vupMacro(state, data) {
+      if (state.vupMacro.length) {
+        state.vupMacro.push(data)
       }
     },
-    insertMacro(state, macros) {
-      state.macro = [...macros]
+    SOCKET_vtbMacro(state, data) {
+      if (state.vtbMacro.length) {
+        state.vtbMacro.push(data)
+      }
+    },
+    updateMacro(state, { vup, vtb }) {
+      state.vupMacro = [...vup]
+      state.vtbMacro = [...vtb]
     }
   },
   actions: {

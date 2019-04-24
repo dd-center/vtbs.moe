@@ -2,14 +2,14 @@
 <el-container>
   <el-main>
     <h1>VTB</h1>
-    <el-row v-loading="!macro.length">
-      <el-col :xs="24" :span="12">
+    <el-row>
+      <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
-        <ve-line :data="{rows:macro}" :settings="vup" :data-zoom="dataZoom"></ve-line>
+        <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoom"></ve-line>
       </el-col>
-      <el-col :xs="24" :span="12">
+      <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
         <h1>直播势:</h1>
-        <ve-line :data="{rows:macro}" :settings="vtb" :data-zoom="dataZoom"></ve-line>
+        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoom"></ve-line>
       </el-col>
     </el-row>
   </el-main>
@@ -29,11 +29,14 @@ Vue.component(VeLine.name, VeLine)
 
 export default {
   async mounted() {
-    let macros = await get('macro')
-    this.insertMacro(macros)
+    if (!this.vupMacro.length) {
+      let vup = await get('vupMacro')
+      let vtb = await get('vtbMacro')
+      this.updateMacro({ vup, vtb })
+    }
   },
-  methods: mapMutations(['insertMacro']),
-  computed: mapState(['macro']),
+  methods: mapMutations(['updateMacro']),
+  computed: mapState(['vupMacro', 'vtbMacro']),
   data: function() {
     this.dataZoom = [{
       type: 'slider',

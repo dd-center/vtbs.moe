@@ -7,9 +7,13 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
       if (e === 'liveBulk') {
         arc(await Promise.all([...target].map(e => live.get(e))))
       }
-      if (e === 'macro') {
-        let macroNum = await num.get('macroNum')
-        arc(await macro.bulkGet({ mid: 'record', num: macroNum }))
+      if (e === 'vupMacro') {
+        let macroNum = await num.get('vupMacroNum')
+        arc(await macro.bulkGet({ mid: 'vup', num: macroNum }))
+      }
+      if (e === 'vtbMacro') {
+        let macroNum = await num.get('vtbMacroNum')
+        arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
       }
     }
   }
@@ -24,7 +28,8 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
   console.log('a user connected')
   socket.on('live', handler('live'))
   socket.on('liveBulk', handler('liveBulk'))
-  socket.on('macro', handler('macro'))
+  socket.on('vupMacro', handler('vupMacro'))
+  socket.on('vtbMacro', handler('vtbMacro'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -60,7 +65,8 @@ live: mid -> {time, online}
 
 liveBulk: [mid] -> [{time, online}]
 
-macro: -> [{macro}]
+vupMacro: -> [{vupMacro}]
+vtbMacro: -> [{vtbMacro}]
 
 // Server Push
 online: Number
@@ -75,6 +81,7 @@ status: {}
 
 spiderUpdate: {spiderId, time, duration}
 
-// macro: {macro}
+vupMacro: {macro}
+vtbMacro: {macro}
 
  */
