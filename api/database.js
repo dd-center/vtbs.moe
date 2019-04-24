@@ -24,6 +24,13 @@ class ArrayDatabase extends LevelDatabase {
   get({ mid = 0, num = 0 }) {
     return super.get(`${mid}_${num}`)
   }
+  bulkGet({ mid = 0, num = 1 }) {
+    let bulk = Array(num)
+    for (let i = 0; i < bulk.length; i++) {
+      bulk[i] = this.get({ mid, num: i + 1 })
+    }
+    return Promise.all(bulk)
+  }
 }
 
 exports.init = async () => {
