@@ -1,6 +1,7 @@
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
+  await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -26,7 +27,7 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
     io.emit('vupMacro', sum)
     log('VUP Macroeconomics Update')
     let endTime = (new Date()).getTime()
-    await wait((INTERVAL * 12 * 6) - (endTime - startTime))
+    await wait(INTERVAL - (endTime - startTime))
   }
 }
 
@@ -107,7 +108,7 @@ module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
     console.log(log)
     io.emit('log', log)
   }
-  vup({ vtbs, macro, info, num, INTERVAL, log, io })
+  vup({ vtbs, macro, info, num, INTERVAL: 1000 * 60 * 60 * 6, log, io })
   vtb({ vtbs, macro, info, num, INTERVAL, log, io })
   guard({ vtbs, macro, info, num, INTERVAL, log, io })
 }
