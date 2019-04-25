@@ -5,17 +5,17 @@
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
         <h1>直播势:</h1>
-        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
+        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>虚拟世界舰团:</h1>
-        <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
+        <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
     </el-row>
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
-        <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoom" :not-set-unchange="['dataZoom']"></ve-line>
+        <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
     </el-row>
   </el-main>
@@ -51,10 +51,15 @@ export default {
   methods: mapMutations(['updateMacro']),
   computed: mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
   data: function() {
-    this.dataZoom = [{
+    this.dataZoomDay = [{
       type: 'slider',
-      start: 50,
-      end: 100
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24
+      // end: 100
+    }]
+    this.dataZoomWeek = [{
+      type: 'slider',
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7
+      // end: 100
     }]
     this.vup = {
       dimension: ['time'],
