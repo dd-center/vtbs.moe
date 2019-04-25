@@ -5,7 +5,7 @@
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
         <h1>直播势:</h1>
-        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']"></ve-line>
+        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :extend="vtbExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>虚拟世界舰团:</h1>
@@ -83,6 +83,11 @@ export default {
       yAxisName: ['直播中', '总人气'],
       xAxisType: 'time',
       axisSite: { right: ['online'] }
+    }
+    this.vtbExtend = {
+      'series.0.step': 'end',
+      'series.0.smooth': false,
+      series: { sampling: 'average' }
     }
     this.guard = {
       dimension: ['time'],
