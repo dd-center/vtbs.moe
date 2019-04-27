@@ -11,8 +11,6 @@
         <h1>虚拟世界舰团:</h1>
         <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
-    </el-row>
-    <el-row>
       <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
         <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
