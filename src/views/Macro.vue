@@ -11,6 +11,10 @@
         <h1>虚拟世界舰团:</h1>
         <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
+      <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
+        <h1>舰团日K:</h1>
+        <ve-candle :data="{rows:guardMacroK}" :settings="guardK" :not-set-unchange="['dataZoom']"></ve-candle>
+      </el-col>
       <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
         <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
@@ -31,9 +35,11 @@ import { mapMutations, mapState } from 'vuex'
 import { get } from '@/socket'
 
 import VeLine from 'v-charts/lib/line.common'
+import VeCandle from 'v-charts/lib/candle.common'
 import 'echarts/lib/component/dataZoom'
 
 Vue.component(VeLine.name, VeLine)
+Vue.component(VeCandle.name, VeCandle)
 
 export default {
   async mounted() {
@@ -51,7 +57,35 @@ export default {
     }
   },
   methods: mapMutations(['updateMacro']),
-  computed: mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
+  computed: {
+    ...mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
+    guardMacroK: function() {
+      let guardMacro = this.guardMacro
+      let rows = []
+
+      for (let i = 0; i < guardMacro.length; i++) {
+        let { time, guardNum } = guardMacro[i]
+        let ISO = (new Date(time + 1000 * 60 * 60 * 8)).toISOString().slice(0, 10)
+        let currentRow = rows[rows.length - 1] || {}
+
+        if (currentRow.time !== ISO) {
+          rows.push({
+            time: ISO,
+            open: currentRow.close !== undefined ? currentRow.close : guardNum,
+            close: guardNum,
+            lowest: guardNum
+          })
+        } else {
+          if (currentRow.lowest > guardNum) {
+            rows[rows.length - 1].lowest = guardNum
+          }
+          rows[rows.length - 1].close = guardNum
+        }
+      }
+
+      return rows
+    }
+  },
   data: function() {
     this.dataZoomDay = [{
       type: 'slider',
@@ -100,6 +134,20 @@ export default {
       yAxisName: ['舰长+提督+总督'],
       scale: [true],
       xAxisType: 'time'
+    }
+    this.guardK = {
+      labelMap: {
+        open: '开盘',
+        close: '收盘',
+        lowest: '最低'
+      },
+      upColor: '#ec0000',
+      downColor: '#00da3c',
+      // showMA: true,
+      // MA: [3],
+      dimension: 'time',
+      metrics: ['open', 'close', 'lowest', 'close'],
+      showDataZoom: true
     }
     this.reserve = {
       dimension: ['time'],
