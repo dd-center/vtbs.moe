@@ -6,8 +6,8 @@ favicons('favicon.png', {
   icons: {
     appleStartup: { background: '#e3d6b9' },
     coast: false,
-    yandex: false
-  }
+    yandex: false,
+  },
 }, (error, response) => {
   if (error) {
     console.log(error.message)

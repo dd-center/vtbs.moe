@@ -73,7 +73,7 @@ export default {
             time: ISO,
             open: currentRow.close !== undefined ? currentRow.close : guardNum,
             close: guardNum,
-            lowest: guardNum
+            lowest: guardNum,
           })
         } else {
           if (currentRow.lowest > guardNum) {
@@ -84,17 +84,17 @@ export default {
       }
 
       return rows
-    }
+    },
   },
   data: function() {
     this.dataZoomDay = [{
       type: 'slider',
-      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24,
       // end: 100
     }]
     this.dataZoomWeek = [{
       type: 'slider',
-      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7,
       // end: 100
     }]
     this.vup = {
@@ -102,44 +102,44 @@ export default {
       metrics: ['video', 'archiveView'],
       labelMap: {
         video: '视频数',
-        archiveView: '总观看'
+        archiveView: '总观看',
       },
       yAxisName: ['视频数', '总观看'],
       xAxisType: 'time',
       scale: [true, true],
-      axisSite: { right: ['archiveView'] }
+      axisSite: { right: ['archiveView'] },
     }
     this.vtb = {
       dimension: ['time'],
       metrics: ['liveStatus', 'online'],
       labelMap: {
         liveStatus: '直播中',
-        online: '总人气'
+        online: '总人气',
       },
       yAxisName: ['直播中', '总人气'],
       xAxisType: 'time',
-      axisSite: { right: ['online'] }
+      axisSite: { right: ['online'] },
     }
     this.vtbExtend = {
       'series.0.step': 'end',
       'series.0.smooth': false,
-      series: { sampling: 'average' }
+      series: { sampling: 'average' },
     }
     this.guard = {
       dimension: ['time'],
       metrics: ['guardNum'],
       labelMap: {
-        guardNum: '舰团'
+        guardNum: '舰团',
       },
       yAxisName: ['舰长+提督+总督'],
       scale: [true],
-      xAxisType: 'time'
+      xAxisType: 'time',
     }
     this.guardK = {
       labelMap: {
         open: '开盘',
         close: '收盘',
-        lowest: '最低'
+        lowest: '最低',
       },
       upColor: '#ec0000',
       downColor: '#00da3c',
@@ -147,20 +147,20 @@ export default {
       // MA: [3],
       dimension: 'time',
       metrics: ['open', 'close', 'lowest', 'close'],
-      showDataZoom: true
+      showDataZoom: true,
     }
     this.reserve = {
       dimension: ['time'],
       metrics: ['coins'],
       labelMap: {
-        coins: '总硬币'
+        coins: '总硬币',
       },
       yAxisName: ['硬币'],
       xAxisType: 'time',
-      scale: [true]
+      scale: [true],
     }
     return {}
-  }
+  },
 }
 </script>
 

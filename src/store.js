@@ -30,11 +30,11 @@ export default new Vuex.Store({
     face: {},
     vupMacro: [],
     vtbMacro: [],
-    guardMacro: []
+    guardMacro: [],
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
-    liveRank: rank((state, a, b) => 100000000000 * (state.info[b.mid].liveStatus * state.info[b.mid].online - state.info[a.mid].liveStatus * state.info[a.mid].online) + 1000000 * (state.info[b.mid]['guardNum'] - state.info[a.mid]['guardNum']) + state.info[b.mid]['follower'] - state.info[a.mid]['follower'])
+    liveRank: rank((state, a, b) => 100000000000 * (state.info[b.mid].liveStatus * state.info[b.mid].online - state.info[a.mid].liveStatus * state.info[a.mid].online) + 1000000 * (state.info[b.mid]['guardNum'] - state.info[a.mid]['guardNum']) + state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
   },
   mutations: {
     SOCKET_vtbs(state, data) {
@@ -99,7 +99,7 @@ export default new Vuex.Store({
       if (guard) {
         state.guardMacro = [...guard]
       }
-    }
+    },
   },
   actions: {
     async SOCKET_info({ commit, dispatch }, info) {
@@ -120,6 +120,6 @@ export default new Vuex.Store({
       for (let i = 0; i < bulk.length; i++) {
         commit('loadPastLive', { mid: bulk[i].mid, time: list[i].time })
       }
-    }
-  }
+    },
+  },
 })

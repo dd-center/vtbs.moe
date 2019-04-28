@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 
 Vue.use(VueAnalytics, {
   id: 'UA-123973162-3',
-  router
+  router,
 })
 
 Vue.use(new VueSocketIO({
@@ -27,8 +27,8 @@ Vue.use(new VueSocketIO({
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
-    mutationPrefix: 'SOCKET_'
-  }
+    mutationPrefix: 'SOCKET_',
+  },
 }))
 
 Vue.mixin({
@@ -41,12 +41,12 @@ Vue.mixin({
         return `${Math.round(value / 1000) / 10} 万`
       }
       return value
-    }
-  }
+    },
+  },
 })
 
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app')

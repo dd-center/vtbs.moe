@@ -20,7 +20,7 @@ export default {
   name: 'app',
   data() {
     return {
-      fullscreenLoading: true
+      fullscreenLoading: true,
     }
   },
   sockets: {
@@ -35,14 +35,14 @@ export default {
       setTimeout(() => {
         this.fullscreenLoading = !this.$socket.connected
       }, 1000)
-    }
+    },
   },
   computed: {
     activeIndex: function() {
       return this.$route.path
-    }
+    },
   },
-  methods: {}
+  methods: {},
 }
 </script>
 

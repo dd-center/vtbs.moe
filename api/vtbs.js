@@ -180,5 +180,5 @@ module.exports = [
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
-  { mid: 391614061, note: 'Hizuki Miu' }
+  { mid: 391614061, note: 'Hizuki Miu' },
 ]

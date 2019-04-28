@@ -22,8 +22,8 @@ export default {
         archiveView: '播放',
         online: '人气',
         guardNum: '舰团',
-        pastLive: '直播'
-      })
+        pastLive: '直播',
+      }),
     },
     icon: {
       default: () => ({
@@ -31,10 +31,10 @@ export default {
         archiveView: 'el-icon-caret-right',
         online: 'el-icon-d-caret',
         guardNum: 'el-icon-location-outline',
-        pastLive: 'el-icon-time'
-      })
-    }
-  }
+        pastLive: 'el-icon-time',
+      }),
+    },
+  },
 }
 </script>
 

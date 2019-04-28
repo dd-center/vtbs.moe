@@ -46,7 +46,7 @@ export default {
     },
     interval: function() {
       return this.status.INTERVAL
-    }
+    },
   },
   filters: {
     parseTime: function(time = 0) {
@@ -55,8 +55,8 @@ export default {
     },
     load: function(duration, interval) {
       return `${Math.round(duration / interval * 1000) / 10}%`
-    }
-  }
+    },
+  },
 }
 </script>
 

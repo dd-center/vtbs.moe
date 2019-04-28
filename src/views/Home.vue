@@ -20,7 +20,7 @@ import card from '@/components/card'
 export default {
   name: 'home',
   components: {
-    card
+    card,
   },
   computed: { ...mapState(['vtbs']),
     ...mapGetters(['followerRank', 'liveRank']),
@@ -29,8 +29,8 @@ export default {
         return this.liveRank
       }
       return this.followerRank
-    }
-  }
+    },
+  },
 }
 </script>
 

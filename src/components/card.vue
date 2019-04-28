@@ -43,10 +43,10 @@ import 'element-ui/lib/theme-chalk/display.css'
 
 export default {
   components: {
-    badge
+    badge,
   },
   props: {
-    vtb: Object
+    vtb: Object,
   },
   computed: {
     info: function() {
@@ -87,8 +87,8 @@ export default {
     },
     liveStatus: function() {
       return this.info.liveStatus
-    }
-  }
+    },
+  },
 }
 </script>
 
