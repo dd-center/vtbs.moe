@@ -57,7 +57,7 @@ class Spider {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
       let time = (new Date()).getTime()
-      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank']).catch(() => undefined)
+      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         i -= this.PARALLEL
         this.log(`RETRY: ${vtb.mid}`)
