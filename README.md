@@ -1,6 +1,6 @@
 # vtbs.moe
 
-你好呀→_→
+你好呀→\_→
 
 欢迎来到 <https://vtbs.moe> 的 Github 项目主页
 
@@ -27,7 +27,7 @@
 
 ## 开发
 
-安装依赖: 
+安装依赖:
 
 ```
 npm install
@@ -69,4 +69,4 @@ node index
 
 有什么问题可以开 issue
 
-聊天也可以开 issue →_→
+聊天也可以开 issue →\_→
