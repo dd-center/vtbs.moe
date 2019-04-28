@@ -60,7 +60,7 @@ class Spider {
       let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         i -= this.PARALLEL
-        this.wait(1000*30)
+        this.wait(1000 * 30)
         this.log(`RETRY: ${vtb.mid}`)
         continue
       }

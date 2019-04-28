@@ -12,7 +12,7 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
       video: 0,
       coins: 0,
       archiveView: 0,
-      time: startTime
+      time: startTime,
     }
 
     for (let i = 0; i < vtbs.length; i++) {
@@ -41,7 +41,7 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
     let sum = {
       liveStatus: 0,
       online: 0,
-      time: startTime
+      time: startTime,
     }
 
     for (let i = 0; i < vtbs.length; i++) {
@@ -78,7 +78,7 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
 
     let sum = {
       guardNum: 0,
-      time: startTime
+      time: startTime,
     }
 
     for (let i = 0; i < vtbs.length; i++) {
