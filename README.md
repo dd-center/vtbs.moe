@@ -8,9 +8,9 @@
 
 ## 介绍
 
-这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面，只在NGA宣传过
+这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面，目前只在NGA宣传过
 
-目前 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 vtbs.moe
+现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 vtbs.moe
 
 网站用到的部分开源软件:
 
@@ -56,6 +56,12 @@ node index
 
 * Socket 服务端口: `8001`
 * Vtuber/Vup 列表 见 [api/vtbs.js](api/vtbs.js)
+
+#### 其他
+
+* 检查 `vtbs.js` 列表有没有重复的指令: `npm run repeat`
+
+* 把数据库导出为 json 文件: `node script/db2json`
 
 ## 贡献
 
