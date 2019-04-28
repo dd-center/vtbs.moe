@@ -176,6 +176,7 @@ module.exports = [
   { mid: 391875813, note: '白组' },
   { mid: 2304086, note: '可能是VTB里技术最好的' },
   { mid: 9824984, note: 'Nachoco' },
+  { mid: 360221708, note: '天神子兔音' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
