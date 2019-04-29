@@ -8,5 +8,11 @@ module.exports = {
       maskIcon: 'img/icons/safari-pinned-tab.svg',
     },
     themeColor: '#afd4e3',
+    name: 'VTBs in bilibili!',
+    appleMobileWebAppCapable: 'yes',
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: 'src/service-worker.js',
+    },
   },
 }
