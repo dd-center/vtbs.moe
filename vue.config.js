@@ -7,5 +7,6 @@ module.exports = {
       appleTouchIcon: 'img/icons/apple-touch-icon-1024x1024.png',
       maskIcon: 'img/icons/safari-pinned-tab.svg',
     },
+    themeColor: '#afd4e3',
   },
 }
