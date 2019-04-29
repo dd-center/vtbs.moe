@@ -1,7 +1,7 @@
 <template>
 <el-row>
   <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
-    <img :src="face" class="face" v-if="face">
+    <img :src="face.replace('http:','https:')" class="face" v-if="face">
     <img src="@/assets/face.jpg" class="face" v-else>
   </el-col>
   <el-col :span="12" class="hidden-sm-and-up">
