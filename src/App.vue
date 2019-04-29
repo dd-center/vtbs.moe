@@ -2,11 +2,16 @@
 <div id="app">
   <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
     <el-header>
-      <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" :router="true">
+      <el-menu :default-active="activeIndex" menu-trigger='click' mode="horizontal" :router="true">
         <el-menu-item index="/">🍉</el-menu-item>
         <el-menu-item index="/live">直播势<span class="el-icon-d-caret"></span></el-menu-item>
-        <el-menu-item index="/macro">VTB宏观经济<span class="el-icon-zoom-in"></span></el-menu-item>
-        <el-menu-item index="/about">关于<span class="el-icon-document"></span></el-menu-item>
+        <el-menu-item class="hidden-xs-only" index="/macro">VTB宏观经济<span class="el-icon-zoom-in"></span></el-menu-item>
+        <el-menu-item class="right hidden-xs-only" index="/about">关于<span class="el-icon-document"></span></el-menu-item>
+        <el-submenu index="1" class="hidden-sm-and-up right">
+          <template slot="title" index="1">{{emoji}}</template>
+          <el-menu-item index="/macro">VTB宏观经济<span class="el-icon-zoom-in"></span></el-menu-item>
+          <el-menu-item index="/about">关于<span class="el-icon-document"></span></el-menu-item>
+        </el-submenu>
       </el-menu>
     </el-header>
     <router-view>
@@ -16,9 +21,14 @@
 </template>
 
 <script>
+import 'element-ui/lib/theme-chalk/display.css'
+
+let emojis = ['🍥', '⚓️', '🍡', '🍫', '🌽', '🦀', '🌶️', '🏮', '😈', '🌙', '🌲', '🦎']
+
 export default {
   name: 'app',
   data() {
+    this.emoji = emojis[Math.floor(emojis.length * Math.random())]
     return {
       fullscreenLoading: true,
     }
@@ -49,5 +59,9 @@ export default {
 <style>
 * {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.right {
+  float: right !important;
 }
 </style>
