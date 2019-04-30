@@ -18,7 +18,7 @@
         </h3>
       </el-col>
       <el-col :span="7">
-        <a :href="`https://space.bilibili.com/${mid}`" target="_blank">
+        <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space">
           <el-button type="primary" icon="el-icon-document" size="mini">空间</el-button>
         </a>
       </el-col>
@@ -101,5 +101,9 @@ export default {
 
 h3 {
   margin: 0;
+}
+
+.space {
+  float: right;
 }
 </style>
