@@ -9,7 +9,7 @@
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>虚拟世界舰团:</h1>
-        <ve-line :data="{rows:guardMacro}" :settings="guard" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
+        <ve-line :data="{rows:guardMacro}" :settings="guard" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>舰团日K:</h1>
@@ -123,6 +123,8 @@ export default {
     this.vtbExtend = {
       'series.0.step': 'end',
       'series.0.smooth': false,
+      'series.0.symbol': 'none',
+      // 'series.1.symbol': 'none',
       series: { sampling: 'average' },
     }
     this.guard = {
@@ -135,14 +137,18 @@ export default {
       scale: [true],
       xAxisType: 'time',
     }
+    this.guardExtend = {
+      'series.0.symbol': 'none',
+      'series.0.smoothMonotone': 'x',
+    }
     this.guardK = {
       labelMap: {
         open: '开盘',
         close: '收盘',
         lowest: '最低',
       },
-      upColor: '#ec0000',
-      downColor: '#00da3c',
+      // upColor: '#ec0000',
+      // downColor: '#00da3c',
       // showMA: true,
       // MA: [3],
       dimension: 'time',
@@ -165,4 +171,5 @@ export default {
 </script>
 
 <style scoped>
+
 </style>
