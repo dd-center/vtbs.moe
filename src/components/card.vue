@@ -23,6 +23,9 @@
         </a>
       </el-col>
     </el-row>
+    <el-row v-if="liveStatus">
+      <span class="el-icon-ship"></span> {{title}}
+    </el-row>
     <el-row>
       <el-col>
         <p>{{sign}}</p>
@@ -87,6 +90,9 @@ export default {
     },
     liveStatus: function() {
       return this.info.liveStatus
+    },
+    title: function() {
+      return this.info.title
     },
   },
 }

@@ -57,14 +57,14 @@ class Spider {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
       let time = (new Date()).getTime()
-      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'face', 'areaRank'], { wait: 300 }).catch(() => undefined)
+      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         i -= this.PARALLEL
         this.wait(1000 * 30)
         this.log(`RETRY: ${vtb.mid}`)
         continue
       }
-      let { mid, uname, video, coins, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, face, areaRank } = object
+      let { mid, uname, video, coins, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, areaRank } = object
 
       let info = await this.db.info.get(mid)
       if (!info) {
@@ -88,8 +88,8 @@ class Spider {
         await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
-      await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
-      this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, time })
+      await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)
