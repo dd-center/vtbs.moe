@@ -5,10 +5,12 @@
       <el-menu :default-active="activeIndex" menu-trigger='click' mode="horizontal" :router="true">
         <el-menu-item index="/">🍉</el-menu-item>
         <el-menu-item index="/live">直播势<span class="el-icon-d-caret"></span></el-menu-item>
+        <el-menu-item class="hidden-xs-only" index="/detail">详细<span class="el-icon-discover"></span></el-menu-item>
         <el-menu-item class="hidden-xs-only" index="/macro">VTB宏观经济<span class="el-icon-zoom-in"></span></el-menu-item>
         <el-menu-item class="float-right hidden-xs-only" index="/about">关于<span class="el-icon-document"></span></el-menu-item>
         <el-submenu index="1" class="hidden-sm-and-up float-right">
           <template slot="title" index="1">{{emoji}}</template>
+          <el-menu-item index="/detail">详细<span class="el-icon-discover"></span></el-menu-item>
           <el-menu-item index="/macro">VTB宏观经济<span class="el-icon-zoom-in"></span></el-menu-item>
           <el-menu-item index="/about">关于<span class="el-icon-document"></span></el-menu-item>
         </el-submenu>
