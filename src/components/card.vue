@@ -67,6 +67,9 @@ export default {
     uname: function() {
       return this.info.uname || this.vtb.note
     },
+    note: function() {
+      return this.vtb.note || this.mid
+    },
     sign: function() {
       return this.info.sign || this.mid
     },
