@@ -8,16 +8,22 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
         arc(await Promise.all([...target].map(e => live.get(e))))
       }
       if (e === 'vupMacro') {
-        let macroNum = await num.get('vupMacroNum')
-        arc(await macro.bulkGet({ mid: 'vup', num: macroNum }))
+        socket.join('vupMacro', async () => {
+          let macroNum = await num.get('vupMacroNum')
+          arc(await macro.bulkGet({ mid: 'vup', num: macroNum }))
+        })
       }
       if (e === 'vtbMacro') {
-        let macroNum = await num.get('vtbMacroNum')
-        arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
+        socket.join('vtbMacro', async () => {
+          let macroNum = await num.get('vtbMacroNum')
+          arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
+        })
       }
       if (e === 'guardMacro') {
-        let macroNum = await num.get('guardMacroNum')
-        arc(await macro.bulkGet({ mid: 'guard', num: macroNum }))
+        socket.join('guardMacro', async () => {
+          let macroNum = await num.get('guardMacroNum')
+          arc(await macro.bulkGet({ mid: 'guard', num: macroNum }))
+        })
       }
     }
   }
@@ -87,8 +93,9 @@ status: {}
 
 spiderUpdate: {spiderId, time, duration}
 
-vupMacro: {macro}
-vtbMacro: {macro}
-guardMacro: {macro}
+// Room:
+vupMacro => vupMacro: {macro}
+vtbMacro => vtbMacro: {macro}
+guardMacro => guardMacro: {macro}
 
  */

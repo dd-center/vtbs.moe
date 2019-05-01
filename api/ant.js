@@ -24,7 +24,7 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
 
     await macro.put({ mid: 'vup', num: macroNum, value: sum })
     await num.put('vupMacroNum', macroNum)
-    io.emit('vupMacro', sum)
+    io.to('vupMacro').emit('vupMacro', sum)
     log('VUP Macroeconomics Update')
     let endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
@@ -62,7 +62,7 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
 
     await macro.put({ mid: 'vtb', num: macroNum, value: sum })
     await num.put('vtbMacroNum', macroNum)
-    io.emit('vtbMacro', sum)
+    io.to('vtbMacro').emit('vtbMacro', sum)
     log('VTB Macroeconomics Update')
     let endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
@@ -96,7 +96,7 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
 
     await macro.put({ mid: 'guard', num: macroNum, value: sum })
     await num.put('guardMacroNum', macroNum)
-    io.emit('guardMacro', sum)
+    io.to('guardMacro').emit('guardMacro', sum)
     log('Guard Macroeconomics Update')
     let endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
