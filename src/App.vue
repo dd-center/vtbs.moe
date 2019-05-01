@@ -63,7 +63,24 @@ export default {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  height: 100%;
+}
+
 .float-right {
   float: right !important;
+}
+
+#app {
+  height: 100%;
+}
+
+.el-container {
+  height: 100%;
 }
 </style>
