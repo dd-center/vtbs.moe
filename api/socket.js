@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, INTERVAL }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, PARALLEL, INTERVAL }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'live') {
@@ -25,6 +25,21 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
           arc(await macro.bulkGet({ mid: 'guard', num: macroNum }))
         })
       }
+      if (e === 'info') {
+        arc(await info.get(target))
+      }
+      if (e === 'bulkActive') {
+        let { recordNum, mid } = target
+        arc(await active.bulkGet({ mid, num: recordNum }))
+      }
+      if (e === 'bulkLive') {
+        let { liveNum, mid } = target
+        arc(await live.bulkGet({ mid, num: liveNum }))
+      }
+      if (e === 'bulkGuard') {
+        let { guardChange, mid } = target
+        arc(await guard.bulkGet({ mid, num: guardChange }))
+      }
     }
   }
 
@@ -41,6 +56,10 @@ exports.connect = ({ io, site, macro, num, info, active, live, vtbs, PARALLEL, I
   socket.on('vupMacro', handler('vupMacro'))
   socket.on('vtbMacro', handler('vtbMacro'))
   socket.on('guardMacro', handler('guardMacro'))
+  socket.on('info', handler('info'))
+  socket.on('bulkActive', handler('bulkActive'))
+  socket.on('bulkLive', handler('bulkLive'))
+  socket.on('bulkGuard', handler('bulkGuard'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -79,6 +98,11 @@ liveBulk: [mid] -> [{time, online}]
 vupMacro: -> [{vupMacro}]
 vtbMacro: -> [{vtbMacro}]
 guardMacro: -> [{guardMacro}]
+
+info: mid -> {info}
+bulkActive: { recordNum, mid } -> [active]
+bulkLive: { liveNum, mid } -> [live]
+bulkGuard: { guardNum, mid } -> [guard]
 
 // Server Push
 online: Number
