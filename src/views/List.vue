@@ -1,22 +1,25 @@
 <template>
 <el-container>
-  <el-main v-loading="!vtbs.length">
-    <el-row>
-      <el-col>
-        <el-input v-model="search" placeholder="搜索"></el-input>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col>
-        <el-table :data="searchList" stripe>
-          <el-table-column prop="mid" label="mid">
-          </el-table-column>
-          <el-table-column prop="uname" label="名字">
-          </el-table-column>
-        </el-table>
-      </el-col>
-    </el-row>
-  </el-main>
+  <el-scrollbar class="scrollbarContain">
+    <el-main v-loading="!vtbs.length">
+      <el-table :data="searchList" stripe>
+        <el-table-column prop="mid" label="mid">
+        </el-table-column>
+        <el-table-column prop="uname" label="名字">
+        </el-table-column>
+        <el-table-column align="right">
+          <template slot="header" slot-scope="scope">
+            <el-input v-model="search" placeholder="搜索"></el-input>
+          </template>
+          <template slot-scope="scope">
+            <router-link :to="`/detail/${scope.row.mid}`">
+              <el-button size="mini">Inspect</el-button>
+            </router-link>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-main>
+  </el-scrollbar>
 </el-container>
 </template>
 
@@ -54,5 +57,13 @@ export default {
 </script>
 
 <style scoped>
+.el-main {
+  padding: 0;
+  padding-top: 1px;
+  z-index: -1;
+}
 
+.scrollbarContain {
+  width: 100%;
+}
 </style>

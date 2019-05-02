@@ -1,6 +1,11 @@
 <template>
 <el-row>
   <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
+    <div class="discover" v-if="hover">
+      <router-link :to="`/detail/${mid}`">
+        <span class="el-icon-discover discoverButton"></span>
+      </router-link>
+    </div>
     <img :src="face.replace('http:','https:')" class="face" v-if="face">
     <img src="@/assets/face.jpg" class="face" v-else>
   </el-col>
@@ -50,6 +55,7 @@ export default {
   },
   props: {
     vtb: Object,
+    hover: Boolean,
   },
   computed: {
     info: function() {
@@ -114,5 +120,24 @@ h3 {
 
 .space {
   float: right;
+}
+
+.discover {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+}
+
+.discoverButton {
+  font-size: 120px;
+  opacity: 0;
+  color: #409EFF;
+  transition-property: opacity;
+  transition-duration: 0.5s;
+}
+
+.discoverButton:hover {
+  font-size: 120px;
+  opacity: 0.5;
 }
 </style>
