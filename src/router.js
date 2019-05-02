@@ -24,13 +24,11 @@ export default new Router({
     path: '/detail/',
     name: 'detail',
     component: List,
-  // }, {
-  //   path: '/detail/:mid',
-  //   name: 'detail',
-  //   // component: Macro
-  //   component: () =>
-  //     import(/* webpackChunkName: "macro" */ './views/About.vue'),
-  //   props: true,
+  }, {
+    path: '/detail/:mid',
+    component: () =>
+      import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
+    props: true,
   }, {
     path: '/about',
     name: 'about',

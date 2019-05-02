@@ -1,0 +1,489 @@
+<template>
+<el-container>
+  <el-aside class="hidden-sm-and-down aside">
+    <list></list>
+  </el-aside>
+  <el-main v-loading="!topPhoto">
+    <img :src="topPhoto" alt="topPhoto" class="topPhoto" v-if="topPhoto">
+    <el-row v-if="topPhoto">
+      <el-col :span="6" :xs="12" :xl="4">
+        <el-card class="box-card center" shadow="hover">
+          <div slot="header">
+            <h2>{{uname}}</h2>
+            <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
+              <el-tag size="medium">直播中</el-tag>
+            </a>
+          </div>
+          <div v-loading="!face">
+            <img :src="face.replace('http:','https:')" class="face" v-if="face">
+            <img src="@/assets/face.jpg" class="face" v-else>
+          </div>
+          <el-divider></el-divider>
+          个人空间:
+          <br>
+          <a :href="`http://space.bilibili.com/${mid}`" target="_blank">
+            {{`http://space.bilibili.com/${mid}`}}
+          </a>
+          <el-divider></el-divider>
+          直播间:
+          <br>
+          <a :href="`https://live.bilibili.com/${roomid}`" target="_blank" v-if="roomid">
+            {{`https://live.bilibili.com/${roomid}`}}
+          </a>
+        </el-card>
+      </el-col>
+      <el-col :span="6" :xs="12" :xl="4">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            关注
+          </div>
+          <div class="center">
+            <span class="el-icon-star-on big"></span>
+            <h3>{{follower | locale}}</h3>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" :xs="12" :xl="4">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            播放
+          </div>
+          <div class="center">
+            <span class="el-icon-caret-right big"></span>
+            <h3>{{archiveView | locale}}</h3>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" :xs="12" :xl="4">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            视频
+          </div>
+          <div class="center">
+            <span class="el-icon-picture-outline-round big"></span>
+            <h3>{{video | locale}}</h3>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24" :xl="8">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            签名
+          </div>
+          <p>
+            {{sign}}
+          </p>
+        </el-card>
+      </el-col>
+      <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            舰团
+          </div>
+          <div class="center">
+            <span class="el-icon-location-outline big"></span>
+            <h3>{{guardNum | locale}}</h3>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            关注/舰团 比
+          </div>
+          <div class="center">
+            <span class="big el-icon-star-on">/<span class="el-icon-location-outline" /></span>
+            <h3>≈ {{Math.round(follower/guardNum) | locale}}</h3>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="24">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
+          </div>
+          <ve-line :data="{rows:active}" :settings="activeLine" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24" :xl="8" v-if="liveNum">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            直播·人气
+          </div>
+          <ve-line :data="{rows:live}" :settings="liveLine" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
+        </el-card>
+      </el-col>
+      <el-col :span="12" :xs="24" :xl="8" v-if="guardChange>1">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            舰团
+          </div>
+          <ve-line :data="{rows:guard}" :settings="guardLine" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-divider><i class="el-icon-s-data"></i></el-divider>
+    <el-row>
+      <el-col :span="24">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            过去一星期
+          </div>
+          <el-table :data="pastWeek" stripe>
+            <el-table-column label="日期">
+              <template slot-scope="scope">
+                <span v-if="scope.row.date">{{scope.row.date}}</span>
+                <span v-else style="font-size:16px;">日平均</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="关注增量">
+              <template slot-scope="scope">
+                <span v-if="scope.row.followerChange>0" class="more">+{{scope.row.followerChange | locale}}</span>
+                <span v-if="scope.row.followerChange<0" class="less">{{scope.row.followerChange | locale}}</span>
+                <span v-if="scope.row.followerChange==0">{{scope.row.followerChange | locale}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="follower" label="总关注">
+            </el-table-column>
+            <el-table-column label="日播放量">
+              <template slot-scope="scope">
+                <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | locale}}</span>
+                <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | locale}}</span>
+                <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | locale}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="archiveView" label="播放">
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row v-if="topPhoto">
+      <el-col :span="8" :xs="24">
+        <el-table :data="parsed" stripe :show-header="false">
+          <el-table-column prop="name">
+          </el-table-column>
+          <el-table-column>
+            <template slot-scope="scope">
+              <template v-if="typeof scope.row.value === 'number'">
+                <span>{{scope.row.value.toLocaleString()}}</span>
+                <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumber}})</span>
+              </template>
+              <template v-if="typeof scope.row.value === 'string'">
+                <span>{{scope.row.value}}</span>
+              </template>
+              <template v-if="scope.row.space">
+                <a :href="`http://space.bilibili.com/${scope.row.space}`" target="_blank">
+                  {{scope.row.space}}
+                </a>
+              </template>
+              <template v-if="scope.row.room">
+                <template v-if="scope.row.room==='无'">
+                  无
+                </template>
+                <a :href="`https://live.bilibili.com/${scope.row.room}`" target="_blank" v-else>
+                  {{scope.row.room}}
+                </a>
+              </template>
+              <template v-if="typeof scope.row.liveStatus !== 'undefined'">
+                <a :href="`https://live.bilibili.com/${roomid}`" v-if="scope.row.liveStatus" target="_blank">
+                  <el-tag size="small">直播中</el-tag>
+                </a>
+                <template v-else-if="typeof scope.row.past === 'number'">
+                  {{scope.row.moment}}
+                </template>
+                <template v-else>
+                  不知道→_→
+                </template>
+              </template>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="16" :xs="24">
+        JSON数据:
+        <pre>
+          {{info}}
+        </pre>
+      </el-col>
+    </el-row>
+  </el-main>
+</el-container>
+</template>
+
+<script>
+import Vue from 'vue'
+// import { mapState, mapGetters } from 'vuex'
+import moment from 'moment'
+import List from '@/views/List'
+
+import VeLine from 'v-charts/lib/line.common'
+
+import 'echarts/lib/component/dataZoom'
+
+import { get } from '@/socket'
+
+Vue.component(VeLine.name, VeLine)
+
+export default {
+  props: ['mid'],
+  data: function() {
+    this.dataZoomDay = [{
+      type: 'slider',
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24,
+    }]
+    this.dataZoomWeek = [{
+      type: 'slider',
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7,
+    }]
+    this.activeLine = {
+      dimension: ['time'],
+      metrics: ['follower'],
+      labelMap: {
+        follower: '关注',
+      },
+      yAxisName: ['关注'],
+      scale: [true],
+      xAxisType: 'time',
+    }
+    this.liveLine = {
+      dimension: ['time'],
+      metrics: ['online'],
+      labelMap: {
+        online: '人气',
+      },
+      yAxisName: ['人气'],
+      xAxisType: 'time',
+    }
+    this.guardLine = {
+      dimension: ['time'],
+      metrics: ['guardNum'],
+      labelMap: {
+        guardNum: '舰团',
+      },
+      yAxisName: ['舰团'],
+      xAxisType: 'time',
+    }
+    return {
+      active: [],
+      info: {},
+      rawLive: [],
+      guard: [],
+    }
+  },
+  watch: {
+    mid: {
+      immediate: true,
+      handler: async function() {
+        this.active = []
+        this.info = {}
+        this.rawLive = []
+        this.guard = []
+        let info = await get('info', this.mid)
+        this.info = info
+        let { recordNum, liveNum, guardChange, mid } = info
+        let active = await get('bulkActive', { recordNum, mid })
+        this.active = active
+        if (liveNum) {
+          let live = await get('bulkLive', { liveNum, mid })
+          this.rawLive = live
+        }
+        if (guardChange > 1) {
+          let guard = await get('bulkGuard', { guardChange, mid })
+          this.guard = guard
+        }
+      },
+    },
+  },
+  computed: {
+    live: function() {
+      let rawLive = [...this.rawLive]
+      let live = []
+      for (let i = 0; i < rawLive.length; i++) {
+        let before = rawLive[i - 1] || {}
+        let current = rawLive[i]
+        let after = rawLive[i + 1] || {}
+        if (current.time - before.time > 1000 * 60 * 5 * 1.5) {
+          live.push({ time: current.time - 1000 * 60 * 5, online: 0 })
+        }
+        live.push(current)
+        if (after.time - current.time > 1000 * 60 * 5 * 1.5) {
+          live.push({ time: current.time + 1000 * 60 * 5, online: 0 })
+        }
+      }
+      return live
+    },
+    pastWeek: function() {
+      let active = [...this.active]
+      if (!active.length) {
+        return []
+      }
+      let days = []
+      for (let i = active.length - 1; i >= 0 && days.length < 8; i--) {
+        let currentDate = moment(active[i].time).format('M-D')
+        let lastDate = (days[days.length - 1] || {}).date
+        if (currentDate !== lastDate) {
+          days.push({ date: currentDate, follower: active[i].follower, archiveView: active[i].archiveView })
+        }
+      }
+      let pastWeek = []
+      for (let i = 1; i < days.length; i++) {
+        pastWeek.push({
+          ...days[i - 1],
+          followerChange: days[i - 1].follower - days[i].follower,
+          archiveViewChange: days[i - 1].archiveView - days[i].archiveView,
+        })
+      }
+      let followerChangeSum = 0
+      let archiveViewChangeSum = 0
+      for (let { followerChange, archiveViewChange } of pastWeek) {
+        followerChangeSum += followerChange
+        archiveViewChangeSum += archiveViewChange
+      }
+      pastWeek.push({
+        followerChange: Math.round(followerChangeSum / pastWeek.length),
+        archiveViewChange: Math.round(archiveViewChangeSum / pastWeek.length),
+        follower: '-',
+      })
+      return pastWeek
+    },
+    face: function() {
+      return this.info.face
+    },
+    roomid: function() {
+      return this.info.roomid
+    },
+    uname: function() {
+      return this.info.uname || this.mid
+    },
+    sign: function() {
+      return this.info.sign || this.mid
+    },
+    topPhoto: function() {
+      return this.info.topPhoto
+    },
+    coins: function() {
+      return this.info.coins
+    },
+    video: function() {
+      return this.info.video
+    },
+    archiveView: function() {
+      return this.info.archiveView
+    },
+    notice: function() {
+      return this.info.notice
+    },
+    liveStatus: function() {
+      return this.info.liveStatus
+    },
+    follower: function() {
+      return this.info.follower
+    },
+    guardNum: function() {
+      return this.info.guardNum
+    },
+    liveNum: function() {
+      return this.info.liveNum
+    },
+    areaRank: function() {
+      return this.info.areaRank
+    },
+    online: function() {
+      return this.info.online
+    },
+    title: function() {
+      return this.info.title
+    },
+    time: function() {
+      return this.info.time
+    },
+    guardChange: function() {
+      return this.info.guardChange
+    },
+    parsed: function() {
+      return [
+        { name: '名字', value: this.uname },
+        { name: '关注', value: this.follower },
+        { name: '空间', space: String(this.mid) },
+        { name: '直播间', room: String(this.roomid || '无') },
+        { name: '签名', value: this.sign },
+        { name: '视频数', value: this.video },
+        { name: '总播放', value: this.archiveView },
+        { name: '硬币', value: this.coins },
+        { name: '直播标题', value: this.title },
+        { name: '舰团', value: this.guardNum },
+        {
+          name: '直播状态',
+          liveStatus: this.liveStatus,
+          past: this.$store.state.pastLive[this.mid],
+          moment: (typeof this.$store.state.pastLive[this.mid] === 'number') ? moment(this.$store.state.pastLive[this.mid]).fromNow() : '从未',
+        },
+        { name: '公告', value: this.notice },
+        { name: '直播时长', value: `${Math.round(this.liveNum / 12)} 时` },
+        { name: '直播总排名', value: this.areaRank },
+        { name: '人气', value: this.online },
+        { name: '上次更新', value: moment(this.time).fromNow() },
+      ]
+    },
+  },
+  components: {
+    List,
+  },
+  filters: {
+    locale: v => v.toLocaleString(),
+  },
+}
+</script>
+
+<style scoped>
+pre {
+  background-color: rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
+  white-space: pre-line;
+}
+
+.topPhoto {
+  width: 100%;
+}
+
+.el-main {
+  padding: 0px;
+}
+
+.right {
+  float: right;
+  color: gray;
+}
+
+.el-col {
+  padding: 12px;
+}
+
+.aside {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.face {
+  width: 180px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
+.center {
+  text-align: center;
+}
+
+.big {
+  font-size: 42px;
+}
+
+.more {
+  color: #00da3c;
+}
+
+.less {
+  color: #ec0000;
+}
+</style>
