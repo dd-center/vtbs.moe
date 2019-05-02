@@ -97,6 +97,9 @@
           </div>
         </el-card>
       </el-col>
+    </el-row>
+    <el-divider><i class="el-icon-s-data"></i></el-divider>
+    <el-row>
       <el-col :span="24">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
@@ -145,19 +148,20 @@
             </el-table-column>
             <el-table-column prop="follower" label="总关注">
             </el-table-column>
-            <el-table-column label="日播放量">
+            <el-table-column label="日播放">
               <template slot-scope="scope">
                 <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | locale}}</span>
                 <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | locale}}</span>
                 <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | locale}}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="archiveView" label="播放">
+            <el-table-column prop="archiveView" label="总播放">
             </el-table-column>
           </el-table>
         </el-card>
       </el-col>
     </el-row>
+    <el-divider><i class="el-icon-s-data"></i></el-divider>
     <el-row v-if="topPhoto">
       <el-col :span="8" :xs="24">
         <el-table :data="parsed" stripe :show-header="false">
