@@ -219,7 +219,7 @@
 import Vue from 'vue'
 // import { mapState, mapGetters } from 'vuex'
 import moment from 'moment'
-import List from '@/views/List'
+import List from '@/components/list'
 
 import VeLine from 'v-charts/lib/line.common'
 
