@@ -598,6 +598,7 @@ pre {
 
 .topPhoto {
   width: 100%;
+  margin-top: 1px;
 }
 
 .el-main {
