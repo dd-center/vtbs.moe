@@ -68,10 +68,7 @@ live
 mid_liveNum: {online, time}
 
 guard
-mid_liveNum: {guardNum, areaRank, time}
-
-face
-mid: time
+mid_guardChange: {guardNum, areaRank, time}
 
 macro
 vup_vupMacroNum: {video, coins, archiveView}
