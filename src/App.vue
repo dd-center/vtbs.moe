@@ -1,6 +1,6 @@
 <template>
 <div id="app">
-  <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
+  <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器..." class="container">
     <el-header>
       <el-menu :default-active="activeIndex" menu-trigger='click' mode="horizontal" :router="true">
         <el-menu-item index="/">🍉</el-menu-item>
@@ -63,24 +63,11 @@ export default {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 
-html {
-  height: 100%;
-}
-
 body {
   margin: 0px;
-  height: 100%;
 }
 
 .float-right {
   float: right !important;
-}
-
-#app {
-  height: 100%;
-}
-
-.el-container {
-  height: 100%;
 }
 </style>

@@ -1,8 +1,12 @@
 <template>
 <el-container>
-  <el-aside class="hidden-sm-and-down aside">
-    <list></list>
+  <el-aside class="hidden-sm-and-down" v-if="aside">
   </el-aside>
+  <div class="hidden-sm-and-down aside" v-if="aside">
+    <list></list>
+  </div>
+  <el-button icon="el-icon-close" size="mini" type="danger" circle class="hidden-sm-and-down sideButtonClose" @click="aside=!aside" v-if="aside"></el-button>
+  <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button>
   <el-main v-loading="!topPhoto">
     <img :src="topPhoto" alt="topPhoto" class="topPhoto" v-if="topPhoto">
     <el-row v-if="topPhoto">
@@ -312,6 +316,7 @@ export default {
       'series.0.smoothMonotone': 'x',
     }
     return {
+      aside: false,
       active: [],
       info: {},
       rawLive: [],
@@ -603,6 +608,25 @@ pre {
 .aside {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   z-index: 1;
+  height: 85%;
+  position: fixed;
+  overflow-y: auto;
+  top: 90px;
+  left: 20px;
+}
+
+.sideButton {
+  position: fixed;
+  top: 100px;
+  left: 40px;
+  z-index: 2;
+}
+
+.sideButtonClose {
+  position: fixed;
+  z-index: 2;
+  top: 80px;
+  left: 10px;
 }
 
 .face {
