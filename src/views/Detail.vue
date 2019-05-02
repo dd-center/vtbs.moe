@@ -108,6 +108,17 @@
           </div>
         </el-card>
       </el-col>
+      <el-col :span="6" :xs="12" :xl="4" v-if="liveNum">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            共直播
+          </div>
+          <div class="center">
+            <span class="big el-icon-d-caret"></span>
+            <h3>{{totalLive}}</h3>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
     <el-divider><i class="el-icon-s-data"></i></el-divider>
     <el-row>
@@ -116,7 +127,7 @@
           <div slot="header">
             <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
           </div>
-          <ve-line :data="{rows:active}" :settings="activeLine" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
+          <ve-line :data="{rows:active}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
         </el-card>
       </el-col>
       <el-col :span="12" :xs="24" :xl="8" v-if="liveNum">
@@ -124,15 +135,15 @@
           <div slot="header">
             直播·人气
           </div>
-          <ve-line :data="{rows:live}" :settings="liveLine" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
+          <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
         </el-card>
       </el-col>
-      <el-col :span="12" :xs="24" :xl="8" v-if="guardChange>1">
+      <el-col :span="12" :xs="24" :xl="8" v-if="maxGuardNum>1">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
             舰团
           </div>
-          <ve-line :data="{rows:guard}" :settings="guardLine" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+          <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
         </el-card>
       </el-col>
     </el-row>
@@ -141,7 +152,7 @@
       <el-col :span="24">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
-            过去一星期
+            过去一周
           </div>
           <el-table :data="pastWeek" stripe>
             <el-table-column label="日期">
@@ -167,6 +178,15 @@
               </template>
             </el-table-column>
             <el-table-column prop="archiveView" label="总播放">
+            </el-table-column>
+            <el-table-column label="舰团变化" v-if="maxGuardNum">
+              <template slot-scope="scope">
+                <span v-if="scope.row.guardNumChange>0" class="more">+{{scope.row.guardNumChange | locale}}</span>
+                <span v-if="scope.row.guardNumChange<0" class="less">{{scope.row.guardNumChange | locale}}</span>
+                <span v-if="scope.row.guardNumChange==0">{{scope.row.guardNumChange | locale}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="guardNum" label="舰团" v-if="maxGuardNum">
             </el-table-column>
           </el-table>
         </el-card>
@@ -261,6 +281,9 @@ export default {
       scale: [true],
       xAxisType: 'time',
     }
+    this.activeExtend = {
+      'series.0.symbol': 'none',
+    }
     this.liveLine = {
       dimension: ['time'],
       metrics: ['online'],
@@ -270,14 +293,23 @@ export default {
       yAxisName: ['人气'],
       xAxisType: 'time',
     }
+    this.liveExtend = {
+      'series.0.symbol': 'none',
+      'series.0.smoothMonotone': 'x',
+    }
     this.guardLine = {
       dimension: ['time'],
       metrics: ['guardNum'],
       labelMap: {
         guardNum: '舰团',
       },
+      scale: [true],
       yAxisName: ['舰团'],
       xAxisType: 'time',
+    }
+    this.guardExtend = {
+      'series.0.symbol': 'none',
+      'series.0.smoothMonotone': 'x',
     }
     return {
       active: [],
@@ -348,41 +380,112 @@ export default {
           live.push({ time: current.time + 1000 * 60 * 5, online: 0 })
         }
       }
+      if (live.length && (new Date()).getTime() - live[live.length - 1].time > 1000 * 60 * 5 * 1.5) {
+        live.push({ time: live[live.length - 1].time + 1000 * 60 * 5, online: 0 })
+        live.push({ time: (new Date()).getTime(), online: 0 })
+      }
       return live
     },
     pastWeek: function() {
       let active = [...this.active]
+      let guard = [...this.guard]
       if (!active.length) {
         return []
       }
+
       let days = []
+      let guardDays = []
+
+      for (let i = guard.length - 1; i >= 0 && guardDays.length < 8; i--) {
+        let currentDate = moment(guard[i].time).format('M-D')
+        let nextDate
+        if (guard[i + 1]) {
+          nextDate = moment(guard[i + 1].time).format('M-D')
+        }
+        if (currentDate !== nextDate) {
+          guardDays.push({ date: currentDate, time: guard[i].time, guardNum: guard[i].guardNum })
+        }
+      }
+      guardDays.push({ time: 0, guardNum: this.guardNum })
+
       for (let i = active.length - 1; i >= 0 && days.length < 8; i--) {
         let currentDate = moment(active[i].time).format('M-D')
         let lastDate = (days[days.length - 1] || {}).date
+        let guardNum = 0
+        for (let j = 0; j < guardDays.length; j++) {
+          if (!guardNum) {
+            if (guardDays[j].date === currentDate) {
+              guardNum = guardDays[j].guardNum
+            } else if (guardDays[j].time < active[i].time) {
+              guardNum = guardDays[j].guardNum
+            }
+          }
+        }
         if (currentDate !== lastDate) {
-          days.push({ date: currentDate, follower: active[i].follower, archiveView: active[i].archiveView })
+          days.push({
+            date: currentDate,
+            follower: active[i].follower,
+            archiveView: active[i].archiveView,
+            guardNum,
+          })
         }
       }
+
       let pastWeek = []
       for (let i = 1; i < days.length; i++) {
         pastWeek.push({
           ...days[i - 1],
           followerChange: days[i - 1].follower - days[i].follower,
           archiveViewChange: days[i - 1].archiveView - days[i].archiveView,
+          guardNumChange: days[i - 1].guardNum - days[i].guardNum,
         })
       }
+
       let followerChangeSum = 0
       let archiveViewChangeSum = 0
-      for (let { followerChange, archiveViewChange } of pastWeek) {
+      let guardNumChangeSum = 0
+      for (let { followerChange, archiveViewChange, guardNumChange } of pastWeek) {
         followerChangeSum += followerChange
         archiveViewChangeSum += archiveViewChange
+        guardNumChangeSum += guardNumChange
       }
+
       pastWeek.push({
         followerChange: Math.round(followerChangeSum / pastWeek.length),
         archiveViewChange: Math.round(archiveViewChangeSum / pastWeek.length),
+        guardNumChange: Math.round(guardNumChangeSum / pastWeek.length),
         follower: '-',
+        guardNum: '-',
       })
+      console.log(pastWeek)
       return pastWeek
+    },
+    maxGuardNum: function() {
+      let max = this.guardNum
+      for (let i = 0; i < this.guard.length; i++) {
+        if (this.guard[i].guardNum > max) {
+          max = this.guard[i].guardNum
+        }
+      }
+      return max
+    },
+    totalLive: function() {
+      let duration = moment.duration(this.liveNum * 5, 'minutes')
+      let result = []
+      let d = Math.floor(duration.asDays())
+      let h = duration.hours()
+      let m = duration.minutes()
+      if (d) {
+        result.push(`${d} 天`)
+      }
+      if (h) {
+        result.push(`${h} 小时`)
+      }
+      if (m) {
+        result.push(`${m} 分钟`)
+      }
+      return result.join(' ')
+      // return moment.duration(this.liveNum * 5, 'minutes').humanize()
     },
     face: function() {
       return this.info.face
