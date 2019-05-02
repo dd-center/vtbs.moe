@@ -138,6 +138,6 @@ h3 {
 
 .discoverButton:hover {
   font-size: 120px;
-  opacity: 0.5;
+  opacity: 0.4;
 }
 </style>
