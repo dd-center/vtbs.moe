@@ -26,7 +26,9 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, PARA
         })
       }
       if (e === 'info') {
-        arc(await info.get(target))
+        socket.join(target, async () => {
+          arc(await info.get(target))
+        })
       }
       if (e === 'bulkActive') {
         let { recordNum, mid } = target
@@ -121,5 +123,10 @@ spiderUpdate: {spiderId, time, duration}
 vupMacro => vupMacro: {macro}
 vtbMacro => vtbMacro: {macro}
 guardMacro => guardMacro: {macro}
+
+mid => detailInfo: {mid, {data}}
+mid => detailActive: {mid, {data}}
+mid => detailLive: {mid, {data}}
+mid => detailGuard: {mid, {data}}
 
  */

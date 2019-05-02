@@ -310,6 +310,28 @@ export default {
       },
     },
   },
+  sockets: {
+    detailInfo: function({ mid, data }) {
+      if (mid === Number(this.mid)) {
+        this.info = data
+      }
+    },
+    detailActive: function({ mid, data }) {
+      if (mid === Number(this.mid)) {
+        this.active.push(data)
+      }
+    },
+    detailLive: function({ mid, data }) {
+      if (mid === Number(this.mid)) {
+        this.rawLive.push(data)
+      }
+    },
+    detailGuard: function({ mid, data }) {
+      if (mid === Number(this.mid)) {
+        this.guard.push(data)
+      }
+    },
+  },
   computed: {
     live: function() {
       let rawLive = [...this.rawLive]

@@ -75,19 +75,23 @@ class Spider {
       let currentActive = await this.db.active.get({ mid, num: recordNum })
       if (notable({ object, time, currentActive })) {
         recordNum++
+        this.io.to(mid).emit('detailActive', { mid, data: { archiveView, follower, time } })
         await this.db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
       }
 
       if (liveStatus) {
         liveNum++
+        this.io.to(mid).emit('detailLive', { mid, data: { online, time } })
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
       if (guardNum !== info.guardNum || areaRank !== info.areaRank) {
         guardChange++
+        this.io.to(mid).emit('detailGuard', { mid, data: { guardNum, areaRank, time } })
         await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
+      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
       await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
       this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
 
