@@ -97,6 +97,17 @@
           </div>
         </el-card>
       </el-col>
+      <el-col :span="6" :xs="12" :xl="4" v-if="liveStatus">
+        <el-card class="box-card" shadow="hover">
+          <div slot="header">
+            直播间
+          </div>
+          <div class="center">
+            <el-tag size="medium">直播中</el-tag>
+            <h3>{{title}}</h3>
+          </div>
+        </el-card>
+      </el-col>
     </el-row>
     <el-divider><i class="el-icon-s-data"></i></el-divider>
     <el-row>
