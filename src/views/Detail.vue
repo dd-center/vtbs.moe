@@ -9,8 +9,12 @@
   <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button>
   <el-main v-loading="!topPhoto">
     <img :src="topPhoto" alt="topPhoto" class="topPhoto" v-if="topPhoto">
+
+    <el-row type="flex" justify="space-around">
+    <el-col :span="aside ? 24 : 21" class="container">
+
     <el-row v-if="topPhoto">
-      <el-col :span="6" :xs="12" :xl="4">
+      <el-col :span="6" :xs="24" :xl="4">
         <el-card class="box-card center" shadow="hover">
           <div slot="header">
             <h2>{{uname}}</h2>
@@ -246,6 +250,10 @@
         </pre>
       </el-col>
     </el-row>
+
+    </el-col>
+    </el-row>
+
   </el-main>
 </el-container>
 </template>
@@ -611,7 +619,7 @@ pre {
   height: 85%;
   position: fixed;
   overflow-y: auto;
-  top: 90px;
+  top: 80px;
   left: 20px;
 }
 
@@ -625,18 +633,19 @@ pre {
 .sideButtonClose {
   position: fixed;
   z-index: 2;
-  top: 80px;
+  top: 70px;
   left: 10px;
 }
 
 .face {
-  width: 180px;
+  width: 60%;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 }
 
 .center {
   text-align: center;
+  word-wrap: break-word;
 }
 
 .big {
@@ -649,5 +658,11 @@ pre {
 
 .less {
   color: #ec0000;
+}
+
+@media only screen and (max-width: 991px) {
+  .container {
+    width: 100%;
+  }
 }
 </style>
