@@ -1,46 +1,39 @@
 <template>
-<el-row>
-  <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
-    <div class="discover" v-if="hover">
-      <router-link :to="`/detail/${mid}`">
-        <span class="el-icon-discover discoverButton"></span>
-      </router-link>
-    </div>
-    <img :src="face.replace('http:','https:')" class="face" v-if="face">
-    <img src="@/assets/face.jpg" class="face" v-else>
-  </el-col>
-  <el-col :span="12" class="hidden-sm-and-up">
-    <badge :status="status" v-if="info"></badge>
-  </el-col>
-  <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
-    <el-row type="flex" justify="space-between">
-      <el-col :span="12">
-        <h3>
-          <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
-            <el-tag size="small">直播中</el-tag>
-          </a>
-          {{uname}}
-        </h3>
-      </el-col>
-      <el-col :span="7">
+<div>
+  <el-row>
+    <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
+      <div class="discover" v-if="hover">
+        <router-link :to="`/detail/${mid}`">
+          <span class="el-icon-discover discoverButton"></span>
+        </router-link>
+      </div>
+      <img :src="face.replace('http:','https:')" class="face" v-if="face">
+      <img src="@/assets/face.jpg" class="face" v-else>
+    </el-col>
+    <el-col :span="12" class="hidden-sm-and-up">
+      <badge :status="status" v-if="info"></badge>
+    </el-col>
+    <el-col :span="12" :xl="14" :xs="24" v-loading="!info">
+      <h3>
+        <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
+          <el-tag size="small">直播中</el-tag>
+        </a>
+        {{uname}}
         <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space">
           <el-button type="primary" icon="el-icon-document" size="mini">空间</el-button>
         </a>
-      </el-col>
-    </el-row>
-    <el-row v-if="liveStatus">
-      <span class="el-icon-ship"></span> {{title}}
-    </el-row>
-    <el-row>
-      <el-col>
-        <p>{{sign}}</p>
-      </el-col>
-    </el-row>
-  </el-col>
-  <el-col :span="6" class="hidden-xs-only">
-    <badge :status="status" v-if="info"></badge>
-  </el-col>
-</el-row>
+      </h3>
+      <span v-if="liveStatus" class="el-icon-ship">{{title}}</span>
+      <p>{{sign}}</p>
+    </el-col>
+    <el-col :span="6" class="hidden-xs-only">
+      <badge :status="status" v-if="info"></badge>
+    </el-col>
+  </el-row>
+  <div class="hidden-sm-and-up">
+    <el-divider></el-divider>
+  </div>
+</div>
 </template>
 
 <script>
