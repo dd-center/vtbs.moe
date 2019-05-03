@@ -126,6 +126,12 @@ module.exports = [
   // SOW
   { mid: 408231448, note: 'Misa' },
   { mid: 405037911, note: '莲娜' },
+  { mid: 82803440, note: '凛星' },
+  { mid: 166617, note: 'Ita' },
+
+  // HoderAstra
+  { mid: 281426315, note: '矢泽大凤' },
+  { mid: 18699270, note: '金丝蓝染' },
 
   { mid: 403080854, note: 'Nia' },
   { mid: 1337624, note: '奈木' },
@@ -183,4 +189,5 @@ module.exports = [
   { mid: 7858535, note: '豆腐' },
   { mid: 391614061, note: 'Hizuki Miu' },
   { mid: 45921503, note: 'AnMr海外转播' },
+  { mid: 264319276, note: '花芽姐妹' },
 ]
