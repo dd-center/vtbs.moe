@@ -23,6 +23,7 @@ export default {
         online: '人气',
         guardNum: '舰团',
         pastLive: '直播',
+        rise: '日增',
       }),
     },
     icon: {
@@ -32,6 +33,7 @@ export default {
         online: 'el-icon-d-caret',
         guardNum: 'el-icon-location-outline',
         pastLive: 'el-icon-time',
+        rise: 'el-icon-caret-top',
       }),
     },
   },

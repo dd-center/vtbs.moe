@@ -23,10 +23,13 @@ export default {
     card,
   },
   computed: { ...mapState(['vtbs']),
-    ...mapGetters(['followerRank', 'liveRank']),
+    ...mapGetters(['followerRank', 'liveRank', 'riseRank']),
     rank: function() {
       if (this.$route.path.includes('live')) {
         return this.liveRank
+      }
+      if (this.$route.path.includes('rise')) {
+        return this.riseRank
       }
       return this.followerRank
     },

@@ -75,9 +75,11 @@ export default {
     status: function() {
       let object = {}
       object.follower = this.info.follower
-      object.archiveView = this.info.archiveView
       if (this.$route.path.includes('live')) {
         object.guardNum = this.info.guardNum
+      } else {
+        object.archiveView = this.info.archiveView
+        object.rise = this.info.rise
       }
       if (this.liveStatus) {
         object.online = this.info.online

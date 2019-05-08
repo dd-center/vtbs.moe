@@ -34,6 +34,7 @@ export default new Vuex.Store({
   },
   getters: {
     followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
+    riseRank: rank((state, a, b) => state.info[b.mid]['rise'] - state.info[a.mid]['rise']),
     liveRank: rank((state, a, b) => 100000000000 * (state.info[b.mid].liveStatus * state.info[b.mid].online - state.info[a.mid].liveStatus * state.info[a.mid].online) + 1000000 * (state.info[b.mid]['guardNum'] - state.info[a.mid]['guardNum']) + state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
   },
   mutations: {

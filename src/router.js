@@ -11,7 +11,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [{
     path: '/',
-    alias: '/live',
+    alias: ['/live', '/rise'],
     name: 'home',
     component: Home,
   }, {
