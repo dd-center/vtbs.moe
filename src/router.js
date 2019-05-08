@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import List from './views/List.vue'
+import DD from './views/DD.vue'
 // import Macro from './views/Macro.vue'
 
 Vue.use(Router)
@@ -20,6 +21,10 @@ export default new Router({
     // component: Macro
     component: () =>
       import(/* webpackChunkName: "macro" */ './views/Macro.vue'),
+  }, {
+    path: '/dd/',
+    name: 'dd',
+    component: DD,
   }, {
     path: '/detail/',
     name: 'detail',

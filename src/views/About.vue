@@ -9,6 +9,7 @@
           宏观经济：bilibili 虚拟世界宏观走势<br>
           数据每 5 分钟更新一次<br>
           宏观经济中视频势每 6 小时更新一次<br>
+          风云榜，24小时更新一次
         </p>
         <a href="https://github.com/simon300000/vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/simon300000/vtbs.moe.svg?style=social"></a> <br>
         <a href="https://github.com/simon300000/vtbs.moe/" target="_blank">github:simon300000/vtbs.moe</a>
