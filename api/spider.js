@@ -6,6 +6,9 @@ const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
+  if (currentActive.archiveView === object.archiveView && currentActive.follower === object.follower) {
+    return false
+  }
   if (time - currentActive.time > oneHours) {
     return true
   }
