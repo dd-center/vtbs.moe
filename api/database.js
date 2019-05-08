@@ -44,8 +44,10 @@ exports.init = async () => {
   let live = new ArrayDatabase({ name: 'live', db })
   let guard = new ArrayDatabase({ name: 'guard', db })
 
+  let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
+  let guardType = new LevelDatabase({ name: 'guardType', db })
   let macro = new ArrayDatabase({ name: 'macro', db })
-  return { site, num, info, active, live, guard, macro }
+  return { site, num, info, active, live, guard, macro, fullGuard, guardType }
 }
 
 /*
@@ -69,6 +71,12 @@ mid_liveNum: {online, time}
 
 guard
 mid_guardChange: {guardNum, areaRank, time}
+
+fullGuard
+mid: [...guards]
+
+guardLevel
+mid: [n,n,n]
 
 macro
 vup_vupMacroNum: {video, coins, archiveView}

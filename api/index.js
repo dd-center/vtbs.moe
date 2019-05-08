@@ -15,7 +15,7 @@ const INTERVAL = 1000 * 60 * 5
 ;
 (async () => {
   // let { site, info, active, live } = await init()
-  let { site, num, info, active, live, guard, macro } = await init()
+  let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
@@ -30,7 +30,7 @@ const INTERVAL = 1000 * 60 * 5
     }, 1000 * 60 * 2)
   }
   setTimeout(() => {
-    ant({ vtbs, macro, num, info, INTERVAL, io })
   }, 1000 * 60)
-  io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, PARALLEL, INTERVAL }))
+    ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
+  io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL }))
 })()
