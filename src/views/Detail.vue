@@ -138,7 +138,7 @@
           <ve-line :data="{rows:active}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
         </el-card>
       </el-col>
-      <el-col :span="12" :xs="24" :xl="8" v-if="liveNum">
+      <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
             直播·人气
@@ -146,7 +146,7 @@
           <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
         </el-card>
       </el-col>
-      <el-col :span="12" :xs="24" :xl="8" v-if="maxGuardNum>1">
+      <el-col :span="12" :xs="24" v-if="maxGuardNum">
         <el-card class="box-card" shadow="hover">
           <div slot="header">
             舰团
@@ -348,7 +348,7 @@ export default {
           let live = await get('bulkLive', { liveNum, mid })
           this.rawLive = live
         }
-        if (guardChange > 1) {
+        if (guardChange > 0) {
           let guard = await get('bulkGuard', { guardChange, mid })
           this.guard = guard
         }
