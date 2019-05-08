@@ -15,7 +15,7 @@
     </el-col>
   </el-row>
   <template v-for="i in [0,1,2]">
-    <el-row v-for="vtb in vtbs[i]" class="vtb">
+    <el-row v-for="vtb in vtbs[i]" class="vtb" :key="`${dd.mid}_${vtb}`">
       <el-col :span="10" :xs="7">
         <div :class="`guard guard-${i} right`"></div>
       </el-col>
