@@ -132,6 +132,7 @@ module.exports = [
   // HoderAstra
   { mid: 281426315, note: '矢泽大凤' },
   { mid: 18699270, note: '金丝蓝染' },
+  { mid: 1802067, note: 'Plutya' },
 
   { mid: 403080854, note: 'Nia' },
   { mid: 1337624, note: '奈木' },
