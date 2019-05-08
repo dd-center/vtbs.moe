@@ -21,7 +21,7 @@ const INTERVAL = 1000 * 60 * 5
     spider.start()
     setInterval(() => {
       // Auto restart when spider are dead
-      if ((new Date()).getTime() - spider.endTime > INTERVAL * 1.5) {
+      if ((new Date()).getTime() - spider.endTime > INTERVAL * 2) {
         console.log(`Spider ${spiderId}, NOT OK`)
         process.exit()
       } else {
