@@ -20,7 +20,7 @@
         </a>
         {{uname}}
         <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space">
-          <el-button type="primary" icon="el-icon-document" size="mini">空间</el-button>
+          <el-tag size="small" type="info">{{mid}}</el-tag>
         </a>
       </h3>
       <span v-if="liveStatus" class="el-icon-ship">{{title}}</span>
