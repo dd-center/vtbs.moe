@@ -80,6 +80,12 @@ export default {
       } else {
         object.archiveView = this.info.archiveView
         object.rise = this.info.rise
+        if (this.$route.path.includes('rise')) {
+          object = {
+            rise: this.info.rise,
+            ...object,
+          }
+        }
       }
       if (this.liveStatus) {
         object.online = this.info.online
