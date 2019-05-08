@@ -137,7 +137,6 @@ const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
         }
         all[guard.mid].dd[level].push(mid)
         if (all[guard.mid].dd[0].length * 100 + all[guard.mid].dd[1].length * 10 + all[guard.mid].dd[2].length > 1) {
-          console.log(guard.uname)
           some[guard.mid] = all[guard.mid]
         }
       }
