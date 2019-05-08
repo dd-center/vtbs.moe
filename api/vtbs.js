@@ -145,6 +145,10 @@ module.exports = [
   { mid: 147471, note: 'YY' },
   { mid: 2483446, note: '你也是最弱' },
 
+  // Chucolala
+  { mid: 401480763, note: '真白花音' },
+  { mid: 407106379, note: 'erio' },
+
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
@@ -184,6 +188,8 @@ module.exports = [
   { mid: 9824984, note: 'Nachoco' },
   { mid: 360221708, note: '天神子兔音' },
   { mid: 389056211, note: 'AZKi' },
+  { mid: 420321371, note: '涉谷HAL' },
+  { mid: 406548031, note: '音俣るか' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
