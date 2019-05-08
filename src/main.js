@@ -34,6 +34,9 @@ Vue.use(new VueSocketIO({
 Vue.mixin({
   filters: {
     parseNumber: value => {
+      return value.toLocaleString()
+    },
+    parseNumberOld: value => {
       if (value >= 1000000) {
         return `${Math.round(value / 10000)} 万`
       }

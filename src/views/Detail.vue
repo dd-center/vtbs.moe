@@ -210,7 +210,7 @@
             <template slot-scope="scope">
               <template v-if="typeof scope.row.value === 'number'">
                 <span>{{scope.row.value.toLocaleString()}}</span>
-                <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumber}})</span>
+                <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumberOld}})</span>
               </template>
               <template v-if="typeof scope.row.value === 'string'">
                 <span>{{scope.row.value}}</span>
