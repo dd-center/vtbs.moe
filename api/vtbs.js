@@ -196,4 +196,9 @@ module.exports = [
   { mid: 391614061, note: 'Hizuki Miu' },
   { mid: 45921503, note: 'AnMr海外转播' },
   { mid: 264319276, note: '花芽姐妹' },
+  { mid: 5421881, note: 'Asaha' },
+  { mid: 399554022, note: '竹取かるた' },
+  { mid: 328576435, note: '星空悠' },
+  { mid: 136844, note: 'RiNE' },
+  { mid: 1448323, note: '樱美Yuna' },
 ]
