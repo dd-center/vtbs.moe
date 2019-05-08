@@ -16,10 +16,10 @@
   </el-row>
   <template v-for="i in [0,1,2]">
     <el-row v-for="vtb in vtbs[i]" class="vtb">
-      <el-col :span="10">
+      <el-col :span="10" :xs="7">
         <div :class="`guard guard-${i} right`"></div>
       </el-col>
-      <el-col :span="14">
+      <el-col :span="14" :xs="17">
         <div>{{name(vtb)}}</div>
       </el-col>
     </el-row>
