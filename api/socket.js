@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, PARALLEL, INTERVAL }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL }) => async socket => {
   const handler = e => async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'live') {
@@ -42,6 +42,12 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, PARA
         let { guardChange, mid } = target
         arc(await guard.bulkGet({ mid, num: guardChange }))
       }
+      if (e === 'guardType') {
+        arc(await guardType.get(target))
+      }
+      if (e === 'fullGuard') {
+        arc(await fullGuard.get(target))
+      }
     }
   }
 
@@ -62,6 +68,8 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, PARA
   socket.on('bulkActive', handler('bulkActive'))
   socket.on('bulkLive', handler('bulkLive'))
   socket.on('bulkGuard', handler('bulkGuard'))
+  socket.on('guardType', handler('guardType'))
+  socket.on('fullGuard', handler('fullGuard'))
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -105,6 +113,10 @@ info: mid -> {info}
 bulkActive: { recordNum, mid } -> [active]
 bulkLive: { liveNum, mid } -> [live]
 bulkGuard: { guardNum, mid } -> [guard]
+
+guardType: mid -> [n,n,n]
+
+fullGuard: all/some/number/[mid] -> ?/Any
 
 // Server Push
 online: Number
