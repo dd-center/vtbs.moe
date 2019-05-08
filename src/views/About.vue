@@ -9,7 +9,10 @@
           宏观经济：bilibili 虚拟世界宏观走势<br>
           数据每 5 分钟更新一次<br>
           宏观经济中视频势每 6 小时更新一次<br>
-          风云榜，24小时更新一次
+          风云榜，24小时更新一次 <br>
+          名单查漏补缺 issue: <a href="https://github.com/simon300000/vtbs.moe/issues/1">https://github.com/simon300000/vtbs.moe/issues/1</a>
+          <br>
+          日增的数据是过去24小时粉丝数变化，并不是昨天一天的变化
         </p>
         <a href="https://github.com/simon300000/vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/simon300000/vtbs.moe.svg?style=social"></a> <br>
         <a href="https://github.com/simon300000/vtbs.moe/" target="_blank">github:simon300000/vtbs.moe</a>
@@ -18,6 +21,7 @@
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>
+        <p v-loading="!number">共收录VTB/VUP: {{number}} 个</p>
         <p v-if="online">目前在线: {{online}}</p>
         <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
           <h4>Spiders {{spiderId}}</h4>
@@ -41,12 +45,15 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
-  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online']),
+  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs']),
     spiders: function() {
       return this.status.PARALLEL
     },
     interval: function() {
       return this.status.INTERVAL
+    },
+    number: function() {
+      return this.vtbs && this.vtbs.length
     },
   },
   filters: {
