@@ -1,3 +1,4 @@
+const biliAPI = require('bili-api')
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
@@ -103,7 +104,57 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
+const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
+  for (;;) {
+    let startTime = (new Date()).getTime()
+
+    for (let i = 0; i < vtbs.length; i++) {
+      let { mid } = vtbs[i]
+      let object = await biliAPI({ mid }, ['guards', 'guardLevel'], { wait: 1000 }).catch(() => undefined)
+      if (!object) {
+        i--
+        this.wait(1000)
+        log(`Guard RETRY: ${mid}`)
+        continue
+      }
+      let { guards, guardLevel } = object
+      await guardType.put(mid, guardLevel)
+      await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
+      log(`Guard: ${i + 1}/${vtbs.length}`)
+    }
+
+    let all = {}
+    let some = {}
+    for (let i = 0; i < vtbs.length; i++) {
+      let { mid } = vtbs[i]
+      let guards = (await fullGuard.get(mid) || [])
+      for (let j = 0; j < guards.length; j++) {
+        let guard = guards[j]
+        let { level } = guard
+        if (!all[guard.mid]) {
+          let { uname, face } = guard
+          all[guard.mid] = { uname, face, mid: guard.mid, dd: [[], [], []] }
+        }
+        all[guard.mid].dd[level].push(mid)
+        if (all[guard.mid].dd[0].length * 100 + all[guard.mid].dd[1].length * 10 + all[guard.mid].dd[2].length > 1) {
+          console.log(guard.uname)
+          some[guard.mid] = all[guard.mid]
+        }
+      }
+    }
+    all.time = (new Date()).getTime()
+    some.time = (new Date()).getTime()
+    await fullGuard.put('all', all)
+    await fullGuard.put('some', some)
+    await fullGuard.put('number', Object.keys(all).length)
+    log(`Guard: Count ${Object.keys(all).length}`)
+
+    let endTime = (new Date()).getTime()
+    await wait(INTERVAL - (endTime - startTime))
+  }
+}
+
+module.exports = ({ vtbs, macro, info, num, fullGuard, guardType, INTERVAL, io }) => {
   const log = log => {
     console.log(log)
     io.emit('log', log)
@@ -111,4 +162,5 @@ module.exports = ({ vtbs, macro, info, num, INTERVAL, io }) => {
   vup({ vtbs, macro, info, num, INTERVAL: 1000 * 60 * 60 * 6, log, io })
   vtb({ vtbs, macro, info, num, INTERVAL, log, io })
   guard({ vtbs, macro, info, num, INTERVAL, log, io })
+  dd({ vtbs, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log })
 }
