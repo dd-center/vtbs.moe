@@ -91,9 +91,18 @@ class Spider {
         await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
       }
 
-      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
-      await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
-      this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      let dayNum = 1000 * 60 * 60 * 24 / this.INTERVAL
+      let dayBackSkip = Math.max(recordNum - dayNum, 0)
+      let totalRecordNum = Math.min(dayNum, recordNum)
+      let actives = await this.db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
+      let todayActives = actives.filter(active => active.time > time - 1000 * 60 * 60 * 24)
+      let timeDifference = time - todayActives[0].time
+      let followerChange = follower - todayActives[0].follower
+      let rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
+
+      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
+      await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)
