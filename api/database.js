@@ -24,10 +24,10 @@ class ArrayDatabase extends LevelDatabase {
   get({ mid = 0, num = 0 }) {
     return super.get(`${mid}_${num}`)
   }
-  bulkGet({ mid = 0, num = 1 }) {
+  bulkGet({ mid = 0, num = 1, skip = 0 }) {
     let bulk = Array(num)
     for (let i = 0; i < bulk.length; i++) {
-      bulk[i] = this.get({ mid, num: i + 1 })
+      bulk[i] = this.get({ mid, num: i + 1 + skip })
     }
     return Promise.all(bulk)
   }
