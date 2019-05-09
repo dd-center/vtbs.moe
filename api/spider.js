@@ -1,5 +1,11 @@
 const biliAPI = require('bili-api')
 
+const race = (...args) => new Promise((resolve, reject) => {
+  setTimeout(reject, 1000 * 5)
+  biliAPI(...args)
+    .then(resolve)
+})
+
 let oneHours = 1000 * 60 * 60
 
 const notable = ({ object, time, currentActive }) => {
@@ -60,11 +66,11 @@ class Spider {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
       let time = (new Date()).getTime()
-      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
+      let object = await race(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         i -= this.PARALLEL
-        this.wait(1000 * 15)
         this.log(`RETRY: ${vtb.mid}`)
+        await this.wait(1000 * 5)
         continue
       }
       let { mid, uname, video, coins, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank } = object
