@@ -15,10 +15,12 @@ moment.locale('zh-cn')
 
 Vue.config.productionTip = false
 
-Vue.use(VueAnalytics, {
-  id: 'UA-123973162-3',
-  router,
-})
+if (process.env.NODE_ENV === 'production') {
+  Vue.use(VueAnalytics, {
+    id: 'UA-123973162-3',
+    router,
+  })
+}
 
 Vue.use(new VueSocketIO({
   debug: process.env.NODE_ENV === 'development',
