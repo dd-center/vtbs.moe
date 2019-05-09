@@ -30,7 +30,7 @@ const INTERVAL = 1000 * 60 * 5
     }, 1000 * 60 * 2)
   }
   setTimeout(() => {
-  }, 1000 * 60)
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
+  }, 1000 * 60 * 4)
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL }))
 })()
