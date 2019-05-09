@@ -74,8 +74,9 @@ mid_guardChange: {guardNum, areaRank, time}
 
 fullGuard
 mid: [...guards]
-all: {[mid]: {uname, face, mid, dd:[[],[],[]]}, time}
-some: {[mid]: {uname, face, mid, dd:[[],[],[]]}, time} guard>1
+all: {[mid]: {uname, face, mid, dd:[[],[],[]]}}
+some: {[mid]: {uname, face, mid, dd:[[],[],[]]}} guard>1
+time: time
 number: num
 
 guardType

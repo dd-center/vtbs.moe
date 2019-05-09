@@ -1,6 +1,12 @@
 const biliAPI = require('bili-api')
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+const race = (...args) => new Promise((resolve, reject) => {
+  setTimeout(reject, 1000 * 60 * 10)
+  biliAPI(...args)
+    .then(resolve)
+})
+
 const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
   for (;;) {
@@ -110,10 +116,10 @@ const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
 
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
-      let object = await biliAPI({ mid }, ['guards', 'guardLevel'], { wait: 1000 }).catch(() => undefined)
+      let object = await race({ mid }, ['guards', 'guardLevel'], { wait: 1000 }).catch(() => undefined)
       if (!object) {
         i--
-        this.wait(1000)
+        await wait(1000)
         log(`Guard RETRY: ${mid}`)
         continue
       }
@@ -141,10 +147,9 @@ const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
         }
       }
     }
-    all.time = (new Date()).getTime()
-    some.time = (new Date()).getTime()
     await fullGuard.put('all', all)
     await fullGuard.put('some', some)
+    await fullGuard.put('time', (new Date()).getTime())
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)
 
