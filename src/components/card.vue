@@ -76,7 +76,9 @@ export default {
       let object = {}
       object.follower = this.info.follower
       if (this.$route.path.includes('live')) {
-        object.guardNum = this.info.guardNum
+        if (this.info.guardNum) {
+          object.guardNum = this.info.guardNum
+        }
       } else {
         object.archiveView = this.info.archiveView
         object.rise = this.info.rise
