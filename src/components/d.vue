@@ -8,7 +8,8 @@
   <el-row class="name">
     <el-col class="center">
       <span>
-        <el-tag size="mini" v-if="isDD">DD</el-tag>
+        <el-tag size="mini" type="success" v-if="isMeaQua">Meaqua</el-tag>
+        <el-tag size="mini" v-else-if="isDD">DD</el-tag>
         <el-tag type="warning" size="mini" v-else>单推</el-tag>
         {{uname}}
       </span>
@@ -48,6 +49,10 @@ export default {
     },
     vtbs: function() {
       return this.dd.dd
+    },
+    isMeaQua: function() {
+      let d = [].concat(...this.vtbs)
+      return d.length === 2 && d.includes(349991143) && d.includes(375504219)
     },
   },
   methods: {
