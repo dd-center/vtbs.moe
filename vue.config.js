@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 module.exports = {
   lintOnSave: false,
   pwa: {
@@ -14,5 +16,13 @@ module.exports = {
     workboxOptions: {
       swSrc: 'src/service-worker.js',
     },
+  },
+  configureWebpack: {
+    plugins: [
+      new webpack.ContextReplacementPlugin(
+        /moment[/\\]locale$/,
+        /zh-cn/,
+      ),
+    ],
   },
 }
