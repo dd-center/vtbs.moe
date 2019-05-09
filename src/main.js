@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 
 if (process.env.NODE_ENV === 'production') {
   Vue.use(VueAnalytics, {
-    id: 'UA-123973162-3',
+    id: 'UA-123973162-4',
     router,
   })
 }
