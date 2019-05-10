@@ -224,4 +224,7 @@ module.exports = [
   { mid: 328576435, note: '星空悠' },
   { mid: 136844, note: 'RiNE' },
   { mid: 1448323, note: '樱美Yuna' },
+
+  // 快看快看是Menhera
+  { mid: 326968804, note: 'Menhera' },
 ]
