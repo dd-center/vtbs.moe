@@ -12,10 +12,7 @@ const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
-  if (currentActive.archiveView === object.archiveView && currentActive.follower === object.follower) {
-    return false
-  }
-  if (time - currentActive.time > oneHours) {
+  if (time - currentActive.time > 3 * oneHours) {
     return true
   }
   if (Math.abs(currentActive.archiveView - object.archiveView) * 1000 > currentActive.archiveView) {
