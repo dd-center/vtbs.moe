@@ -106,7 +106,10 @@ module.exports = [
   { mid: 403930401, note: '绿仙' },
   { mid: 403928672, note: '葵' },
   { mid: 403921378, note: '凛' },
+  // 非官方(?)
   { mid: 109891, note: '月ノ美兎' },
+  { mid: 344515485, note: '樋口枫' },
+  { mid: 384064360, note: '竜胆尊' },
   // 上海2434
   { mid: 1631724, note: '塞塔nya' },
 
@@ -130,11 +133,6 @@ module.exports = [
   { mid: 82803440, note: '凛星' },
   { mid: 166617, note: 'Ita' },
 
-  // HoderAstra
-  { mid: 281426315, note: '矢泽大凤' },
-  { mid: 18699270, note: '金丝蓝染' },
-  { mid: 1802067, note: 'Plutya' },
-
   { mid: 403080854, note: 'Nia' },
   { mid: 1337624, note: '奈木' },
   { mid: 186463, note: 'NaNa' },
@@ -147,9 +145,32 @@ module.exports = [
   { mid: 147471, note: 'YY' },
   { mid: 2483446, note: '你也是最弱' },
 
+  // HoderAstra
+  { mid: 281426315, note: '矢泽大凤' },
+  { mid: 18699270, note: '金丝蓝染' },
+  { mid: 1802067, note: 'Plutya' },
+
   // Chucolala
   { mid: 401480763, note: '真白花音' },
   { mid: 407106379, note: 'erio' },
+
+  // HoneyStrap
+  { mid: 385851175, note: '周防パトラ' },
+  { mid: 389349320, note: '蒼月エリ' },
+  { mid: 400323299, note: '島村シャルロット' },
+  { mid: 2073698, note: '西園寺メアリ' },
+  { mid: 389647363, note: '堰代ミコ' },
+
+  // Animare 有閑喫茶あにまーれ
+  { mid: 382545233, note: '因幡組' },
+  { mid: 4175516, note: '宇森ひなこ' },
+  { mid: 809154, note: '宗谷いちか' },
+  { mid: 390899490, note: '日ノ隈らん' },
+
+  { mid: 45921503, note: 'AnMr海外转播' },
+
+  // 虚研社
+  { mid: 4763529, note: '幽灵子辰' },
 
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
@@ -192,11 +213,11 @@ module.exports = [
   { mid: 389056211, note: 'AZKi' },
   { mid: 420321371, note: '涉谷HAL' },
   { mid: 406548031, note: '音俣るか' },
+  { mid: 198297, note: '进击的冰糖' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
   { mid: 391614061, note: 'Hizuki Miu' },
-  { mid: 45921503, note: 'AnMr海外转播' },
   { mid: 264319276, note: '花芽姐妹' },
   { mid: 5421881, note: 'Asaha' },
   { mid: 399554022, note: '竹取かるた' },
