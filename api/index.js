@@ -5,7 +5,9 @@ const ant = require('./ant')
 
 const Server = require('socket.io')
 const io = new Server(8001, { serveClient: false, path: '/' })
+const ioInternal = new Server(9001, { serveClient: false, path: '/' })
 const { connect } = require('./socket')
+const internal = require('./internal')
 
 const { init } = require('./database')
 
@@ -33,4 +35,5 @@ const INTERVAL = 1000 * 60 * 5
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL }))
+  ioInternal.on('connection', internal({ vtbs }))
 })()
