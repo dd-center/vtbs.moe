@@ -1,5 +1,5 @@
 exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL }) => async socket => {
-  const handler = e => async (target, arc) => {
+  const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'live') {
         arc(await live.get(target))
@@ -49,7 +49,7 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
         arc(await fullGuard.get(target))
       }
     }
-  }
+  })
 
   io.clients((error, clients) => {
     if (error) {
@@ -59,17 +59,17 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   })
 
   console.log('a user connected')
-  socket.on('live', handler('live'))
-  socket.on('liveBulk', handler('liveBulk'))
-  socket.on('vupMacro', handler('vupMacro'))
-  socket.on('vtbMacro', handler('vtbMacro'))
-  socket.on('guardMacro', handler('guardMacro'))
-  socket.on('info', handler('info'))
-  socket.on('bulkActive', handler('bulkActive'))
-  socket.on('bulkLive', handler('bulkLive'))
-  socket.on('bulkGuard', handler('bulkGuard'))
-  socket.on('guardType', handler('guardType'))
-  socket.on('fullGuard', handler('fullGuard'))
+  handler('live')
+  handler('liveBulk')
+  handler('vupMacro')
+  handler('vtbMacro')
+  handler('guardMacro')
+  handler('info')
+  handler('bulkActive')
+  handler('bulkLive')
+  handler('bulkGuard')
+  handler('guardType')
+  handler('fullGuard')
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
