@@ -1,12 +1,15 @@
 const biliAPI = require('bili-api')
 
-const race = (...args) => new Promise((resolve, reject) => {
-  setTimeout(() => {
+const race = (...args) => new Promise(resolve => {
+  let timeout = setTimeout(() => {
     console.log('TIMEOUT')
     resolve(undefined)
   }, 1000 * 15)
   biliAPI(...args)
-    .then(resolve)
+    .then(data => {
+      clearTimeout(timeout)
+      resolve(data)
+    })
 })
 
 let oneHours = 1000 * 60 * 60
