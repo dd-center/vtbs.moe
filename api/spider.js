@@ -111,7 +111,7 @@ class Spider {
       this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
-      await this.wait(700 * 1)
+      await this.wait(1000 * 1)
     }
   }
 }
