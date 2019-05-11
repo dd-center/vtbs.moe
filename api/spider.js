@@ -1,7 +1,10 @@
 const biliAPI = require('bili-api')
 
 const race = (...args) => new Promise((resolve, reject) => {
-  setTimeout(reject, 1000 * 5)
+  setTimeout(() => {
+    console.log('TIMEOUT')
+    resolve(undefined)
+  }, 1000 * 15)
   biliAPI(...args)
     .then(resolve)
 })
