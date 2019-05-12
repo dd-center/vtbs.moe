@@ -8,10 +8,16 @@
   <el-row class="name">
     <el-col class="center">
       <span>
-        <el-tag size="mini" type="success" v-if="isMeaQua">Meaqua</el-tag>
+        <el-tag size="mini" type="success" v-if="isMeaQua" title="Meaqua贴贴">Meaqua</el-tag>
         <el-tag size="mini" v-else-if="isDD">DD</el-tag>
         <el-tag type="warning" size="mini" v-else>单推</el-tag>
-        {{uname}}
+        <router-link :to="`/detail/${dd.mid}`" v-if="isVTB" class="detail" title="这是一名本站收录的VTB/VUP">
+          {{uname}}
+          <el-tag type="danger" size="mini" v-if="isVTB">V</el-tag>
+        </router-link>
+        <template v-else>
+          {{uname}}
+        </template>
       </span>
     </el-col>
   </el-row>
@@ -54,6 +60,9 @@ export default {
       let d = [].concat(...this.vtbs)
       return d.length === 2 && d.includes(349991143) && d.includes(375504219)
     },
+    isVTB: function() {
+      return Object.keys(this.$store.state.info).includes(String(this.dd.mid))
+    },
   },
   methods: {
     name: function(mid) {
@@ -83,6 +92,15 @@ export default {
   font-size: 18px;
   margin-top: 2px;
   margin-bottom: 8px;
+}
+
+.detail {
+  color: black;
+  text-decoration: none;
+}
+
+.detail:hover {
+  text-decoration: underline;
 }
 
 .vtb {
