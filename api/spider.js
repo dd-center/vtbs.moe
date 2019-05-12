@@ -69,14 +69,14 @@ class Spider {
     for (let i = this.spiderId; i < this.vtbs.length; i += this.PARALLEL) {
       let vtb = this.vtbs[i]
       let time = (new Date()).getTime()
-      let object = await race(vtb, ['mid', 'uname', 'video', 'coins', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
+      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         i -= this.PARALLEL
         this.log(`RETRY: ${vtb.mid}`)
         await this.wait(1000 * 5)
         continue
       }
-      let { mid, uname, video, coins, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank } = object
+      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank } = object
 
       let info = await this.db.info.get(mid)
       if (!info) {
@@ -112,9 +112,9 @@ class Spider {
       let followerChange = follower - todayActives[0].follower
       let rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
 
-      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
-      await this.db.info.put(mid, { mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
-      this.infoArray.push({ mid, uname, video, coins, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
+      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)

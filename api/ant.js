@@ -17,15 +17,13 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
 
     let sum = {
       video: 0,
-      coins: 0,
       archiveView: 0,
       time: startTime,
     }
 
     for (let i = 0; i < vtbs.length; i++) {
-      let { video = 0, coins = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
+      let { video = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
       sum.video += video
-      sum.coins += coins
       sum.archiveView += archiveView
     }
 

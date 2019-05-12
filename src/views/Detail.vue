@@ -514,9 +514,6 @@ export default {
     topPhoto: function() {
       return this.info.topPhoto
     },
-    coins: function() {
-      return this.info.coins
-    },
     video: function() {
       return this.info.video
     },
@@ -562,7 +559,6 @@ export default {
         { name: '签名', value: this.sign },
         { name: '视频数', value: this.video },
         { name: '总播放', value: this.archiveView },
-        { name: '硬币', value: this.coins },
         { name: '直播标题', value: this.title },
         { name: '舰团', value: this.guardNum },
         {

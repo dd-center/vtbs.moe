@@ -19,10 +19,6 @@
         <h1>视频势:</h1>
         <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
-      <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
-        <h1>虚拟世界外汇储备:</h1>
-        <ve-line :data="{rows:vupMacro}" :settings="reserve" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
-      </el-col>
     </el-row>
   </el-main>
 </el-container>
@@ -154,16 +150,6 @@ export default {
       dimension: 'time',
       metrics: ['open', 'close', 'lowest', 'close'],
       showDataZoom: true,
-    }
-    this.reserve = {
-      dimension: ['time'],
-      metrics: ['coins'],
-      labelMap: {
-        coins: '总硬币',
-      },
-      yAxisName: ['硬币'],
-      xAxisType: 'time',
-      scale: [true],
     }
     return {}
   },
