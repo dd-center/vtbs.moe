@@ -204,7 +204,7 @@
             </el-card>
           </el-col>
         </el-row>
-        <!-- <template v-if="roomid">
+        <template v-if="roomid">
           <el-divider><i class="el-icon-s-fold"></i></el-divider>
           <el-row>
             <el-col :span="24">
@@ -212,11 +212,11 @@
                 <div slot="header">
                   <span style="font-size:20px;"><a href="https://bilichat.3shain.com">BILICHAT</a></span> by <a href="https://3shain.com">3Shain</a>
                 </div>
-                <iframe :src="`https://bilichat.3shain.com/alpha/${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
+                <iframe :src="`https://bilibili-dd-center.github.io/BiliChat/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
               </el-card>
             </el-col>
           </el-row>
-        </template> -->
+        </template>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row v-if="topPhoto">
           <el-col :span="8" :xs="24">
