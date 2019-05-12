@@ -204,7 +204,7 @@
             </el-card>
           </el-col>
         </el-row>
-        <template v-if="roomid">
+        <!-- <template v-if="roomid">
           <el-divider><i class="el-icon-s-fold"></i></el-divider>
           <el-row>
             <el-col :span="24">
@@ -216,7 +216,7 @@
               </el-card>
             </el-col>
           </el-row>
-        </template>
+        </template> -->
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row v-if="topPhoto">
           <el-col :span="8" :xs="24">
