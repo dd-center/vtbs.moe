@@ -230,4 +230,7 @@ module.exports = [
 
   // 快看快看是Menhera
   { mid: 326968804, note: 'Menhera' },
+
+  // 「你也是VTB了」大赏
+  { mid: 12895828, note: '莫叁' },
 ]
