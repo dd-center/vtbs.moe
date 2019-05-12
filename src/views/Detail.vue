@@ -11,247 +11,251 @@
     <img :src="topPhoto.replace('http:','https:')" alt="topPhoto" class="topPhoto" v-if="topPhoto">
 
     <el-row type="flex" justify="space-around">
-    <el-col :span="aside ? 24 : 21" class="container">
+      <el-col :span="aside ? 24 : 21" class="container">
 
-    <el-row v-if="topPhoto">
-      <el-col :span="6" :xs="24" :xl="4">
-        <el-card class="box-card center" shadow="hover">
-          <div slot="header">
-            <h2>{{uname}}</h2>
-            <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
-              <el-tag size="medium">直播中</el-tag>
-            </a>
-          </div>
-          <div v-loading="!face">
-            <img :src="face.replace('http:','https:')" class="face" v-if="face">
-            <img src="@/assets/face.jpg" class="face" v-else>
-          </div>
-          <el-divider></el-divider>
-          个人空间:
-          <br>
-          <a :href="`http://space.bilibili.com/${mid}`" target="_blank">
-            {{`http://space.bilibili.com/${mid}`}}
-          </a>
-          <el-divider></el-divider>
-          直播间:
-          <br>
-          <a :href="`https://live.bilibili.com/${roomid}`" target="_blank" v-if="roomid">
-            {{`https://live.bilibili.com/${roomid}`}}
-          </a>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            关注
-          </div>
-          <div class="center">
-            <span class="el-icon-star-on big"></span>
-            <h3>{{follower | locale}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            播放
-          </div>
-          <div class="center">
-            <span class="el-icon-caret-right big"></span>
-            <h3>{{archiveView | locale}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            视频
-          </div>
-          <div class="center">
-            <span class="el-icon-picture-outline-round big"></span>
-            <h3>{{video | locale}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="12" :xs="24" :xl="8">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            签名
-          </div>
-          <p>
-            {{sign}}
-          </p>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            舰团
-          </div>
-          <div class="center">
-            <span class="el-icon-location-outline big"></span>
-            <h3>{{guardNum | locale}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            关注/舰团 比
-          </div>
-          <div class="center">
-            <span class="big el-icon-star-on">/<span class="el-icon-location-outline" /></span>
-            <h3>≈ {{Math.round(follower/guardNum) | locale}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4" v-if="liveStatus">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            直播间
-          </div>
-          <div class="center">
-            <el-tag size="medium">直播中</el-tag>
-            <h3>{{title}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="6" :xs="12" :xl="4" v-if="liveNum">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            共直播
-          </div>
-          <div class="center">
-            <span class="big el-icon-d-caret"></span>
-            <h3>{{totalLive}}</h3>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-divider><i class="el-icon-s-data"></i></el-divider>
-    <el-row>
-      <el-col :span="24">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
-          </div>
-          <ve-line :data="{rows:active}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
-        </el-card>
-      </el-col>
-      <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            直播·人气
-          </div>
-          <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
-        </el-card>
-      </el-col>
-      <el-col :span="12" :xs="24" v-if="maxGuardNum">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            舰团
-          </div>
-          <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-divider><i class="el-icon-s-data"></i></el-divider>
-    <el-row>
-      <el-col :span="24">
-        <el-card class="box-card" shadow="hover">
-          <div slot="header">
-            过去一周
-          </div>
-          <el-table :data="pastWeek" stripe>
-            <el-table-column label="日期">
-              <template slot-scope="scope">
-                <span v-if="scope.row.date">{{scope.row.date}}</span>
-                <span v-else style="font-size:16px;">日平均</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="关注增量">
-              <template slot-scope="scope">
-                <span v-if="scope.row.followerChange>0" class="more">+{{scope.row.followerChange | locale}}</span>
-                <span v-if="scope.row.followerChange<0" class="less">{{scope.row.followerChange | locale}}</span>
-                <span v-if="scope.row.followerChange==0">{{scope.row.followerChange | locale}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="follower" label="总关注">
-            </el-table-column>
-            <el-table-column label="日播放">
-              <template slot-scope="scope">
-                <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | locale}}</span>
-                <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | locale}}</span>
-                <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | locale}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="archiveView" label="总播放">
-            </el-table-column>
-            <el-table-column label="舰团变化" v-if="maxGuardNum">
-              <template slot-scope="scope">
-                <span v-if="scope.row.guardNumChange>0" class="more">+{{scope.row.guardNumChange | locale}}</span>
-                <span v-if="scope.row.guardNumChange<0" class="less">{{scope.row.guardNumChange | locale}}</span>
-                <span v-if="scope.row.guardNumChange==0">{{scope.row.guardNumChange | locale}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="guardNum" label="舰团" v-if="maxGuardNum">
-            </el-table-column>
-          </el-table>
-        </el-card>
-      </el-col>
-    </el-row>
-    <el-divider><i class="el-icon-s-data"></i></el-divider>
-    <el-row v-if="topPhoto">
-      <el-col :span="8" :xs="24">
-        <el-table :data="parsed" stripe :show-header="false">
-          <el-table-column prop="name">
-          </el-table-column>
-          <el-table-column>
-            <template slot-scope="scope">
-              <template v-if="typeof scope.row.value === 'number'">
-                <span>{{scope.row.value.toLocaleString()}}</span>
-                <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumberOld}})</span>
-              </template>
-              <template v-if="typeof scope.row.value === 'string'">
-                <span>{{scope.row.value}}</span>
-              </template>
-              <template v-if="scope.row.space">
-                <a :href="`http://space.bilibili.com/${scope.row.space}`" target="_blank">
-                  {{scope.row.space}}
+        <el-row v-if="topPhoto">
+          <el-col :span="6" :xs="24" :xl="4">
+            <el-card class="box-card center" shadow="hover">
+              <div slot="header">
+                <h2>{{uname}}</h2>
+                <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
+                  <el-tag size="medium">直播中</el-tag>
+                </a>
+              </div>
+              <div v-loading="!face">
+                <img :src="face.replace('http:','https:')" class="face" v-if="face">
+                <img src="@/assets/face.jpg" class="face" v-else>
+              </div>
+              <el-divider></el-divider>
+              个人空间:
+              <br>
+              <a :href="`http://space.bilibili.com/${mid}`" target="_blank">
+                {{`http://space.bilibili.com/${mid}`}}
+              </a>
+              <template v-if="roomid">
+                <el-divider></el-divider>
+                直播间:
+                <br>
+                <a :href="`https://live.bilibili.com/${roomid}`" target="_blank" v-if="roomid">
+                  {{`https://live.bilibili.com/${roomid}`}}
                 </a>
               </template>
-              <template v-if="scope.row.room">
-                <template v-if="scope.row.room==='无'">
-                  无
-                </template>
-                <a :href="`https://live.bilibili.com/${scope.row.room}`" target="_blank" v-else>
-                  {{scope.row.room}}
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                关注
+              </div>
+              <div class="center">
+                <span class="el-icon-star-on big"></span>
+                <h3>{{follower | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                播放
+              </div>
+              <div class="center">
+                <span class="el-icon-caret-right big"></span>
+                <h3>{{archiveView | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                视频
+              </div>
+              <div class="center">
+                <span class="el-icon-picture-outline-round big"></span>
+                <h3>{{video | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="12" :xs="24" :xl="8">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                签名
+              </div>
+              <p>
+                {{sign}}
+              </p>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                舰团
+              </div>
+              <div class="center">
+                <span class="el-icon-location-outline big"></span>
+                <h3>{{guardNum | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                关注/舰团 比
+              </div>
+              <div class="center">
+                <span class="big el-icon-star-on">/<span class="el-icon-location-outline" /></span>
+                <h3>≈ {{Math.round(follower/guardNum) | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="roomid">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                直播间
+              </div>
+              <div class="center">
+                <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
+                  <el-tag size="medium">直播中</el-tag>
                 </a>
-              </template>
-              <template v-if="typeof scope.row.liveStatus !== 'undefined'">
-                <a :href="`https://live.bilibili.com/${roomid}`" v-if="scope.row.liveStatus" target="_blank">
-                  <el-tag size="small">直播中</el-tag>
-                </a>
-                <template v-else-if="typeof scope.row.past === 'number'">
-                  {{scope.row.moment}}
+                <h3>{{title}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!averageLive">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                平均每周直播
+              </div>
+              <div class="center">
+                <span class="big el-icon-d-caret"></span>
+                <h3>{{averageLive}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-divider><i class="el-icon-s-data"></i></el-divider>
+        <el-row>
+          <el-col :span="24">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
+              </div>
+              <ve-line :data="{rows:active}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
+            </el-card>
+          </el-col>
+          <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                直播·人气
+              </div>
+              <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
+            </el-card>
+          </el-col>
+          <el-col :span="12" :xs="24" v-if="maxGuardNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                舰团
+              </div>
+              <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-divider><i class="el-icon-s-data"></i></el-divider>
+        <el-row>
+          <el-col :span="24">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                过去一周
+              </div>
+              <el-table :data="pastWeek" stripe>
+                <el-table-column label="日期">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.date">{{scope.row.date}}</span>
+                    <span v-else style="font-size:16px;">日平均</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="关注增量">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.followerChange>0" class="more">+{{scope.row.followerChange | locale}}</span>
+                    <span v-if="scope.row.followerChange<0" class="less">{{scope.row.followerChange | locale}}</span>
+                    <span v-if="scope.row.followerChange==0">{{scope.row.followerChange | locale}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="follower" label="总关注">
+                </el-table-column>
+                <el-table-column label="日播放">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | locale}}</span>
+                    <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | locale}}</span>
+                    <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | locale}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="archiveView" label="总播放">
+                </el-table-column>
+                <el-table-column label="舰团变化" v-if="maxGuardNum">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.guardNumChange>0" class="more">+{{scope.row.guardNumChange | locale}}</span>
+                    <span v-if="scope.row.guardNumChange<0" class="less">{{scope.row.guardNumChange | locale}}</span>
+                    <span v-if="scope.row.guardNumChange==0">{{scope.row.guardNumChange | locale}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="guardNum" label="舰团" v-if="maxGuardNum">
+                </el-table-column>
+              </el-table>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-divider><i class="el-icon-s-data"></i></el-divider>
+        <el-row v-if="topPhoto">
+          <el-col :span="8" :xs="24">
+            <el-table :data="parsed" stripe :show-header="false">
+              <el-table-column prop="name">
+              </el-table-column>
+              <el-table-column>
+                <template slot-scope="scope">
+                  <template v-if="typeof scope.row.value === 'number'">
+                    <span>{{scope.row.value.toLocaleString()}}</span>
+                    <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumberOld}})</span>
+                  </template>
+                  <template v-if="typeof scope.row.value === 'string'">
+                    <span>{{scope.row.value}}</span>
+                  </template>
+                  <template v-if="scope.row.space">
+                    <a :href="`http://space.bilibili.com/${scope.row.space}`" target="_blank">
+                      {{scope.row.space}}
+                    </a>
+                  </template>
+                  <template v-if="scope.row.room">
+                    <template v-if="scope.row.room==='无'">
+                      无
+                    </template>
+                    <a :href="`https://live.bilibili.com/${scope.row.room}`" target="_blank" v-else>
+                      {{scope.row.room}}
+                    </a>
+                  </template>
+                  <template v-if="typeof scope.row.liveStatus !== 'undefined'">
+                    <a :href="`https://live.bilibili.com/${roomid}`" v-if="scope.row.liveStatus" target="_blank">
+                      <el-tag size="small">直播中</el-tag>
+                    </a>
+                    <template v-else-if="typeof scope.row.past === 'number'">
+                      {{scope.row.moment}}
+                    </template>
+                    <template v-else>
+                      不知道→_→
+                    </template>
+                  </template>
                 </template>
-                <template v-else>
-                  不知道→_→
-                </template>
-              </template>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-col>
-      <el-col :span="16" :xs="24">
-        JSON数据:
-        <pre>
+              </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="16" :xs="24">
+            JSON数据:
+            <pre>
           {{info}}
         </pre>
-      </el-col>
-    </el-row>
+          </el-col>
+        </el-row>
 
-    </el-col>
+      </el-col>
     </el-row>
 
   </el-main>
@@ -481,8 +485,12 @@ export default {
       }
       return max
     },
-    totalLive: function() {
-      let duration = moment.duration(this.liveNum * 5, 'minutes')
+    averageLive: function() {
+      if (!this.rawLive.length) {
+        return undefined
+      }
+      let time = new Date().getTime()
+      let duration = moment.duration((1000 * 60 * 5 * this.liveNum) * 1000 * 60 * 60 * 24 * 7 / (time - this.rawLive[0].time), 'ms')
       let result = []
       let d = Math.floor(duration.asDays())
       let h = duration.hours()
