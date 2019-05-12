@@ -39,7 +39,7 @@ export default {
       return list
     },
     searchList: function() {
-      let searchArray = this.search.split(' ')
+      let searchArray = this.search.split('')
       return this.list.filter(({ uname }) => {
         if (!uname) {
           return false
