@@ -1,0 +1,3 @@
+[submodule "public/BiliChat"]
+	path = public/BiliChat
+	url = https://github.com/bilibili-dd-center/BiliChat

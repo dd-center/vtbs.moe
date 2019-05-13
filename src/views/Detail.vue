@@ -212,7 +212,7 @@
                 <div slot="header">
                   <span style="font-size:20px;"><a href="https://bilichat.3shain.com">BILICHAT</a></span> by <a href="https://3shain.com">3Shain</a>
                 </div>
-                <iframe :src="`https://bilibili-dd-center.github.io/BiliChat/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
+                <iframe :src="`/BiliChat/docs/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
               </el-card>
             </el-col>
           </el-row>
