@@ -61,7 +61,7 @@ vtbMacroNum: Number
 guardMacroNum: Number
 
 info
-mid: {mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time}
+mid: {mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time}
 
 active
 mid_recordNum: {archiveView, follower, time}

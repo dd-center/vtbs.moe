@@ -115,9 +115,11 @@ class Spider {
       let followerChange = follower - todayActives[0].follower
       let rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
 
-      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time } })
-      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
-      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, areaRank, online, title, time })
+      let guardType = await this.db.guardType.get(mid)
+
+      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time } })
+      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time })
+      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)

@@ -15,7 +15,7 @@ const rank = target => state => [...state.vtbs].sort((a, b) => {
   if (!state.info[b.mid]) {
     return -1
   }
-  return target(state, a, b)
+  return target(state, state.info[a.mid], state.info[b.mid])
 })
 
 export default new Vuex.Store({
@@ -33,9 +33,13 @@ export default new Vuex.Store({
     guardMacro: [],
   },
   getters: {
-    followerRank: rank((state, a, b) => state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
-    riseRank: rank((state, a, b) => state.info[b.mid]['rise'] - state.info[a.mid]['rise']),
-    liveRank: rank((state, a, b) => 100000000000 * (state.info[b.mid].liveStatus * state.info[b.mid].online - state.info[a.mid].liveStatus * state.info[a.mid].online) + 1000000 * (state.info[b.mid]['guardNum'] - state.info[a.mid]['guardNum']) + state.info[b.mid]['follower'] - state.info[a.mid]['follower']),
+    followerRank: rank((state, a, b) => b.follower - a.follower),
+    riseRank: rank((state, a, b) => b.rise - a.rise),
+    liveRank: rank((state, a, b) => {
+      let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
+      let guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
+      return 100000000000 * liveDifference + 1000000 * guardDifference + b.follower - a.follower
+    }),
   },
   mutations: {
     SOCKET_vtbs(state, data) {

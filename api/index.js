@@ -19,7 +19,7 @@ const INTERVAL = 1000 * 60 * 5
   // let { site, info, active, live } = await init()
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
-    let spider = new Spider({ db: { site, info, active, live, guard }, vtbs, spiderId, io, PARALLEL, INTERVAL })
+    let spider = new Spider({ db: { site, info, active, live, guard, guardType }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
     setInterval(() => {
       // Auto restart when spider are dead
