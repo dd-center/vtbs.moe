@@ -139,7 +139,7 @@
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
               </div>
-              <ve-line :data="{rows:active}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!active.length"></ve-line>
+              <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!hourFollowerChange.length"></ve-line>
             </el-card>
           </el-col>
           <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
@@ -302,13 +302,15 @@ export default {
     }]
     this.activeLine = {
       dimension: ['time'],
-      metrics: ['follower'],
+      metrics: ['follower', 'change'],
       labelMap: {
         follower: '关注',
+        change: '增量',
       },
-      yAxisName: ['关注'],
+      yAxisName: ['关注', '每小时增量'],
       scale: [true],
       xAxisType: 'time',
+      axisSite: { right: ['change'] },
     }
     this.activeExtend = {
       'series.0.symbol': 'none',
@@ -497,6 +499,18 @@ export default {
         }
       }
       return max
+    },
+    hourFollowerChange: function() {
+      if (this.active.length < 2) {
+        return this.active
+      }
+      return this.active
+        .map(({ follower, time }, i, active) => i && ({
+          time,
+          follower,
+          change: Math.round((follower - active[i - 1].follower) * 1000 * 60 * 60 / (time - active[i - 1].time)),
+        }))
+        .filter(e => e)
     },
     averageLive: function() {
       if (!this.rawLive.length) {
