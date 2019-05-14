@@ -516,11 +516,19 @@ export default {
       if (this.active.length < 2) {
         return this.active
       }
+      const hourAgo = (time, index) => {
+        for (let i = index; i > 0; i--) {
+          if (time - this.active[i].time > 1000 * 60 * 60) {
+            return this.active[i]
+          }
+        }
+        return this.active[0]
+      }
       return this.active
-        .map(({ follower, time }, i, active) => i && ({
+        .map(({ follower, time }, i) => i && ({
           time,
           follower,
-          change: Math.round((follower - active[i - 1].follower) * 1000 * 60 * 60 / (time - active[i - 1].time)),
+          change: Math.round((follower - hourAgo(time, i).follower) * 1000 * 60 * 60 / (time - hourAgo(time, i).time)),
         }))
         .filter(e => e)
     },
