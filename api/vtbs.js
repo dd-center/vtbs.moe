@@ -172,6 +172,23 @@ module.exports = [
   // 虚研社
   { mid: 4763529, note: '幽灵子辰' },
 
+  // VOMNIS
+  { mid: 464865, note: '小卯' },
+  { mid: 1910639, note: '染谷杏' },
+  { mid: 10207746, note: '鶹鸝' },
+  { mid: 49694204, note: '转圈' },
+
+  // CodeEcho
+  { mid: 416203727, note: '铃果' },
+
+  // Kenlos
+  { mid: 1421667, note: '丹羽加奈' },
+  { mid: 13096224, note: '恒天' },
+  { mid: 7287911, note: '胧玥' },
+
+  { mid: 13791309, note: '早见樱' },
+  { mid: 1836495, note: '喵奈子' },
+
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
@@ -218,6 +235,10 @@ module.exports = [
   { mid: 423747660, note: '成早酱' },
   { mid: 410236949, note: '雪城真寻' },
   { mid: 407806618, note: '冻砂与海桑' },
+  { mid: 406474271, note: '庞小莹' },
+  { mid: 49464709, note: 'Leia' },
+  { mid: 19462294, note: 'Lemonsix' },
+  { mid: 2461100, note: '艾莓雅' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
@@ -228,6 +249,12 @@ module.exports = [
   { mid: 328576435, note: '星空悠' },
   { mid: 136844, note: 'RiNE' },
   { mid: 1448323, note: '樱美Yuna' },
+  { mid: 412113528, note: '风月莉莉娅' },
+  { mid: 20600085, note: '静夜夜' },
+  { mid: 846180, note: 'Miya' },
+  { mid: 2023004, note: 'MEYO' },
+  { mid: 245093784, note: 'Lily' },
+  { mid: 620903, note: '泰蕾莎' },
 
   // 快看快看是Menhera
   { mid: 326968804, note: 'Menhera' },
