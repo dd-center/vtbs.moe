@@ -69,5 +69,7 @@ export default {
 </script>
 
 <style scoped>
-pre {}
+.el-main {
+  word-wrap: break-word;
+}
 </style>
