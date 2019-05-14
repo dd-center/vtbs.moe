@@ -210,7 +210,7 @@
             <el-col :span="24">
               <el-card class="box-card" shadow="hover">
                 <div slot="header">
-                  <span style="font-size:20px;"><a href="https://bilichat.3shain.com">BILICHAT</a></span> by <a href="https://3shain.com">3Shain</a>
+                  <span style="font-size:20px;">直播间弹幕: <a href="https://bilichat.3shain.com">BILICHAT</a></span> by <a href="https://3shain.com">3Shain</a>
                 </div>
                 <iframe :src="`/BiliChat/docs/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
               </el-card>
@@ -375,6 +375,18 @@ export default {
     },
   },
   sockets: {
+    async connect() {
+      let info = await get('info', this.mid)
+      this.info = info
+      let { recordNum, liveNum, guardChange, mid } = info
+      this.active = await get('bulkActive', { recordNum, mid })
+      if (liveNum) {
+        this.rawLive = await get('bulkLive', { liveNum, mid })
+      }
+      if (guardChange > 0) {
+        this.guard = await get('bulkGuard', { guardChange, mid })
+      }
+    },
     detailInfo: function({ mid, data }) {
       if (mid === Number(this.mid)) {
         this.info = data
