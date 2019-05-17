@@ -70,7 +70,7 @@ live
 mid_liveNum: {online, time}
 
 guard
-mid_guardChange: {guardNum, areaRank, time}
+mid_guardChange: {guardNum, time}
 
 fullGuard
 mid: [...guards]

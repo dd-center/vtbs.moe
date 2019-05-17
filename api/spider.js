@@ -100,10 +100,10 @@ class Spider {
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
-      if (guardNum !== info.guardNum || areaRank !== info.areaRank) {
+      if (guardNum !== info.guardNum) {
         guardChange++
-        this.io.to(mid).emit('detailGuard', { mid, data: { guardNum, areaRank, time } })
-        await this.db.guard.put({ mid, num: guardChange, value: { guardNum, areaRank, time } })
+        this.io.to(mid).emit('detailGuard', { mid, data: { guardNum, time } })
+        await this.db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
       }
 
       let dayNum = 1000 * 60 * 60 * 24 / this.INTERVAL
