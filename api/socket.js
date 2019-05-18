@@ -41,6 +41,11 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
         let { recordNum, mid } = target
         arc(await active.bulkGet({ mid, num: recordNum }))
       }
+      if (e === 'bulkActiveSome') {
+        let { recordNum, mid } = target
+        let skip = recordNum - 512
+        arc(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
+      }
       if (e === 'bulkLive') {
         let { liveNum, mid } = target
         arc(await live.bulkGet({ mid, num: liveNum }))
@@ -79,6 +84,7 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   handler('guardMacro')
   handler('info')
   handler('bulkActive')
+  handler('bulkActiveSome')
   handler('bulkLive')
   handler('bulkLiveWeek')
   handler('bulkGuard')
@@ -126,6 +132,7 @@ guardMacro: -> [{guardMacro}]
 
 info: mid -> {info}
 bulkActive: { recordNum, mid } -> [active]
+bulkActiveSome: { recordNum, mid } -> [active]
 bulkLive: { liveNum, mid } -> [live]
 bulkLiveWeek: { liveNum, mid } -> [live]
 bulkGuard: { guardNum, mid } -> [guard]

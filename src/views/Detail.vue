@@ -139,6 +139,7 @@
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
+                <el-button size="mini" @click="loadFullActive" v-if="!fullActive" :loading="loadingActive" title="显示完整" class="right">(一部分)</el-button>
               </div>
               <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!hourFollowerChange.length"></ve-line>
             </el-card>
@@ -146,7 +147,7 @@
           <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loading" title="载入完整" class="right">(一周)</el-button>
+                直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loadingLive" title="显示完整" class="right">(一部分)</el-button>
               </div>
               <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
             </el-card>
@@ -349,7 +350,8 @@ export default {
       info: {},
       rawLive: [],
       guard: [],
-      loading: false,
+      loadingLive: false,
+      loadingActive: false,
     }
   },
   watch: {
@@ -363,7 +365,7 @@ export default {
         let info = await get('info', this.mid)
         this.info = info
         let { recordNum, liveNum, guardChange, mid } = info
-        let active = await get('bulkActive', { recordNum, mid })
+        let active = await get('bulkActiveSome', { recordNum, mid })
         this.active = active
         if (liveNum) {
           let live = await get('bulkLiveWeek', { liveNum, mid })
@@ -381,7 +383,11 @@ export default {
       let info = await get('info', this.mid)
       this.info = info
       let { recordNum, liveNum, guardChange, mid } = info
-      this.active = await get('bulkActive', { recordNum, mid })
+      if (this.fullActive) {
+        this.active = await get('bulkActive', { recordNum, mid })
+      } else {
+        this.active = await get('bulkActiveSome', { recordNum, mid })
+      }
       if (liveNum) {
         if (this.fullLive) {
           this.rawLive = await get('bulkLive', { liveNum, mid })
@@ -595,6 +601,9 @@ export default {
     liveNum: function() {
       return this.info.liveNum
     },
+    recordNum() {
+      return this.info.recordNum
+    },
     areaRank: function() {
       return this.info.areaRank
     },
@@ -637,6 +646,9 @@ export default {
     fullLive() {
       return this.rawLive.length >= this.liveNum
     },
+    fullActive() {
+      return this.active.length >= this.recordNum
+    },
   },
   components: {
     List,
@@ -646,9 +658,14 @@ export default {
   },
   methods: {
     async loadFullLive() {
-      this.loading = true
+      this.loadingLive = true
       let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
       this.rawLive = live
+    },
+    async loadFullActive() {
+      this.loadingActive = true
+      let active = await get('bulkActive', { recordNum: this.recordNum, mid: this.mid })
+      this.active = active
     },
   },
 }
