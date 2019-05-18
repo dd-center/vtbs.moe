@@ -117,6 +117,7 @@
                   <el-tag size="medium">直播中</el-tag>
                 </a>
                 <h3>{{title}}</h3>
+                <h3 v-if="liveStatus">人气: {{online | locale}}</h3>
               </div>
             </el-card>
           </el-col>

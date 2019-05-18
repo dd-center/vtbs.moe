@@ -9,7 +9,7 @@
         </el-table-column>
         <el-table-column align="right">
           <template slot="header" slot-scope="scope">
-            <el-input v-model="search" placeholder="搜索"></el-input>
+            <el-input v-model="search" placeholder="模糊搜索"></el-input>
           </template>
           <template slot-scope="scope">
             <router-link :to="`/detail/${scope.row.mid}`">
