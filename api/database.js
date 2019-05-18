@@ -1,16 +1,28 @@
 const level = require('level')
 const fs = require('fs-extra')
 
+const LRU = require('lru-cache')
+
+const cache = new LRU({
+  max: 100000,
+})
+
 class LevelDatabase {
   constructor({ name, db }) {
     this.name = name
     this.db = db
   }
   put(key, value) {
+    cache.set(`${this.name}_${key}`, value)
     return this.db.put(`${this.name}_${key}`, value)
   }
-  get(key) {
-    return this.db.get(`${this.name}_${key}`).catch(() => undefined)
+  async get(key) {
+    let value = cache.get(`${this.name}_${key}`)
+    if (!value) {
+      value = await this.db.get(`${this.name}_${key}`).catch(() => undefined)
+      cache.set(`${this.name}_${key}`, value)
+    }
+    return value
   }
 }
 
