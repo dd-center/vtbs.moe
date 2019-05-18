@@ -19,6 +19,13 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
           arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
         })
       }
+      if (e === 'vtbMacroWeek') {
+        socket.join('vtbMacro', async () => {
+          let macroNum = await num.get('vtbMacroNum')
+          let skip = macroNum - 24 * 60 * 7 / 5
+          arc(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
+        })
+      }
       if (e === 'guardMacro') {
         socket.join('guardMacro', async () => {
           let macroNum = await num.get('guardMacroNum')
@@ -63,6 +70,7 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   handler('liveBulk')
   handler('vupMacro')
   handler('vtbMacro')
+  handler('vtbMacroWeek')
   handler('guardMacro')
   handler('info')
   handler('bulkActive')
@@ -107,6 +115,7 @@ liveBulk: [mid] -> [{time, online}]
 
 vupMacro: -> [{vupMacro}]
 vtbMacro: -> [{vtbMacro}]
+vtbMacroWeek: -> [{vtbMacro}]
 guardMacro: -> [{guardMacro}]
 
 info: mid -> {info}

@@ -6,11 +6,14 @@
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
         <h1>直播势:</h1>
         <ve-line :data="{rows:vtbMacro}" :settings="vtb" :extend="vtbExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']"></ve-line>
+        <el-button size="mini" @click="loadVtbMacroAll" v-if="!fullVtb" :loading="loading" title="载入完整">(一周)</el-button>
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>虚拟世界舰团:</h1>
         <ve-line :data="{rows:guardMacro}" :settings="guard" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
+    </el-row>
+    <el-row>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>舰团日K:</h1>
         <ve-candle :data="{rows:guardMacroK}" :settings="guardK" :not-set-unchange="['dataZoom']"></ve-candle>
@@ -44,7 +47,7 @@ export default {
         .then(vup => this.updateMacro({ vup }))
     }
     if (!this.vtbMacro.length) {
-      get('vtbMacro')
+      get('vtbMacroWeek')
         .then(vtb => this.updateMacro({ vtb }))
     }
     if (!this.guardMacro.length) {
@@ -52,7 +55,17 @@ export default {
         .then(guard => this.updateMacro({ guard }))
     }
   },
-  methods: mapMutations(['updateMacro']),
+  methods: {
+    loadVtbMacroAll() {
+      this.loading = true
+      get('vtbMacro')
+        .then(vtb => {
+          this.updateMacro({ vtb })
+          this.fullVtb = true
+        })
+    },
+    ...mapMutations(['updateMacro']),
+  },
   computed: {
     ...mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
     guardMacroK: function() {
@@ -80,6 +93,9 @@ export default {
       }
 
       return rows
+    },
+    fullVtb() {
+      return this.vtbMacro.length > 24 * 12 * 7
     },
   },
   data: function() {
@@ -151,7 +167,9 @@ export default {
       metrics: ['open', 'close', 'lowest', 'close'],
       showDataZoom: true,
     }
-    return {}
+    return {
+      loading: false,
+    }
   },
 }
 </script>
