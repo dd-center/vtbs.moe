@@ -100,6 +100,12 @@ class Spider {
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
+      let averageLive
+      if (liveNum) {
+        let firstLive = await this.db.live.get({ mid, num: 1 })
+        averageLive = (1000 * 60 * 5 * liveNum) * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
+      }
+
       if (guardNum !== info.guardNum) {
         guardChange++
         this.io.to(mid).emit('detailGuard', { mid, data: { guardNum, time } })
@@ -117,9 +123,9 @@ class Spider {
 
       let guardType = await this.db.guardType.get(mid)
 
-      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time } })
-      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time })
-      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, guardChange, guardType, areaRank, online, title, time })
+      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time } })
+      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time })
+      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time })
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)

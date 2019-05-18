@@ -538,11 +538,10 @@ export default {
         .filter(e => e)
     },
     averageLive: function() {
-      if (!this.rawLive.length) {
+      if (!this.info.averageLive) {
         return undefined
       }
-      let time = new Date().getTime()
-      let duration = moment.duration((1000 * 60 * 5 * this.liveNum) * 1000 * 60 * 60 * 24 * 7 / (time - this.rawLive[0].time), 'ms')
+      let duration = moment.duration(this.info.averageLive, 'ms')
       let result = []
       let d = Math.floor(duration.asDays())
       let h = duration.hours()
