@@ -145,7 +145,7 @@
           <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                直播·人气
+                直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loading" title="载入完整" class="right">(一周)</el-button>
               </div>
               <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
             </el-card>
@@ -348,6 +348,7 @@ export default {
       info: {},
       rawLive: [],
       guard: [],
+      loading: false,
     }
   },
   watch: {
@@ -364,7 +365,7 @@ export default {
         let active = await get('bulkActive', { recordNum, mid })
         this.active = active
         if (liveNum) {
-          let live = await get('bulkLive', { liveNum, mid })
+          let live = await get('bulkLiveWeek', { liveNum, mid })
           this.rawLive = live
         }
         if (guardChange > 0) {
@@ -381,7 +382,11 @@ export default {
       let { recordNum, liveNum, guardChange, mid } = info
       this.active = await get('bulkActive', { recordNum, mid })
       if (liveNum) {
-        this.rawLive = await get('bulkLive', { liveNum, mid })
+        if (this.fullLive) {
+          this.rawLive = await get('bulkLive', { liveNum, mid })
+        } else {
+          this.rawLive = await get('bulkLiveWeek', { liveNum, mid })
+        }
       }
       if (guardChange > 0) {
         this.guard = await get('bulkGuard', { guardChange, mid })
@@ -629,12 +634,22 @@ export default {
         { name: '上次更新', value: moment(this.time).fromNow() },
       ]
     },
+    fullLive() {
+      return this.rawLive.length >= this.liveNum
+    },
   },
   components: {
     List,
   },
   filters: {
     locale: v => v.toLocaleString(),
+  },
+  methods: {
+    async loadFullLive() {
+      this.loading = true
+      let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
+      this.rawLive = live
+    },
   },
 }
 </script>
