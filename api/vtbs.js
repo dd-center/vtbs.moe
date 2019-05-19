@@ -240,6 +240,7 @@ module.exports = [
   { mid: 19462294, note: 'Lemonsix' },
   { mid: 2461100, note: '艾莓雅' },
   { mid: 175056, note: 'yakko' },
+  { mid: 410741448, note: 'Milky' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
@@ -256,6 +257,7 @@ module.exports = [
   { mid: 2023004, note: 'MEYO' },
   { mid: 245093784, note: 'Lily' },
   { mid: 620903, note: '泰蕾莎' },
+  { mid: 345648420, note: 'Okome' },
 
   // 快看快看是Menhera
   { mid: 326968804, note: 'Menhera' },
