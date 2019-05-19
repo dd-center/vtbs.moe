@@ -132,6 +132,19 @@
               </div>
             </el-card>
           </el-col>
+          <el-col :span="6" :xs="12" :xl="4">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                BiliOB 观察者
+              </div>
+              <div class="center">
+                <a :href="`https://www.biliob.com/author/${mid}`" target="_blank">
+                  <img src="@/assets/biliob-frontend/public/img/icons/android-chrome-192x192.png" alt="BiliOB" width="72">
+                  {{`https://www.biliob.com/author/${mid}`}}
+                </a>
+              </div>
+            </el-card>
+          </el-col>
         </el-row>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
