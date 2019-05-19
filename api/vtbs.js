@@ -241,6 +241,7 @@ module.exports = [
   { mid: 2461100, note: '艾莓雅' },
   { mid: 175056, note: 'yakko' },
   { mid: 410741448, note: 'Milky' },
+  { mid: 11063770, note: '大猩猩' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
