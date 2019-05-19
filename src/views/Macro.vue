@@ -61,7 +61,6 @@ export default {
       get('vtbMacro')
         .then(vtb => {
           this.updateMacro({ vtb })
-          this.fullVtb = true
         })
     },
     ...mapMutations(['updateMacro']),

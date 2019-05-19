@@ -36,7 +36,7 @@
                 <el-divider></el-divider>
                 直播间:
                 <br>
-                <a :href="`https://live.bilibili.com/${roomid}`" target="_blank" v-if="roomid">
+                <a :href="`https://live.bilibili.com/${roomid}`" target="_blank">
                   {{`https://live.bilibili.com/${roomid}`}}
                 </a>
               </template>
@@ -124,7 +124,7 @@
           <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!averageLive">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                平均每周直播
+                周均直播
               </div>
               <div class="center">
                 <span class="big el-icon-d-caret"></span>
@@ -135,7 +135,7 @@
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                BiliOB 观察者
+                BiliOB 观察者 <small>by Jannchie见齐</small>
               </div>
               <div class="center">
                 <a :href="`https://www.biliob.com/author/${mid}`" target="_blank">
@@ -278,8 +278,8 @@
           <el-col :span="16" :xs="24">
             JSON数据:
             <pre>
-          {{info}}
-        </pre>
+              {{info}}
+            </pre>
           </el-col>
         </el-row>
 
