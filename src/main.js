@@ -36,9 +36,10 @@ Vue.use(new VueSocketIO({
 Vue.mixin({
   filters: {
     parseNumber: value => {
-      if (value !== undefined) {
+      if (value) {
         return value.toLocaleString()
       }
+      return 0
     },
     parseNumberOld: value => {
       if (value >= 1000000) {
