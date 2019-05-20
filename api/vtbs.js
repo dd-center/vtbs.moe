@@ -189,6 +189,10 @@ module.exports = [
   { mid: 13791309, note: '早见樱' },
   { mid: 1836495, note: '喵奈子' },
 
+  // Gemscompany
+  { mid: 355810003, note: '水科葵' },
+  { mid: 318581967, note: '珠根うた' },
+
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
