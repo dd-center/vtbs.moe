@@ -49,7 +49,7 @@
               </div>
               <div class="center">
                 <span class="el-icon-star-on big"></span>
-                <h3>{{follower | locale}}</h3>
+                <h3>{{follower | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -60,7 +60,7 @@
               </div>
               <div class="center">
                 <span class="el-icon-caret-right big"></span>
-                <h3>{{archiveView | locale}}</h3>
+                <h3>{{archiveView | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -71,7 +71,7 @@
               </div>
               <div class="center">
                 <span class="el-icon-picture-outline-round big"></span>
-                <h3>{{video | locale}}</h3>
+                <h3>{{video | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -92,9 +92,9 @@
               </div>
               <div class="center">
                 <span class="big el-icon-caret-top"></span>
-                <h3 v-if="rise > 0" class="more">+{{rise | locale}}</h3>
-                <h3 v-if="rise < 0" class="less">{{rise | locale}}</h3>
-                <h3 v-if="rise === 0">{{rise | locale}}</h3>
+                <h3 v-if="rise > 0" class="more">+{{rise | parseNumber}}</h3>
+                <h3 v-if="rise < 0" class="less">{{rise | parseNumber}}</h3>
+                <h3 v-if="rise === 0">{{rise | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -108,7 +108,7 @@
               </div>
               <div class="center">
                 <span class="el-icon-location-outline big"></span>
-                <h3>{{guardNum | locale}}</h3>
+                <h3>{{guardNum | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -119,7 +119,7 @@
               </div>
               <div class="center">
                 <span class="big el-icon-star-on">/<span class="el-icon-location-outline" /></span>
-                <h3>≈ {{Math.round(follower/guardNum) | locale}}</h3>
+                <h3>≈ {{Math.round(follower/guardNum) | parseNumber}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -128,7 +128,7 @@
               <div slot="header">
                 直播间
                 <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank" class="right">
-                  <el-tag size="medium">人气 {{online | locale}}</el-tag>
+                  <el-tag size="medium">人气 {{online}}</el-tag>
                 </a>
               </div>
               <div class="center">
@@ -205,27 +205,27 @@
                 </el-table-column>
                 <el-table-column label="关注增量">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.followerChange>0" class="more">+{{scope.row.followerChange | locale}}</span>
-                    <span v-if="scope.row.followerChange<0" class="less">{{scope.row.followerChange | locale}}</span>
-                    <span v-if="scope.row.followerChange==0">{{scope.row.followerChange | locale}}</span>
+                    <span v-if="scope.row.followerChange>0" class="more">+{{scope.row.followerChange | parseNumber}}</span>
+                    <span v-if="scope.row.followerChange<0" class="less">{{scope.row.followerChange | parseNumber}}</span>
+                    <span v-if="scope.row.followerChange==0">{{scope.row.followerChange | parseNumber}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="follower" label="总关注">
                 </el-table-column>
                 <el-table-column label="日播放">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | locale}}</span>
-                    <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | locale}}</span>
-                    <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | locale}}</span>
+                    <span v-if="scope.row.archiveViewChange>0" class="more">+{{scope.row.archiveViewChange | parseNumber}}</span>
+                    <span v-if="scope.row.archiveViewChange<0" class="less">{{scope.row.archiveViewChange | parseNumber}}</span>
+                    <span v-if="scope.row.archiveViewChange==0">{{scope.row.archiveViewChange | parseNumber}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="archiveView" label="总播放">
                 </el-table-column>
                 <el-table-column label="舰团变化" v-if="maxGuardNum">
                   <template slot-scope="scope">
-                    <span v-if="scope.row.guardNumChange>0" class="more">+{{scope.row.guardNumChange | locale}}</span>
-                    <span v-if="scope.row.guardNumChange<0" class="less">{{scope.row.guardNumChange | locale}}</span>
-                    <span v-if="scope.row.guardNumChange==0">{{scope.row.guardNumChange | locale}}</span>
+                    <span v-if="scope.row.guardNumChange>0" class="more">+{{scope.row.guardNumChange | parseNumber}}</span>
+                    <span v-if="scope.row.guardNumChange<0" class="less">{{scope.row.guardNumChange | parseNumber}}</span>
+                    <span v-if="scope.row.guardNumChange==0">{{scope.row.guardNumChange | parseNumber}}</span>
                   </template>
                 </el-table-column>
                 <el-table-column prop="guardNum" label="舰团" v-if="maxGuardNum">
@@ -256,7 +256,7 @@
               <el-table-column>
                 <template slot-scope="scope">
                   <template v-if="typeof scope.row.value === 'number'">
-                    <span>{{scope.row.value.toLocaleString()}}</span>
+                    <span>{{scope.row.value | parseNumber}}</span>
                     <span class="right" v-if="scope.row.value>=10000">({{scope.row.value | parseNumberOld}})</span>
                   </template>
                   <template v-if="typeof scope.row.value === 'string'">
@@ -289,9 +289,7 @@
           </el-col>
           <el-col :span="16" :xs="24">
             JSON数据:
-            <pre>
-              {{info}}
-            </pre>
+            <pre><code>{{info}}</code></pre>
           </el-col>
         </el-row>
 
@@ -538,8 +536,10 @@ export default {
         guardNumChange: Math.round(guardNumChangeSum / pastWeek.length),
         follower: '-',
         guardNum: '-',
+        archiveView: '-',
       })
       return pastWeek
+        .map(w => ({ ...w, follower: w.follower.toLocaleString(), guardNum: w.guardNum.toLocaleString(), archiveView: w.archiveView.toLocaleString() }))
     },
     maxGuardNum: function() {
       let max = this.guardNum
@@ -685,9 +685,6 @@ export default {
   components: {
     List,
   },
-  filters: {
-    locale: v => v.toLocaleString(),
-  },
   methods: {
     async loadFullLive() {
       this.loadingLive = true
@@ -707,7 +704,6 @@ export default {
 pre {
   background-color: rgba(0, 0, 0, 0.1);
   word-wrap: break-word;
-  white-space: pre-line;
 }
 
 .topPhoto {
