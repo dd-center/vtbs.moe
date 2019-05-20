@@ -354,6 +354,7 @@ export default {
     this.liveExtend = {
       'series.0.symbol': 'none',
       'series.0.smoothMonotone': 'x',
+      'series.0.sampling': 'average',
     }
     this.guardLine = {
       dimension: ['time'],
@@ -453,11 +454,11 @@ export default {
         let before = rawLive[i - 1] || {}
         let current = rawLive[i]
         let after = rawLive[i + 1] || {}
-        if (current.time - before.time > 1000 * 60 * 5 * 1.5) {
+        if (current.time - before.time > 1000 * 60 * 5 * 3) {
           live.push({ time: current.time - 1000 * 60 * 5, online: 0 })
         }
         live.push(current)
-        if (after.time - current.time > 1000 * 60 * 5 * 1.5) {
+        if (after.time - current.time > 1000 * 60 * 5 * 3) {
           live.push({ time: current.time + 1000 * 60 * 5, online: 0 })
         }
       }
