@@ -85,6 +85,22 @@
               </p>
             </el-card>
           </el-col>
+          <el-col :span="6" :xs="12" :xl="4">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                24小时粉丝增量
+              </div>
+              <div class="center">
+                <span class="big el-icon-caret-top"></span>
+                <h3 v-if="rise > 0" class="more">+{{rise | locale}}</h3>
+                <h3 v-if="rise < 0" class="less">{{rise | locale}}</h3>
+                <h3 v-if="rise === 0">{{rise | locale}}</h3>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-divider><i class="el-icon-s-data"></i></el-divider>
+        <el-row v-if="topPhoto">
           <el-col :span="6" :xs="12" :xl="4" v-if="guardNum">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
@@ -111,13 +127,12 @@
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 直播间
+                <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank" class="right">
+                  <el-tag size="medium">人气 {{online | locale}}</el-tag>
+                </a>
               </div>
               <div class="center">
-                <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
-                  <el-tag size="medium">直播中</el-tag>
-                </a>
                 <h3>{{title}}</h3>
-                <h3 v-if="liveStatus">人气: {{online | locale}}</h3>
               </div>
             </el-card>
           </el-col>
@@ -613,6 +628,9 @@ export default {
     },
     liveNum: function() {
       return this.info.liveNum
+    },
+    rise() {
+      return this.info.rise
     },
     recordNum() {
       return this.info.recordNum

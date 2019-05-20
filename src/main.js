@@ -36,7 +36,7 @@ Vue.use(new VueSocketIO({
 Vue.mixin({
   filters: {
     parseNumber: value => {
-      if (value) {
+      if (value !== undefined) {
         return value.toLocaleString()
       }
     },
