@@ -18,7 +18,13 @@
         <h1>舰团日K:</h1>
         <ve-candle :data="{rows:guardMacroK}" :settings="guardK" :not-set-unchange="['dataZoom']"></ve-candle>
       </el-col>
-      <el-col :xs="24" :span="12" v-loading="!vupMacro.length">
+      <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
+        <h1>舰团周K:</h1>
+        <ve-candle :data="{rows:guardMacroWeekK}" :settings="guardWeekK" :not-set-unchange="['dataZoom']"></ve-candle>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
         <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
       </el-col>
@@ -30,6 +36,8 @@
 <script>
 import Vue from 'vue'
 import { mapMutations, mapState } from 'vuex'
+
+import moment from 'moment'
 
 import { get } from '@/socket'
 
@@ -73,12 +81,13 @@ export default {
 
       for (let i = 0; i < guardMacro.length; i++) {
         let { time, guardNum } = guardMacro[i]
-        let ISO = (new Date(time + 1000 * 60 * 60 * 8)).toISOString().slice(0, 10)
+        let ISO = new Date(time).toLocaleDateString()
         let currentRow = rows[rows.length - 1] || {}
 
         if (currentRow.time !== ISO) {
           rows.push({
             time: ISO,
+            rawTime: time,
             open: currentRow.close !== undefined ? currentRow.close : guardNum,
             close: guardNum,
             lowest: guardNum,
@@ -88,6 +97,38 @@ export default {
             rows[rows.length - 1].lowest = guardNum
           }
           rows[rows.length - 1].close = guardNum
+        }
+      }
+
+      return rows
+        .map(k => ({ highest: k.close, ...k }))
+    },
+    guardMacroWeekK() {
+      let guardMacro = this.guardMacroK
+      let rows = []
+
+      for (let i = 0; i < guardMacro.length; i++) {
+        let { time, rawTime, open, close, lowest, highest } = guardMacro[i]
+        let ISO = time
+        let currentRow = rows[rows.length - 1] || {}
+        let weekNum = moment(rawTime).week()
+
+        if (currentRow.weekNum !== weekNum) {
+          rows.push({
+            time: ISO,
+            weekNum,
+            open,
+            close,
+            lowest,
+            highest,
+          })
+        } else {
+          rows[rows.length - 1] = {
+            ...rows[rows.length - 1],
+            close,
+            lowest: Math.min(lowest, currentRow.lowest),
+            highest: Math.max(highest, currentRow.highest),
+          }
         }
       }
 
@@ -136,7 +177,8 @@ export default {
       'series.0.smooth': false,
       'series.0.symbol': 'none',
       // 'series.1.symbol': 'none',
-      series: { sampling: 'average' },
+      'series.0.sampling': 'average',
+      'series.1.sampling': 'average',
     }
     this.guard = {
       dimension: ['time'],
@@ -157,14 +199,29 @@ export default {
         open: '开盘',
         close: '收盘',
         lowest: '最低',
+        highest: '最高',
       },
       // upColor: '#ec0000',
       // downColor: '#00da3c',
-      // showMA: true,
+      showMA: true,
       // MA: [3],
       dimension: 'time',
-      metrics: ['open', 'close', 'lowest', 'close'],
+      metrics: ['open', 'close', 'lowest', 'highest'],
       showDataZoom: true,
+    }
+    this.guardWeekK = {
+      labelMap: {
+        open: '开盘',
+        close: '收盘',
+        lowest: '最低',
+        highest: '最高',
+        日K: '周K',
+      },
+      legendName: {
+        日K: '周K',
+      },
+      dimension: 'time',
+      metrics: ['open', 'close', 'lowest', 'highest'],
     }
     return {
       loading: false,
