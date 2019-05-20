@@ -4,7 +4,12 @@
     <el-col :span="12" class="right">
       {{props.name[key]}}<span :class="props.icon[key]"></span>
     </el-col>
-    <el-col :span="12">
+    <template v-if="key === 'rise'">
+      <span v-if="value > 0" class="more">+{{value | parseNumber}}</span>
+      <span v-if="value < 0" class="less">{{value | parseNumber}}</span>
+      <span v-if="value === 0">{{value | parseNumber}}</span>
+    </template>
+    <el-col :span="12" v-else>
       {{value | parseNumber}}
     </el-col>
   </el-row>
@@ -42,5 +47,13 @@ export default {
 <style scoped>
 .right {
   text-align: right;
+}
+
+.more {
+  color: #00da3c;
+}
+
+.less {
+  color: #ec0000;
 }
 </style>

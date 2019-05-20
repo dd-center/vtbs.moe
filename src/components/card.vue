@@ -76,21 +76,16 @@ export default {
       return this.info.lastLive
     },
     status: function() {
-      let object = {}
-      object.follower = this.info.follower
+      let object = {
+        follower: this.info.follower,
+        rise: this.info.rise,
+      }
       if (this.$route.path.includes('live')) {
         if (this.info.guardNum) {
           object.guardNum = this.info.guardNum
         }
       } else {
         object.archiveView = this.info.archiveView
-        object.rise = this.info.rise
-        if (this.$route.path.includes('rise')) {
-          object = {
-            rise: this.info.rise,
-            ...object,
-          }
-        }
       }
       if (this.liveStatus) {
         object.online = this.info.online
