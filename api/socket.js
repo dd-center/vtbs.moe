@@ -3,9 +3,13 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
     if (typeof arc === 'function') {
       if (e === 'live') {
         arc(await live.get(target))
+        // DEPRECATED
+        // Remove in the future
       }
       if (e === 'liveBulk') {
         arc(await Promise.all([...target].map(e => live.get(e))))
+        // DEPRECATED
+        // Remove in the future
       }
       if (e === 'vupMacro') {
         socket.join('vupMacro', async () => {

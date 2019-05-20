@@ -23,7 +23,6 @@ export default new Vuex.Store({
     online: 0,
     vtbs: [],
     info: {},
-    pastLive: {},
     status: {},
     spiderUpdate: [],
     logs: [],
@@ -57,9 +56,6 @@ export default new Vuex.Store({
       }
       state.info = { ...info }
       state.face = { ...face }
-    },
-    loadPastLive(state, { mid, time }) {
-      state.pastLive = { ...state.pastLive, [mid]: time }
     },
     SOCKET_log(state, data) {
       state.logs.push({ time: (new Date()).toLocaleString(), data })
@@ -106,25 +102,5 @@ export default new Vuex.Store({
       }
     },
   },
-  actions: {
-    async SOCKET_info({ commit, dispatch }, info) {
-      let pendingUpdatePastLive = []
-      for (let i = 0; i < info.length; i++) {
-        let { mid, liveNum, liveStatus } = info[i]
-        if (!liveNum) {
-          commit('loadPastLive', { mid, time: 'never' })
-        }
-        if (!liveStatus && liveNum) {
-          pendingUpdatePastLive.push({ mid, num: liveNum })
-        }
-      }
-      dispatch('updatePastLive', pendingUpdatePastLive)
-    },
-    async updatePastLive({ commit }, bulk) {
-      let list = await get('liveBulk', bulk)
-      for (let i = 0; i < bulk.length; i++) {
-        commit('loadPastLive', { mid: bulk[i].mid, time: list[i].time })
-      }
-    },
-  },
+  actions: {},
 })

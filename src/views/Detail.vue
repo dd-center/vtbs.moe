@@ -279,11 +279,8 @@
                     <a :href="`https://live.bilibili.com/${roomid}`" v-if="scope.row.liveStatus" target="_blank">
                       <el-tag size="small">直播中</el-tag>
                     </a>
-                    <template v-else-if="typeof scope.row.past === 'number'">
-                      {{scope.row.moment}}
-                    </template>
                     <template v-else>
-                      不知道→_→
+                      {{scope.row.moment}}
                     </template>
                   </template>
                 </template>
@@ -629,6 +626,9 @@ export default {
     liveNum: function() {
       return this.info.liveNum
     },
+    lastLiveTime() {
+      return this.info.lastLive.time
+    },
     rise() {
       return this.info.rise
     },
@@ -664,8 +664,8 @@ export default {
         {
           name: '直播状态',
           liveStatus: this.liveStatus,
-          past: this.$store.state.pastLive[this.mid],
-          moment: (typeof this.$store.state.pastLive[this.mid] === 'number') ? moment(this.$store.state.pastLive[this.mid]).fromNow() : '从未',
+          past: this.lastLiveTime,
+          moment: (typeof this.lastLiveTime === 'number') ? moment(this.lastLiveTime).fromNow() : '不知道→_→',
         },
         { name: '公告', value: this.notice },
         { name: '直播时长', value: `${Math.round(this.liveNum / 12)} 时` },

@@ -72,6 +72,9 @@ export default {
     sign: function() {
       return this.info.sign || this.mid
     },
+    lastLive() {
+      return this.info.lastLive
+    },
     status: function() {
       let object = {}
       object.follower = this.info.follower
@@ -91,12 +94,8 @@ export default {
       }
       if (this.liveStatus) {
         object.online = this.info.online
-      } else if (this.$store.state.pastLive[this.mid]) {
-        if (typeof this.$store.state.pastLive[this.mid] === 'number') {
-          object.pastLive = moment(this.$store.state.pastLive[this.mid]).fromNow()
-        }
-      } else {
-        object.pastLive = undefined
+      } else if (this.lastLive.time) {
+        object.pastLive = moment(this.lastLive.time).fromNow()
       }
       return object
     },

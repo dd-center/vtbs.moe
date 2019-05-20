@@ -86,6 +86,7 @@ class Spider {
         info = {}
       }
       let { recordNum = 0, liveNum = 0, guardChange = 0 } = info
+      let { lastLive = (await this.db.live.get({ mid, num: liveNum })) || {} } = info
 
       let currentActive = await this.db.active.get({ mid, num: recordNum })
       if (notable({ object, time, currentActive })) {
@@ -97,6 +98,7 @@ class Spider {
       if (liveStatus) {
         liveNum++
         this.io.to(mid).emit('detailLive', { mid, data: { online, time } })
+        lastLive = { online, time }
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
@@ -123,9 +125,11 @@ class Spider {
 
       let guardType = await this.db.guardType.get(mid)
 
-      this.io.to(mid).emit('detailInfo', { mid, data: { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time } })
-      await this.db.info.put(mid, { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time })
-      this.infoArray.push({ mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, averageLive, guardChange, guardType, areaRank, online, title, time })
+      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, guardChange, guardType, areaRank, online, title, time }
+
+      this.io.to(mid).emit('detailInfo', { mid, data: newInfo })
+      await this.db.info.put(mid, newInfo)
+      this.infoArray.push(newInfo)
 
       this.log(`UPDATED: ${mid} - ${uname}`)
       await this.wait(1000 * 1)
