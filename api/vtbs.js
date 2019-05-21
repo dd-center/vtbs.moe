@@ -86,7 +86,7 @@ module.exports = [
   // Winks Extra
   { mid: 536899, note: '钟老师' },
   { mid: 353044891, note: 'Adam' },
-  { mid: 204838732, note: '鬼月' },  
+  { mid: 204838732, note: '鬼月' },
   { mid: 381294255, note: 'WINKS事务所' },
 
   // KMNHZ
@@ -107,7 +107,7 @@ module.exports = [
   { mid: 403927583, note: '椎名唯华' },
   { mid: 403930401, note: '绿仙' },
   { mid: 403928672, note: '葵' },
-  { mid: 403921378, note: '凛' },  
+  { mid: 403921378, note: '凛' },
   { mid: 410484677, note: '彩虹社官方' },
   // 非官方(?)
   { mid: 109891, note: '月ノ美兎' },
@@ -116,7 +116,7 @@ module.exports = [
   { mid: 257492, note: '久远千岁' },
   { mid: 230947255, note: '笹木咲' },
   { mid: 406532904, note: '御伽原江良' },
-  
+
   // 上海2434
   { mid: 1631724, note: '塞塔nya' },
 
@@ -201,8 +201,8 @@ module.exports = [
   { mid: 318581967, note: '珠根うた' },
 
   // .LIVE
-  { mid: 391876799, note: 'siro' },  
-  { mid: 409689786, note: '马叔' },  
+  { mid: 391876799, note: 'siro' },
+  { mid: 409689786, note: '马叔' },
   { mid: 349674525, note: '毛绒田咩咩咩' },
 
   // 无所属/无细分 (懒)
@@ -278,7 +278,7 @@ module.exports = [
   { mid: 6777056, note: '朝之姐妹' },
   { mid: 415858231, note: '佐久間ねむ' },
   { mid: 365308305, note: '夜桜たま' },
-  { mid: 3499787, note: 'AYAYA白組搬运工' },  
+  { mid: 3499787, note: 'AYAYA白組搬运工' },
   { mid: 454530, note: '花京院ちえり' },
   { mid: 16706112, note: '郡道美玲&夢月ロア' },
   { mid: 18838062, note: '森中花咲' },
@@ -316,6 +316,7 @@ module.exports = [
   { mid: 176486647, note: '银河爱丽丝' },
   { mid: 5730, note: '星乃めあ' },
   { mid: 394918929, note: 'ウタゴエ' },
+  { mid: 3608875, note: '魔王城ch' },
 
   // 快看快看是Menhera
   { mid: 326968804, note: 'Menhera' },
