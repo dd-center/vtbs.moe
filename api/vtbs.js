@@ -296,6 +296,7 @@ module.exports = [
   { mid: 33398732, note: '三田sonia' },
   { mid: 390186116, note: '屍鬼' },
   { mid: 7078836, note: '富士葵' },
+  { mid: 421347849, note: '白百合' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
