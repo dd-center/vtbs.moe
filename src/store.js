@@ -48,8 +48,8 @@ export default new Vuex.Store({
       let info = { ...state.info }
       let face = { ...state.face }
       for (let i = 0; i < data.length; i++) {
-        let mid = data[i].mid
-        info[data[i].mid] = data[i]
+        let { mid } = data[i]
+        info[mid] = data[i]
         if (!face[mid]) {
           face[mid] = data[i].face
         }

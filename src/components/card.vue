@@ -26,8 +26,8 @@
       <span v-if="liveStatus" class="el-icon-ship">{{title}}</span>
       <p>{{sign}}</p>
     </el-col>
-    <el-col :span="6" class="hidden-xs-only">
-      <badge :status="status" v-if="info"></badge>
+    <el-col :span="6" class="hidden-xs-only" v-loading="!info.uname">
+      <badge :status="status" v-if="info.uname"></badge>
     </el-col>
   </el-row>
   <div class="hidden-sm-and-up">
@@ -73,7 +73,7 @@ export default {
       return this.info.sign || this.mid
     },
     lastLive() {
-      return this.info.lastLive
+      return this.info.lastLive || {}
     },
     status: function() {
       let object = {
