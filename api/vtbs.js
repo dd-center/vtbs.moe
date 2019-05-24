@@ -21,6 +21,7 @@ module.exports = [
   // Homolive
   { mid: 12362451, note: 'homolive' },
   { mid: 405981431, note: 'snow' },
+  { mid: 348832436, note: '兔鞠Mari' },
 
   // Hololive
   { mid: 286700005, note: 'hololive' },
@@ -45,9 +46,16 @@ module.exports = [
   { mid: 412135222, note: 'Okayu' },
   { mid: 412135619, note: 'Korone' },
 
+  // Upd8
+
   // 爱酱
   { mid: 1473830, note: 'KIZUNA.AI' },
   // { mid: 27534330, note: '爱酱' },
+  { mid: 325325965, note: 'YuNi' },
+  { mid: 90100786, note: '青家大院AVtuber' },
+  { mid: 80387576, note: 'Hime' },
+  { mid: 15095071, note: 'Kerin爆破搬运组' },
+  { mid: 5847902, note: 'Omega姐妹' },
 
   // ENTUM
   { mid: 238537745, note: '未来明' },
@@ -73,6 +81,7 @@ module.exports = [
   { mid: 359081307, note: '花音' },
   { mid: 359082339, note: 'Pro' },
   { mid: 359082596, note: '于川流丹' },
+  { mid: 339116260, note: 'WINKS字幕搬运' },
 
   // 上面阿修的gachi
   { mid: 10829693, note: 'GachiA' },
@@ -103,7 +112,7 @@ module.exports = [
   { mid: 252599, note: '游戏部' },
   { mid: 381951501, note: 'Cocoa' },
 
-  // 2434
+  // 彩虹社2434
   { mid: 403927583, note: '椎名唯华' },
   { mid: 403930401, note: '绿仙' },
   { mid: 403928672, note: '葵' },
@@ -112,10 +121,33 @@ module.exports = [
   // 非官方(?)
   { mid: 109891, note: '月ノ美兎' },
   { mid: 344515485, note: '樋口枫' },
+  { mid: 1552664, note: '鈴谷アキ字幕组' },
+  { mid: 28300270, note: 'moira搬运组' },
+  { mid: 3726678, note: '鬼畜千寻炎哈组' },
+  { mid: 327875807, note: '剑持刀也搬运组' },
+  { mid: 401166457, note: '伏見ガク搬运组' },
+  { mid: 2230818, note: '夕阳莉莉搬运組' },
+  { mid: 3326614, note: '野猫航空搬运组' },
+  { mid: 351599084, note: '铃鹿诗子字幕组' },
+  { mid: 18838062, note: '森中花咲' },
+  { mid: 399817053, note: '出雲霞' },
+  { mid: 362420674, note: '修女克蕾雅' },
+  { mid: 414127280, note: '社筑' },
+  { mid: 20313142, note: '雨森小夜搬运组' },
+  { mid: 5595729, note: '舞元启介' },
+  { mid: 19959581, note: '町田ちま' },
+  { mid: 1818100, note: '黑井柴的犬舍后院' },
+  { mid: 385501313, note: '叶＆葛葉双人' },
+  { mid: 315102133, note: '赤羽叶子' },
   { mid: 384064360, note: '竜胆尊' },
   { mid: 257492, note: '久远千岁' },
   { mid: 230947255, note: '笹木咲' },
   { mid: 406532904, note: '御伽原江良' },
+  { mid: 4903038, note: '戌亥 とこ' },
+  { mid: 4504727, note: '三枝明那搬運組' },
+  { mid: 323590528, note: '静凛字幕组' },
+  { mid: 328021285, note: 'mugi字幕组' },
+  { mid: 152257800, note: '精灵Elu/妖精艾露' },
 
   // 上海2434
   { mid: 1631724, note: '塞塔nya' },
@@ -202,19 +234,19 @@ module.exports = [
 
   // .LIVE
   { mid: 391876799, note: 'siro' },
+  { mid: 11725160, note: '路人豆腐铺' }, // siro的搬运账号
   { mid: 409689786, note: '马叔' },
   { mid: 349674525, note: '毛绒田咩咩咩' },
+  { mid: 5174606, note: '北上双叶' },
+  { mid: 454530, note: '花京院ちえり' },
 
   // 无所属/无细分 (懒)
   { mid: 386900246, note: '鬼妈' },
   { mid: 3772162, note: '清露' },
-  { mid: 325325965, note: 'YuNi' },
-  { mid: 90100786, note: 'AVtuber' },
   { mid: 364225566, note: '战斗吧歌姬' },
   { mid: 1612112, note: '魔宵' },
   { mid: 203365648, note: 'Alice' },
   { mid: 35749736, note: '子彧' },
-  { mid: 80387576, note: 'Hime' },
   { mid: 125823832, note: '琥珀-虚颜' },
   { mid: 31761638, note: '8911勘测研究所' },
   { mid: 5563350, note: '虚拟次元计划' },
@@ -279,12 +311,8 @@ module.exports = [
   { mid: 415858231, note: '佐久間ねむ' },
   { mid: 365308305, note: '夜桜たま' },
   { mid: 3499787, note: 'AYAYA白組搬运工' },
-  { mid: 454530, note: '花京院ちえり' },
   { mid: 16706112, note: '郡道美玲&夢月ロア' },
-  { mid: 18838062, note: '森中花咲' },
   { mid: 399574079, note: '闇夜乃莫露露' },
-  { mid: 315102133, note: '赤羽叶子' },
-  { mid: 399817053, note: '出雲霞' },
   { mid: 3584186, note: '狐狐音' },
   { mid: 394851149, note: 'Eve_aic' },
   { mid: 406748610, note: 'MEMProject' },
@@ -297,6 +325,12 @@ module.exports = [
   { mid: 390186116, note: '屍鬼' },
   { mid: 7078836, note: '富士葵' },
   { mid: 421347849, note: '白百合' },
+  { mid: 24791744, note: '杀戮的天使官方' },
+  { mid: 298077390, note: 'KanataHikari搬运' },
+  { mid: 6826308, note: '千代家ぷりり搬运' },
+  { mid: 354142359, note: '狸猫花生搬运组' },
+  { mid: 396532028, note: '童田明治的小狼窝' },
+  { mid: 15936956, note: '穿裙带菜裸奔人字幕组' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
