@@ -7,7 +7,7 @@
           <span class="el-icon-discover discoverButton"></span>
         </router-link>
       </div>
-      <img :src="face.replace('http:','https:')" class="face" v-if="face">
+      <img :src="`${face.replace('http:','https:')}@192h_192w`" class="face" v-if="face">
       <img src="@/assets/face.jpg" class="face" v-else>
     </el-col>
     <el-col :span="12" class="hidden-sm-and-up">
