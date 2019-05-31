@@ -3,11 +3,15 @@ const vtbs = require('./vtbs')
 
 const ant = require('./ant')
 
+const http = require('http')
 const Server = require('socket.io')
-const io = new Server(8001, { serveClient: false, path: '/' })
+
 const ioInternal = new Server(9001, { serveClient: false, path: '/' })
-const { connect } = require('./socket')
 const internal = require('./internal')
+// TODO: useless?
+
+const { connect } = require('./socket')
+const httpAPI = require('./http')
 
 const { init } = require('./database')
 
@@ -16,8 +20,10 @@ const INTERVAL = 1000 * 60 * 5
 
 ;
 (async () => {
-  // let { site, info, active, live } = await init()
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
+  const io = new Server({ serveClient: false })
+  const server = http.createServer(httpAPI({ vtbs, info, fullGuard }))
+  io.attach(server)
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard, guardType }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()
@@ -36,4 +42,5 @@ const INTERVAL = 1000 * 60 * 5
   }, 1000 * 60 * 4)
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL }))
   ioInternal.on('connection', internal({ vtbs }))
+  server.listen(8001)
 })()
