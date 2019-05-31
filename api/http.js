@@ -1,6 +1,13 @@
 const Koa = require('koa')
 const Router = require('koa-router')
 
+const LRU = require('lru-cache')
+
+const cache = new LRU({
+  maxAge: 1000 * 5,
+  max: 100,
+})
+
 module.exports = ({ vtbs, info, fullGuard }) => {
   const app = new Koa()
   const v1 = new Router({ prefix: '/v1' })
@@ -27,6 +34,17 @@ module.exports = ({ vtbs, info, fullGuard }) => {
     }
   })
 
+  app.use(async (ctx, next) => {
+    let hit = cache.get(ctx.url)
+    if (hit) {
+      ctx.body = hit
+    } else {
+      await next()
+      cache.set(ctx.url, ctx.body)
+    }
+  })
+
   app.use(v1.routes())
+
   return app.callback()
 }
