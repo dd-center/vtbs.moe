@@ -31,6 +31,8 @@
         <a href="https://www.biliob.com" target="_blank">https://www.biliob.com</a>
       </el-col>
       <el-col :xs="24" :span="12">
+        <h1>api.vtbs.moe</h1>
+        <router-link to="api">API Documents</router-link>
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>
