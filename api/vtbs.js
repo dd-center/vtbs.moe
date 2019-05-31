@@ -148,7 +148,9 @@ module.exports = [
   { mid: 323590528, note: '静凛字幕组' },
   { mid: 328021285, note: 'mugi字幕组' },
   { mid: 152257800, note: '精灵Elu/妖精艾露' },
-
+  // VirtuaReal Project
+  { mid: 421267475, note: '艾因Eine' },
+  { mid: 420249427, note: '琉绮Ruki' },
   // 上海2434
   { mid: 1631724, note: '塞塔nya' },
 
@@ -331,6 +333,8 @@ module.exports = [
   { mid: 354142359, note: '狸猫花生搬运组' },
   { mid: 396532028, note: '童田明治的小狼窝' },
   { mid: 15936956, note: '穿裙带菜裸奔人字幕组' },
+  { mid: 323259613, note: '贝尔蒙德班德拉斯' },
+  { mid: 3052285, note: '纪游哉' },
 
   // 从直播区抓过来的
   { mid: 7858535, note: '豆腐' },
