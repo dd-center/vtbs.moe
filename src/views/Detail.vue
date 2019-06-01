@@ -136,6 +136,17 @@
               </div>
             </el-card>
           </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!weekLive">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                本周直播
+              </div>
+              <div class="center">
+                <span class="big el-icon-d-caret"></span>
+                <h3>{{weekLive}}</h3>
+              </div>
+            </el-card>
+          </el-col>
           <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!averageLive">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
@@ -590,6 +601,26 @@ export default {
       }
       return result.join(' ')
       // return moment.duration(this.liveNum * 5, 'minutes').humanize()
+    },
+    weekLive() {
+      if (!this.info.weekLive) {
+        return undefined
+      }
+      let duration = moment.duration(this.info.weekLive, 'ms')
+      let result = []
+      let d = Math.floor(duration.asDays())
+      let h = duration.hours()
+      let m = duration.minutes()
+      if (d) {
+        result.push(`${d} 天`)
+      }
+      if (h) {
+        result.push(`${h} 小时`)
+      }
+      if (m) {
+        result.push(`${m} 分钟`)
+      }
+      return result.join(' ')
     },
     face: function() {
       return this.info.face

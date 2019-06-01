@@ -102,10 +102,15 @@ class Spider {
         await this.db.live.put({ mid, num: liveNum, value: { online, time } })
       }
 
-      let averageLive
+      let averageLive = 0
+      let weekLive = 0
       if (liveNum) {
-        let firstLive = await this.db.live.get({ mid, num: 1 })
+        let allLive = await this.db.live.bulkGet({ mid, num: liveNum })
+        let firstLive = allLive[0]
         averageLive = (1000 * 60 * 5 * liveNum) * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
+
+        let thisWeek = allLive.filter((live) => live.time > time - 1000 * 60 * 60 * 24 * 7)
+        weekLive = thisWeek.length * 1000 * 60 * 5
       }
 
       if (guardNum !== info.guardNum) {
@@ -125,7 +130,7 @@ class Spider {
 
       let guardType = await this.db.guardType.get(mid)
 
-      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, guardChange, guardType, areaRank, online, title, time }
+      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, time }
 
       this.io.to(mid).emit('detailInfo', { mid, data: newInfo })
       await this.db.info.put(mid, newInfo)
