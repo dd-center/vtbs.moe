@@ -56,9 +56,9 @@ export default {
       })
     },
     searchList: function() {
-      let searchArray = (this.search || '').replace(/ /g, '').split('')
+      let searchArray = (this.search || '').toLowerCase().replace(/ /g, '').split('')
       let result = this.list
-        .map(object => ({ ...object, index: 0, string: `${object.uname}${object.note.join('')}` }))
+        .map(object => ({ ...object, index: 0, string: `${object.uname}${object.note.join('')}`.toLowerCase() }))
       searchArray.forEach(key => {
         result = result
           .map(object => ({ ...object, index: object.string.indexOf(key, object.index) + 1 }))
