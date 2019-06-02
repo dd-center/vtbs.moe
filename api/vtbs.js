@@ -2,7 +2,7 @@ module.exports = [
   // Project Paryi
   { mid: 1576121, note: ['Paryi'] },
   { mid: 372984197, note: ['Shiori'] },
-  { mid: 349991143, note: ['Mea'] },
+  { mid: 349991143, note: ['Mea', 'Kagura'] },
   { mid: 8119834, note: ['Hana'] },
   { mid: 2778044, note: ['Miu'] },
   { mid: 3149619, note: ['mana'] },
@@ -247,7 +247,7 @@ module.exports = [
   { mid: 3772162, note: ['清露'] },
   { mid: 364225566, note: ['战斗吧歌姬'] },
   { mid: 1612112, note: ['魔宵'] },
-  { mid: 203365648, note: ['Alice'] },
+  { mid: 203365648, note: ['物述有栖', 'AliceMononobe'] },
   { mid: 35749736, note: ['子彧'] },
   { mid: 125823832, note: ['琥珀-虚颜'] },
   { mid: 31761638, note: ['8911勘测研究所'] },
@@ -336,6 +336,8 @@ module.exports = [
   { mid: 323259613, note: ['贝尔蒙德班德拉斯'] },
   { mid: 3052285, note: ['纪游哉'] },
   { mid: 390389908, note: ['獅子神レオナ翻译组'] },
+  { mid: 23276166, note: ['黑川幽梦'] },
+  { mid: 22296560, note: ['塔西亚'] },
 
   // 从直播区抓过来的
   { mid: 7858535, note: ['豆腐'] },
