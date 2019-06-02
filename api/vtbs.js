@@ -268,7 +268,7 @@ module.exports = [
   { mid: 20530305, note: ['木糖纯和庄不纯'] },
   { mid: 389052754, note: ['摩提_MoChi'] },
   { mid: 397222615, note: ['蒼乃幽姬'] },
-  { mid: 403768239, note: ['RukiRokiChannel'] },
+  { mid: 403768239, note: ['Ruki'] },
   { mid: 320740464, note: ['兰若_Ruo'] },
   { mid: 345819190, note: ['Kanna'] },
   { mid: 296909317, note: ['himehina'] },
