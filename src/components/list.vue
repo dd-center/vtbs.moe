@@ -26,8 +26,18 @@
         <el-table-column prop="guardNum" label="舰团">
         </el-table-column>
         <el-table-column prop="mid" label="空间id">
+          <template slot-scope="scope">
+            <a :href="`https://space.bilibili.com/${scope.row.mid}`" target="_blank" class="space">
+             <el-tag size="small" type="info">{{scope.row.mid}}</el-tag>
+             </a>
+          </template>
         </el-table-column>
         <el-table-column prop="roomid" label="直播间id">
+          <template slot-scope="scope">
+            <a :href="`https://live.bilibili.com/${scope.row.roomid}`" v-if="scope.row.roomid" target="_blank" class="space">
+             <el-tag size="small" type="info">{{scope.row.roomid}}</el-tag>
+             </a>
+          </template>
         </el-table-column>
         
       </el-table>
@@ -40,7 +50,11 @@
 import { mapState } from 'vuex'
 
 export default {
-  data: () => ({ search: '' }),
+  data: () => {
+    return {
+      search: ''
+      }
+  },
   computed: { ...mapState(['vtbs', 'info']),
     list: function() {
       let list = []
