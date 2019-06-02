@@ -4,7 +4,7 @@
     <el-main v-loading="!vtbs.length">
       <el-table :data="searchList" stripe>
         <el-table-column align="">
-          <template slot="header" slot-scope="scope">
+          <template slot="header">
             <el-input v-model="search" placeholder="模糊搜索"></el-input>
           </template>
           <template slot-scope="scope">
@@ -26,8 +26,18 @@
         <el-table-column prop="guardNum" label="舰团">
         </el-table-column>
         <el-table-column prop="mid" label="空间id">
+          <template slot-scope="scope">
+            <a :href="`https://space.bilibili.com/${scope.row.mid}`" target="_blank" class="space">
+             <el-tag size="small" type="info">{{scope.row.mid}}</el-tag>
+             </a>
+          </template>
         </el-table-column>
         <el-table-column prop="roomid" label="直播间id">
+          <template slot-scope="scope">
+            <a :href="`https://live.bilibili.com/${scope.row.roomid}`" target="_blank" class="space">
+             <el-tag size="small" type="info">{{scope.row.roomid}}</el-tag>
+             </a>
+          </template>
         </el-table-column>
         
       </el-table>
