@@ -67,10 +67,10 @@ export default {
       return this.info.roomid
     },
     uname: function() {
-      return this.info.uname || this.vtb.note
+      return this.info.uname || this.note[0]
     },
     note: function() {
-      return this.vtb.note || this.mid
+      return this.vtb.note
     },
     sign: function() {
       return this.info.sign || this.mid

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { get } from '@/socket'
+// import { get } from '@/socket'
 
 Vue.use(Vuex)
 
