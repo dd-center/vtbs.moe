@@ -10,7 +10,7 @@
           数据每 5 分钟更新一次<br>
           宏观经济中视频势每 6 小时更新一次<br>
           风云榜，24小时更新一次 <br>
-          名单查漏补缺: 新建 issue <a href="https://github.com/simon300000/vtbs.moe/issues/new?assignees=simon300000&labels=&template=--vtb-vup.md&title=VTB补" target="_blank">https://github.com/simon300000/vtbs.moe/issues/new</a><br>
+          名单查漏补缺: 新建 issue <a href="https://github.com/simon300000/vtbs.moe/issues/new?labels=&template=--vtb-vup.md&title=VTB补" target="_blank">https://github.com/simon300000/vtbs.moe/issues/new</a><br>
           或者邮件: simon3000@163.com
           <br>
           日增的数据是过去24小时粉丝数变化，并不是昨天一天的变化
