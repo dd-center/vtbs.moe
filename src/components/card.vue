@@ -18,6 +18,9 @@
         <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank">
           <el-tag size="small">直播中</el-tag>
         </a>
+        <a :href="`https://live.bilibili.com/${roomid}`" v-else-if="roomid && livePage" target="_blank">
+          <el-tag size="small" type="info">没播</el-tag>
+        </a>
         {{uname}}
         <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space">
           <el-tag size="small" type="info">{{mid}}</el-tag>
@@ -75,12 +78,15 @@ export default {
     lastLive() {
       return this.info.lastLive || {}
     },
+    livePage() {
+      return this.$route.path.includes('live')
+    },
     status: function() {
       let object = {
         follower: this.info.follower,
         rise: this.info.rise,
       }
-      if (this.$route.path.includes('live')) {
+      if (this.livePage) {
         if (this.info.guardNum) {
           object.guardNum = this.info.guardNum
         }
