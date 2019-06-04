@@ -161,7 +161,7 @@ module.exports = ({ vtbs, macro, info, num, fullGuard, guardType, INTERVAL, io }
     console.log(log)
     io.emit('log', log)
   }
-  vup({ vtbs, macro, info, num, INTERVAL: 1000 * 60 * 60 * 6, log, io })
+  vup({ vtbs, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
   vtb({ vtbs, macro, info, num, INTERVAL, log, io })
   guard({ vtbs, macro, info, num, INTERVAL, log, io })
   dd({ vtbs, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log })

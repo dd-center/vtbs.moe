@@ -46,7 +46,7 @@ module.exports = [
   { mid: 412135619, note: ['Inugami Korone', '面包狗', 'hololive'] },
 
   // Holo音乐组
-  { mid: 389056211, note: ['AZKi', 'hololive'] }, //对的，啊夸fakefakefake就是她唱的，现在也进hololive了，专门开了个音乐组，确信
+  { mid: 389056211, note: ['AZKi', 'hololive'] }, // 对的，啊夸fakefakefake就是她唱的，现在也进hololive了，专门开了个音乐组，确信
   // TODO: Hoshimachi Suisei (彗星の如) https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A
 
   // Upd8
