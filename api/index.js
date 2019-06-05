@@ -6,9 +6,7 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const ioInternal = new Server(9001, { serveClient: false, path: '/' })
-const internal = require('./internal')
-// TODO: useless?
+const monster = require('./monster')
 
 const { connect } = require('./socket')
 const httpAPI = require('./http')
@@ -22,7 +20,7 @@ const INTERVAL = 1000 * 60 * 5
 (async () => {
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   const io = new Server({ serveClient: false })
-  const server = http.createServer(httpAPI({ vtbs, info, fullGuard }))
+  const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster }))
   io.attach(server)
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard, guardType }, vtbs, spiderId, io, PARALLEL, INTERVAL })
@@ -41,6 +39,5 @@ const INTERVAL = 1000 * 60 * 5
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
   io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL }))
-  ioInternal.on('connection', internal({ vtbs }))
   server.listen(8001)
 })()

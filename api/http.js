@@ -8,8 +8,19 @@ const cache = new LRU({
   max: 100,
 })
 
-module.exports = ({ vtbs, info, fullGuard }) => {
+module.exports = ({ vtbs, info, fullGuard, monster }) => {
   const app = new Koa()
+
+  app.use(async (ctx, next) => {
+    let hit = cache.get(ctx.url)
+    if (hit) {
+      ctx.body = hit
+    } else {
+      await next()
+      cache.set(ctx.url, ctx.body)
+    }
+  })
+
   const v1 = new Router({ prefix: '/v1' })
 
   v1.get('/vtbs', ctx => {
@@ -34,17 +45,31 @@ module.exports = ({ vtbs, info, fullGuard }) => {
     }
   })
 
-  app.use(async (ctx, next) => {
-    let hit = cache.get(ctx.url)
-    if (hit) {
-      ctx.body = hit
-    } else {
-      await next()
-      cache.set(ctx.url, ctx.body)
-    }
+  app.use(v1.routes())
+
+  const vd = new Router({ prefix: '/vd' })
+
+  vd.get('/rooms', async ctx => {
+    let result = await monster.rooms()
+    ctx.body = result
   })
 
-  app.use(v1.routes())
+  vd.get('/records/:roomid', async ctx => {
+    let result = await monster.records(ctx.params.roomid)
+    ctx.body = result
+  })
+
+  vd.get('/rr', async ctx => {
+    let result = await monster.roomsRecords()
+    ctx.body = result
+  })
+
+  vd.get('/read/:roomid/:date', async ctx => {
+    let result = await monster.read(ctx.params.roomid, ctx.params.date)
+    ctx.body = result
+  })
+
+  app.use(vd.routes())
 
   return app.callback()
 }

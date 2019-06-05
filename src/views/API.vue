@@ -34,6 +34,17 @@
     <p>=> Number</p>
     <p>Timestamp, when guards list updated</p>
 
+    <h3>vdMonster <small>api.vtbs.moe/vd</small></h3>
+    <p>Document: <a href="https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/#json格式">https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/#json格式</a> </p>
+    <h4>rooms() <small>api.vtbs.moe/vd/rooms</small></h4>
+    <p>=> Array</p>
+    <h4>records() <small>api.vtbs.moe/vd/records/:roomid</small></h4>
+    <p>=> Array</p>
+    <h4>roomsRecords() <small>api.vtbs.moe/vd/rr</small></h4>
+    <p>=> Object</p>
+    <h4>read() <small>api.vtbs.moe/vd/read/:roomid/:date</small></h4>
+    <p>=> Object</p>
+
     <h3>Socket.IO <small>api.vtbs.moe/socket.io/</small></h3>
     <p>Advanced interface, please reference the source code available on GitHub.</p>
   </el-main>
@@ -43,5 +54,28 @@
 <style scoped>
 .el-main {
   word-wrap: break-word;
+}
+
+h3:before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background-color: #000;
+  vertical-align: middle;
+  margin-right: 8px;
+  border-radius: 7px;
+}
+
+h4>small {
+  text-decoration: underline;
+}
+
+h4 {
+  margin-left: 6px;
+}
+
+p {
+  margin-left: 16px;
 }
 </style>
