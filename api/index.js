@@ -7,6 +7,7 @@ const http = require('http')
 const Server = require('socket.io')
 
 const monster = require('./monster')
+const vd = require('./vd')
 
 const { connect } = require('./socket')
 const httpAPI = require('./http')
@@ -22,6 +23,7 @@ const INTERVAL = 1000 * 60 * 5
   const io = new Server({ serveClient: false })
   const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster }))
   io.attach(server)
+  vd.attach(server)
   for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
     let spider = new Spider({ db: { site, info, active, live, guard, guardType }, vtbs, spiderId, io, PARALLEL, INTERVAL })
     spider.start()

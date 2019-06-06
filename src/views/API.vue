@@ -35,6 +35,7 @@
     <p>Timestamp, when guards list updated</p>
 
     <h3>vdMonster <small>api.vtbs.moe/vd</small></h3>
+    <p>Live Danmaku Analyze</p>
     <p>Document: <a href="https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/#json格式">https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/#json格式</a> </p>
     <h4>rooms() <small>api.vtbs.moe/vd/rooms</small></h4>
     <p>=> Array</p>
@@ -45,7 +46,23 @@
     <h4>read() <small>api.vtbs.moe/vd/read/:roomid/:date</small></h4>
     <p>=> Object</p>
 
-    <h3>Socket.IO <small>api.vtbs.moe/socket.io/</small></h3>
+    <h3>vdSocket (Socket.io) <small>api.vtbs.moe/vds</small></h3>
+    <p>Live danmaku integrated WebSocket</p>
+    <p>Use Socket.io connect to "api.vtbs.moe/vds"</p>
+    <p>Document: <a href="https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku#socketio">https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku#socketio</a></p>
+    <h4>Subscribe (join)</h4>
+    <p>socket.emit('join', roomid)</p>
+    <p>or</p>
+    <p>Join all: socket.emit('join', 'all')</p>
+    <h4>Unsubscribe (leave)</h4>
+    <p>socket.emit('leave', roomid)</p>
+    <p>or</p>
+    <p>Leave all: socket.emit('leave', 'all')</p>
+    <h4>Danmaku</h4>
+    <p>socket.on('danmaku')</p>
+    <p>Example: {message: "233", roomid: 12235923, mid: 3499295}</p>
+
+    <h3>vtbs.moe api (Socket.IO) <small>api.vtbs.moe/socket.io/</small></h3>
     <p>Advanced interface, please reference the source code available on GitHub.</p>
   </el-main>
 </el-container>
