@@ -38,7 +38,8 @@ export default new Vuex.Store({
     liveRank: rank((state, a, b) => {
       let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
       let guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
-      return 100000000000 * liveDifference + 1000000 * guardDifference + b.follower - a.follower
+      let roomDifference = (b.roomid ? 1 : 0) - (a.roomid ? 1 : 0)
+      return 100000000000 * (liveDifference + roomDifference) + 1000000 * guardDifference + b.follower - a.follower
     }),
   },
   mutations: {
