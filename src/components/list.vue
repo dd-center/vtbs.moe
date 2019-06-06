@@ -12,15 +12,15 @@
         </el-table-column>
         <el-table-column prop="uname" label="名字">
         </el-table-column>
-        <el-table-column prop="follower" label="关注">
+        <el-table-column prop="follower" label="关注" sortable>
         </el-table-column>
-        <el-table-column prop="rise" label="日增">
+        <el-table-column prop="rise" label="日增" sortable>
         </el-table-column>
-        <el-table-column prop="archiveView" label="播放量">
+        <el-table-column prop="archiveView" label="播放量" sortable>
         </el-table-column>
-        <el-table-column prop="video" label="视频数">
+        <el-table-column prop="video" label="视频数" sortable>
         </el-table-column>
-        <el-table-column prop="guardNum" label="舰团">
+        <el-table-column prop="guardNum" label="舰团" sortable>
         </el-table-column>
         <el-table-column prop="mid" label="空间id">
           <template slot-scope="scope">
