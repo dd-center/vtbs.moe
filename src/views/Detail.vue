@@ -200,7 +200,7 @@
               <div slot="header">
                 舰团
               </div>
-              <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+              <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
             </el-card>
           </el-col>
         </el-row>
@@ -339,6 +339,10 @@ export default {
     this.dataZoomWeek = [{
       type: 'slider',
       startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7,
+    }]
+    this.dataZoomMonth = [{
+      type: 'slider',
+      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 30,
     }]
     this.activeLine = {
       dimension: ['time'],
