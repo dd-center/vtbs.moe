@@ -1,4 +1,4 @@
-const { Spider } = require('./spider')
+const spider = require('./spider')
 const vtbs = require('./vtbs')
 
 const ant = require('./ant')
@@ -24,19 +24,7 @@ const INTERVAL = 1000 * 60 * 5
   const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster }))
   io.attach(server)
   vd.attach(server)
-  for (const spiderId of Array(PARALLEL).fill().map((current, index) => index)) {
-    let spider = new Spider({ db: { site, info, active, live, guard, guardType }, vtbs, spiderId, io, PARALLEL, INTERVAL })
-    spider.start()
-    setInterval(() => {
-      // Auto restart when spider are dead
-      if ((new Date()).getTime() - spider.endTime > INTERVAL * 2) {
-        console.log(`Spider ${spiderId}, NOT OK`)
-        process.exit()
-      } else {
-        console.log(`Spider ${spiderId}, OK`)
-      }
-    }, 1000 * 60 * 2)
-  }
+  spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, live, guard, guardType }, io })
   setTimeout(() => {
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
