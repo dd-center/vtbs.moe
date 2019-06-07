@@ -4,3 +4,6 @@
 [submodule "src/assets/biliob-frontend"]
 	path = src/assets/biliob-frontend
 	url = https://github.com/Jannchie/biliob-frontend.git
+[submodule "hawk/dictionary"]
+	path = hawk/dictionary
+	url = https://github.com/bilibili-dd-center/dictionary
