@@ -23,7 +23,7 @@ import { mapState, mapGetters, mapMutations } from 'vuex'
 import card from '@/components/card'
 
 export default {
-  name: 'home',
+  name: 'rank',
   data() {
     return {
       loading: false,

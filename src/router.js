@@ -20,7 +20,7 @@ export default new Router({
   }, {
     path: '/video',
     alias: ['/live', '/rise'],
-    name: 'home',
+    name: 'rank',
     component: Rank,
   }, {
     path: '/macro',
