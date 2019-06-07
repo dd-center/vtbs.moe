@@ -2,15 +2,20 @@
 <el-container>
   <el-main>
     <el-row type="flex" justify="space-around">
-      <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
-        <transition-group name="flip-list">
-          <card v-for="vtb in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card"></card>
-        </transition-group>
+      <h1>VTBs in Bilibili!</h1>
+    </el-row>
+    <el-row type="flex" justify="space-around">
+    </el-row>
+    <h2>1小时直播弹幕</h2>
+    <el-row>
+      <el-col>
+        <ve-wordcloud v-loading="!hawk.h.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.h }" :extend="wordCloudExtend"></ve-wordcloud>
       </el-col>
     </el-row>
-    <el-row v-if="!showAll && vtbs.length">
-      <el-col style="text-align: center;">
-        <el-button @click="loadingShowAll" :loading="loading">显示所有</el-button>
+    <h2>24小时直播弹幕</h2>
+    <el-row>
+      <el-col>
+        <ve-wordcloud v-loading="!hawk.day.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.day }" :extend="wordCloudExtend"></ve-wordcloud>
       </el-col>
     </el-row>
   </el-main>
@@ -18,56 +23,34 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import Vue from 'vue'
+import { mapState } from 'vuex'
 
-import card from '@/components/card'
+import VeWordCloud from 'v-charts/lib/wordcloud.common'
+
+Vue.component(VeWordCloud.name, VeWordCloud)
 
 export default {
   name: 'home',
   data() {
-    return {
-      loading: false,
+    this.wordCloudExtend = {
+      'series.0.width': '100%',
+      'series.0.height': '100%',
+      'series.0.tooltip.show': false,
     }
+    return {}
   },
-  components: {
-    card,
-  },
-  methods: {
-    loadingShowAll() {
-      this.loading = true
-      setTimeout(() => this.enableShowAll(), 100)
-    },
-    ...mapMutations(['enableShowAll']),
-  },
-  computed: { ...mapState(['vtbs', 'showAll']),
-    ...mapGetters(['followerRank', 'liveRank', 'riseRank']),
-    rank: function() {
-      if (this.$route.path.includes('live')) {
-        return this.liveRank
-      }
-      if (this.$route.path.includes('rise')) {
-        return this.riseRank
-      }
-      return this.followerRank
-    },
-    rankLimit: function() {
-      if (this.showAll) {
-        return this.rank
-      } else {
-        return this.rank
-          .filter((info, index) => index < 64)
-      }
-    },
-  },
+  components: {},
+  methods: {},
+  computed: mapState(['hawk']),
 }
 </script>
 
 <style scoped>
-.flip-list-move {
-  transition: transform 0.5s;
-}
-
-.card {
-  margin-bottom: 32px;
+h1 {
+  margin: 0px;
+  font-size: 32px;
+  font-family: Optima;
+  color: #409EFF;
 }
 </style>
