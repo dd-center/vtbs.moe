@@ -22,6 +22,7 @@
     "level": "^5.0.1",
     "lru-cache": "^5.1.1",
     "moment": "^2.24.0",
+    "nodejieba": "^2.3.1",
     "register-service-worker": "^1.6.2",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0",
