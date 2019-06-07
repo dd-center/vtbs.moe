@@ -1,12 +1,12 @@
 <template>
 <el-container>
-  <el-aside class="hidden-sm-and-down" v-if="aside">
+  <!-- <el-aside class="hidden-sm-and-down" v-if="aside">
   </el-aside>
   <div class="hidden-sm-and-down aside" v-if="aside">
     <list></list>
   </div>
   <el-button icon="el-icon-close" size="mini" type="danger" circle class="hidden-sm-and-down sideButtonClose" @click="aside=!aside" v-if="aside"></el-button>
-  <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button>
+  <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button> -->
   <el-main v-loading="!topPhoto">
     <img :src="topPhoto.replace('http:','https:')" alt="topPhoto" class="topPhoto" v-if="topPhoto">
 
