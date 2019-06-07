@@ -8,38 +8,42 @@
         </transition-group>
       </el-col>
     </el-row>
-    <el-row v-if="!showAll && vtbs.length">
-      <el-col style="text-align: center;">
-        <el-button @click="loadingShowAll" :loading="loading">显示所有</el-button>
-      </el-col>
-    </el-row>
   </el-main>
 </el-container>
 </template>
 
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
-
+import { mapState, mapGetters } from 'vuex'
 import card from '@/components/card'
 
 export default {
   name: 'rank',
   data() {
     return {
-      loading: false,
+      show: 32,
     }
   },
   components: {
     card,
   },
-  methods: {
-    loadingShowAll() {
-      this.loading = true
-      setTimeout(() => this.enableShowAll(), 100)
-    },
-    ...mapMutations(['enableShowAll']),
+  methods: {},
+  mounted() {
+    this.$nextTick(function() {
+      document.onscroll = () => {
+        if (document.body.clientHeight - window.scrollY - window.innerHeight < document.body.clientHeight / 3 && this.vtbs.length) {
+          if (!this.allDisplay) {
+            this.show += 15
+          } else {
+            document.onscroll = null
+          }
+        }
+      }
+    })
   },
-  computed: { ...mapState(['vtbs', 'showAll']),
+  destroyed() {
+    document.onscroll = null
+  },
+  computed: { ...mapState(['vtbs']),
     ...mapGetters(['followerRank', 'liveRank', 'riseRank']),
     rank: function() {
       if (this.$route.path.includes('live')) {
@@ -51,12 +55,11 @@ export default {
       return this.followerRank
     },
     rankLimit: function() {
-      if (this.showAll) {
-        return this.rank
-      } else {
-        return this.rank
-          .filter((info, index) => index < 64)
-      }
+      return this.rank
+        .filter((info, index) => index < this.show)
+    },
+    allDisplay() {
+      return this.show >= this.vtbs.length
     },
   },
 }
