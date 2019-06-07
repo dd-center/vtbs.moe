@@ -10,6 +10,7 @@ const monster = require('./monster')
 const { vd, vdSocket } = require('./vd')
 
 const snake = require('./snake')
+const hawk = require('./hawk')
 
 const { connect } = require('./socket')
 const httpAPI = require('./http')
@@ -28,6 +29,7 @@ const INTERVAL = 1000 * 60 * 5
   vd.attach(server)
   spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, live, guard, guardType }, io })
   snake({ vdSocket, io, info })
+  hawk({ io })
   setTimeout(() => {
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)

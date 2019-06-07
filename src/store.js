@@ -31,6 +31,7 @@ export default new Vuex.Store({
     vtbMacro: [],
     guardMacro: [],
     showAll: false,
+    hawk: [],
   },
   getters: {
     followerRank: rank((state, a, b) => b.follower - a.follower),
@@ -91,6 +92,9 @@ export default new Vuex.Store({
       if (state.guardMacro.length) {
         state.guardMacro.push(data)
       }
+    },
+    SOCKET_hawk(state, data) {
+      state.hawk = data
     },
     updateMacro(state, { vup, vtb, guard }) {
       if (vup) {

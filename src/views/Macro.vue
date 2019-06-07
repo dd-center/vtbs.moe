@@ -1,6 +1,12 @@
 <template>
 <el-container>
   <el-main>
+    <h1>24小时直播弹幕</h1>
+    <el-row>
+      <el-col>
+        <ve-wordcloud v-loading="!hawk.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk }" :extend="wordCloudExtend"></ve-wordcloud>
+      </el-col>
+    </el-row>
     <h1>虚拟世界宏观经济走势</h1>
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
@@ -43,10 +49,12 @@ import { get } from '@/socket'
 
 import VeLine from 'v-charts/lib/line.common'
 import VeCandle from 'v-charts/lib/candle.common'
+import VeWordCloud from 'v-charts/lib/wordcloud.common'
 import 'echarts/lib/component/dataZoom'
 
 Vue.component(VeLine.name, VeLine)
 Vue.component(VeCandle.name, VeCandle)
+Vue.component(VeWordCloud.name, VeWordCloud)
 
 export default {
   async mounted() {
@@ -74,7 +82,7 @@ export default {
     ...mapMutations(['updateMacro']),
   },
   computed: {
-    ...mapState(['vupMacro', 'vtbMacro', 'guardMacro']),
+    ...mapState(['vupMacro', 'vtbMacro', 'guardMacro', 'hawk']),
     guardMacroK: function() {
       let guardMacro = this.guardMacro
       let rows = []
@@ -222,6 +230,11 @@ export default {
       },
       dimension: 'time',
       metrics: ['open', 'close', 'lowest', 'highest'],
+    }
+    this.wordCloudExtend = {
+      'series.0.width': '100%',
+      'series.0.height': '100%',
+      'series.0.tooltip.show': false,
     }
     return {
       loading: false,
