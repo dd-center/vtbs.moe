@@ -36,6 +36,7 @@
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>
+        <p v-loading="!upMoment">Uptime: {{upMoment}}</p>
         <p v-loading="!number">共收录VTB/VUP: {{number}} 个</p>
         <p v-if="online">目前在线: {{online}}</p>
         <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
@@ -58,8 +59,14 @@
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
+import { get } from '@/socket'
 
 export default {
+  data() {
+    return {
+      uptime: undefined,
+    }
+  },
   computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs']),
     spiders: function() {
       return this.status.PARALLEL
@@ -70,6 +77,34 @@ export default {
     number: function() {
       return this.vtbs && this.vtbs.length
     },
+    upMoment() {
+      if (this.uptime) {
+        let duration = moment.duration(this.uptime, 's')
+        let result = []
+        let d = Math.floor(duration.asDays())
+        let h = duration.hours()
+        let m = duration.minutes()
+        let s = duration.seconds()
+        if (d) {
+          result.push(`${d} 天`)
+        }
+        if (h) {
+          result.push(`${h} 时`)
+        }
+        if (m) {
+          result.push(`${m} 分`)
+        }
+        if (s) {
+          result.push(`${s} 秒`)
+        }
+        return result.join(' ')
+      } else {
+        return undefined
+      }
+    },
+  },
+  async mounted() {
+    this.uptime = await get('uptime')
   },
   filters: {
     parseTime: function(time = 0) {

@@ -69,6 +69,9 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
       if (e === 'fullGuard') {
         arc(await fullGuard.get(target))
       }
+      if (e === 'uptime') {
+        arc(process.uptime())
+      }
     }
   })
 
@@ -94,6 +97,7 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   handler('bulkGuard')
   handler('guardType')
   handler('fullGuard')
+  handler('uptime')
   socket.emit('log', `ID: ${socket.id}`)
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
@@ -144,6 +148,8 @@ bulkGuard: { guardNum, mid } -> [guard]
 guardType: mid -> [n,n,n]
 
 fullGuard: all/some/number/[mid] -> ?/Any
+
+uptime: -> Number
 
 // Server Push
 online: Number
