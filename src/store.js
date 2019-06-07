@@ -30,7 +30,6 @@ export default new Vuex.Store({
     vupMacro: [],
     vtbMacro: [],
     guardMacro: [],
-    showAll: false,
     hawk: { day: [], h: [] },
     wormArray: [],
   },
@@ -141,9 +140,6 @@ export default new Vuex.Store({
       if (guard) {
         state.guardMacro = [...guard]
       }
-    },
-    enableShowAll(state) {
-      state.showAll = true
     },
   },
   actions: {},
