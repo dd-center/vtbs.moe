@@ -12,7 +12,6 @@ nodejieba.load({
 })
 
 let danmaku = []
-let analyzed = []
 
 vdSocket.on('danmaku', ({ message }) => {
   danmaku.push(message)
@@ -22,7 +21,8 @@ vdSocket.on('danmaku', ({ message }) => {
 })
 
 setInterval(() => {
-  analyzed = nodejieba.extract(danmaku.join('\n'), 64)
+  let analyzed = nodejieba.extract(danmaku.join('\n'), 256)
+  io.emit('analyze', analyzed)
   console.log(`Analyze ${danmaku.length}`)
 }, 1000 * 60)
 
