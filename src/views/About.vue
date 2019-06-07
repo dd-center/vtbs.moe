@@ -8,7 +8,9 @@
           直播势：直播中的按照人气排列，靠前，其他按照舰队排列<br>
           宏观经济：bilibili 虚拟世界宏观走势<br>
           数据每 5 分钟更新一次<br>
-          宏观经济中视频势每 6 小时更新一次<br>
+          直播势的直播状态和人气每 15-30 秒更新一次<br>
+          宏观中视频势每 6 小时更新一次<br>
+          宏观中词云每分钟更新一次<br>
           风云榜，24小时更新一次 <br>
           名单查漏补缺: 新建 issue <a href="https://github.com/simon300000/vtbs.moe/issues/new?labels=&template=--vtb-vup.md&title=VTB补" target="_blank">https://github.com/simon300000/vtbs.moe/issues/new</a><br>
           或者邮件: simon3000@163.com
