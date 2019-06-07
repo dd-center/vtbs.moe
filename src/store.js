@@ -31,7 +31,7 @@ export default new Vuex.Store({
     vtbMacro: [],
     guardMacro: [],
     showAll: false,
-    hawk: [],
+    hawk: { day: [], h: [] },
   },
   getters: {
     followerRank: rank((state, a, b) => b.follower - a.follower),

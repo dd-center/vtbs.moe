@@ -1,7 +1,7 @@
 const ioClient = require('socket.io-client')
 const hawkSocket = ioClient('http://0.0.0.0:9011')
 
-let analyzed = []
+let analyzed = { day: [], h: [] }
 
 module.exports = ({ io }) => {
   hawkSocket.on('analyze', data => {

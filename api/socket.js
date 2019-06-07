@@ -164,7 +164,7 @@ status: {}
 
 spiderUpdate: {spiderId, time, duration}
 
-hawk: [...jieba]
+hawk: {day: [...jieba], h: [...jieba]}
 
 // Room:
 vupMacro => vupMacro: {macro}
