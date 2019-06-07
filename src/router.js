@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Rank from './views/Rank.vue'
 import About from './views/About.vue'
 import List from './views/List.vue'
 import DD from './views/DD.vue'
@@ -14,9 +15,13 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [{
     path: '/',
-    alias: ['/live', '/rise'],
     name: 'home',
     component: Home,
+  }, {
+    path: '/video',
+    alias: ['/live', '/rise'],
+    name: 'home',
+    component: Rank,
   }, {
     path: '/macro',
     name: 'macro',
