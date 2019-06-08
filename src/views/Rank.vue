@@ -3,9 +3,7 @@
   <el-main>
     <el-row type="flex" justify="space-around">
       <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
-        <transition-group name="flip-list">
-          <card v-for="vtb in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card"></card>
-        </transition-group>
+        <rank :list="rankLimit"></rank>
       </el-col>
     </el-row>
   </el-main>
@@ -14,19 +12,18 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import card from '@/components/card'
+import rank from '@/components/rank'
 
 export default {
-  name: 'rank',
+  name: 'ranks',
   data() {
     return {
       show: 32,
     }
   },
   components: {
-    card,
+    rank,
   },
-  methods: {},
   mounted() {
     this.$nextTick(function() {
       document.onscroll = () => {
@@ -45,7 +42,7 @@ export default {
   },
   computed: { ...mapState(['vtbs']),
     ...mapGetters(['followerRank', 'liveRank', 'riseRank']),
-    rank: function() {
+    fullRank() {
       if (this.$route.path.includes('live')) {
         return this.liveRank
       }
@@ -55,7 +52,7 @@ export default {
       return this.followerRank
     },
     rankLimit: function() {
-      return this.rank
+      return this.fullRank
         .filter((info, index) => index < this.show)
     },
     allDisplay() {
@@ -66,11 +63,5 @@ export default {
 </script>
 
 <style scoped>
-.flip-list-move {
-  transition: transform 0.5s;
-}
 
-.card {
-  margin-bottom: 32px;
-}
 </style>
