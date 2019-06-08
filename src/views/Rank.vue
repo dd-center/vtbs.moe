@@ -30,7 +30,7 @@ export default {
   mounted() {
     this.$nextTick(function() {
       document.onscroll = () => {
-        if (document.body.clientHeight - window.scrollY - window.innerHeight < document.body.clientHeight / 3 && this.vtbs.length) {
+        if (document.body.clientHeight - window.scrollY - window.innerHeight < (document.body.clientHeight / this.show * 20) && this.vtbs.length) {
           if (!this.allDisplay) {
             this.show += 15
           } else {
