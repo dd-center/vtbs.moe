@@ -12,12 +12,6 @@
         <ve-wordcloud v-loading="!hawk.h.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.h }" :extend="wordCloudExtend"></ve-wordcloud>
       </el-col>
     </el-row>
-    <h2>24小时直播弹幕</h2>
-    <el-row>
-      <el-col>
-        <ve-wordcloud v-loading="!hawk.day.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.day }" :extend="wordCloudExtend"></ve-wordcloud>
-      </el-col>
-    </el-row>
   </el-main>
 </el-container>
 </template>
