@@ -64,6 +64,8 @@
 
     <h3>vtbs.moe api (Socket.IO) <small>api.vtbs.moe/socket.io/</small></h3>
     <p>Advanced interface, please reference the source code available on GitHub.</p>
+    <h2>Bilibili DD Center, Some Relationship</h2>
+    <img src="https://bilibili-dd-center.github.io/dependency.svg" alt="Graph" width="100%">
   </el-main>
 </el-container>
 </template>
