@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'live') {
@@ -119,6 +119,8 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   }
   socket.emit('info', infoArray)
 
+  socket.emit('worm', wormResult())
+
   for (let i = 0; i < PARALLEL; i++) {
     socket.emit('spiderUpdate', await site.get({ mid: 'spider', num: i }))
   }
@@ -165,6 +167,8 @@ status: {}
 spiderUpdate: {spiderId, time, duration}
 
 hawk: {day: [...jieba], h: [...jieba]}
+
+worm: [...wormArray]
 
 // Room:
 vupMacro => vupMacro: {macro}
