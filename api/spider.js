@@ -132,8 +132,8 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm }) => {
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 
-    let wormArray = await worm({ PARALLEL, vtbs, io })
-    io.emit('worm', wormArray)
+    worm({ PARALLEL, vtbs, io })
+      .then(wormArray => io.emit('worm', wormArray))
 
     let endTime = Date.now()
     lastUpdate = endTime
