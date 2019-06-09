@@ -321,8 +321,6 @@ import Vue from 'vue'
 import moment from 'moment'
 import TreeView from 'vue-json-tree-view'
 
-import List from '@/components/list'
-
 import VeLine from 'v-charts/lib/line.common'
 
 import 'echarts/lib/component/dataZoom'
@@ -727,9 +725,7 @@ export default {
       return this.active.length >= this.recordNum
     },
   },
-  components: {
-    List,
-  },
+  components: {},
   methods: {
     async loadFullLive() {
       this.loadingLive = true
@@ -746,11 +742,6 @@ export default {
 </script>
 
 <style scoped>
-pre {
-  background-color: rgba(0, 0, 0, 0.1);
-  word-wrap: break-word;
-}
-
 .topPhoto {
   width: 100%;
   margin-top: 1px;
