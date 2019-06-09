@@ -25,7 +25,7 @@ const INTERVAL = 1000 * 60 * 5
 (async () => {
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   const io = new Server({ serveClient: false })
-  const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster }))
+  const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster, active, live }))
   io.attach(server)
   vd.attach(server)
   spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, live, guard, guardType }, io, worm })

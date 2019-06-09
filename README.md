@@ -232,6 +232,68 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   1560050332931
   ```
 
+### V2 (JSON)
+
+​	Simple JSON API with Bulk Historical Data.
+
+* #### Active <https://api.vtbs.moe/v2/bulkActive/:mid>
+
+  => Array, `[...{archiveView, follower, time}]`
+
+  History of video views and follower count.
+
+  **Example:** https://api.vtbs.moe/v2/bulkActive/349991143
+
+  ```json
+  [{
+      "archiveView": 16222668,
+      "follower": 298364,
+      "time": 1555247781729
+    }, {
+      "archiveView": 16222668,
+      "follower": 298942,
+      "time": 1555276084544
+    },
+    ...
+  ]
+  ```
+
+* #### Some active <https://api.vtbs.moe/v2/bulkActiveSome/:mid>
+
+  => Array, `[...{archiveView, follower, time}]`
+
+  History of video views and follower count;
+
+  Same as above, but limited to recent `512` entries.
+
+* #### Live <https://api.vtbs.moe/v2/bulkLive/:mid>
+
+  => Array, `[...{online, time}]`
+
+  History of strems on bilibili.
+
+  **Example:** https://api.vtbs.moe/v2/bulkLive/349991143
+
+  ```json
+  [{
+      "online": 16579,
+      "time": 1555334979260
+    }, {
+      "online": 70715,
+      "time": 1555335279261
+    },
+    ...
+  ]
+  ```
+
+* #### Some live <https://api.vtbs.moe/v2/bulkLiveSome/:mid>
+
+  => Array, `[...{online, time}]`
+
+  History of strems on bilibili,
+
+  Same as above, but limited to recent `2016` entries.
+
 ### vdMonster (JSON)
 
 ​	Live Danmaku Analyze.

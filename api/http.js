@@ -8,7 +8,7 @@ const cache = new LRU({
   max: 100,
 })
 
-module.exports = ({ vtbs, info, fullGuard, monster }) => {
+module.exports = ({ vtbs, info, fullGuard, monster, active, live }) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {
@@ -70,6 +70,36 @@ module.exports = ({ vtbs, info, fullGuard, monster }) => {
   })
 
   app.use(vd.routes())
+
+  const v2 = new Router({ prefix: '/v2' })
+
+  v2.get('/bulkActive/:mid', async ctx => {
+    const mid = ctx.params.mid
+    const { recordNum } = await info.get(mid)
+    ctx.body = await active.bulkGet({ mid, num: recordNum })
+  })
+
+  v2.get('/bulkActiveSome/:mid', async ctx => {
+    const mid = ctx.params.mid
+    const { recordNum } = await info.get(mid)
+    const skip = recordNum - 512
+    ctx.body = await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) })
+  })
+
+  v2.get('/bulkLive/:mid', async ctx => {
+    const mid = ctx.params.mid
+    const { liveNum } = await info.get(mid)
+    ctx.body = await live.bulkGet({ mid, num: liveNum })
+  })
+
+  v2.get('/bulkLiveSome/:mid', async ctx => {
+    const mid = ctx.params.mid
+    const { liveNum } = await info.get(mid)
+    const skip = liveNum - 24 * 60 * 7 / 5
+    ctx.body = await live.bulkGet({ mid, num: Math.min(24 * 60 * 7 / 5, liveNum), skip: Math.max(0, skip) })
+  })
+
+  app.use(v2.routes())
 
   return app.callback()
 }
