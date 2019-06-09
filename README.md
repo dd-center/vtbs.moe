@@ -25,6 +25,10 @@
 * 前后端API通讯: [socket.io](https://socket.io)
 * 万能的: [Node.js](https://nodejs.org/zh-cn/)
 
+### Bilibili DD Center, Some internal Relationship
+
+![](bilibili-dd-center.github.io/dependency.svg)
+
 ## 开发
 
 安装依赖:
