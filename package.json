@@ -29,6 +29,7 @@
     "v-charts": "^1.19.0",
     "vue": "^2.6.6",
     "vue-analytics": "^5.16.4",
+    "vue-json-tree-view": "^2.1.4",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^3.0.7",
     "vuex": "^3.0.1"

@@ -304,7 +304,7 @@
           </el-col>
           <el-col :span="16" :xs="24">
             JSON数据:
-            <pre><code>{{info}}</code></pre>
+            <tree-view :data="info" :options="{maxDepth: 3, rootObjectKey: 'info'}"></tree-view>
           </el-col>
         </el-row>
 
@@ -319,6 +319,8 @@
 import Vue from 'vue'
 // import { mapState, mapGetters } from 'vuex'
 import moment from 'moment'
+import TreeView from 'vue-json-tree-view'
+
 import List from '@/components/list'
 
 import VeLine from 'v-charts/lib/line.common'
@@ -327,6 +329,7 @@ import 'echarts/lib/component/dataZoom'
 
 import { get } from '@/socket'
 
+Vue.use(TreeView)
 Vue.component(VeLine.name, VeLine)
 
 export default {
