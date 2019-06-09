@@ -41,7 +41,7 @@ import {
   Tag,
   // Tree,
   // Alert,
-  // Notification,
+  Notification,
   // Slider,
   Loading,
   // Icon,
@@ -157,5 +157,5 @@ Vue.prototype.$loading = Loading.service
 // Vue.prototype.$alert = MessageBox.alert
 // Vue.prototype.$confirm = MessageBox.confirm
 // Vue.prototype.$prompt = MessageBox.prompt
-// Vue.prototype.$notify = Notification
+Vue.prototype.$notify = Notification
 // Vue.prototype.$message = Message
