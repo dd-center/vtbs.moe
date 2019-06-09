@@ -14,16 +14,19 @@
 
 网站用到的部分开源软件:
 
-* 前端架构: [Vue.js](https://cn.vuejs.org)
-  * [Vue CLI](https://cli.vuejs.org/zh/)
-  * [Vuex](https://vuex.vuejs.org/zh/)
-* 组件库: [Element](https://element.eleme.cn/)
-* 图表: [ECharts](https://echarts.baidu.com)
-  * [v-charts](https://v-charts.js.org)
-* 数据库: [level](https://github.com/Level/level)
-* 数据采集: [Bili-api](https://github.com/simon300000/bili-api)
-* 前后端API通讯: [socket.io](https://socket.io)
-* 万能的: [Node.js](https://nodejs.org/zh-cn/)
+* 前端
+  * 框架: [Vue.js](https://vuejs.org)
+    * [Vue CLI](https://cli.vuejs.org/)
+    * [Vuex](https://vuex.vuejs.org/)
+  * 组件库: [Element](https://element.eleme.cn/)
+  * 图表: [ECharts](https://echarts.baidu.com)
+    * [v-charts](https://v-charts.js.org)
+* 后端
+  * 数据库: [level](https://github.com/Level/level)
+  * 数据采集: [Bili-api](https://github.com/simon300000/bili-api)
+  * 前后端API通讯: [socket.io](https://socket.io)
+  * Open JSON API: [koa](https://koajs.com)
+  * 万能的: [Node.js](https://nodejs.org/zh-cn/)
 
 ## Open API
 
@@ -287,6 +290,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 Advanced interface, please reference the source code available on GitHub.
 
 ### Bilibili DD Center org, Some internal relationship.
+
+详情: https://bilibili-dd-center.github.io
 
 ![dependency](https://bilibili-dd-center.github.io/dependency.svg)
 
