@@ -7,6 +7,3 @@
 [submodule "hawk/dictionary"]
 	path = hawk/dictionary
 	url = https://github.com/bilibili-dd-center/dictionary
-[submodule "bilibili-dd-center.github.io"]
-	path = bilibili-dd-center.github.io
-	url = https://github.com/bilibili-dd-center/bilibili-dd-center.github.io
