@@ -62,6 +62,16 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
+  Keys:
+
+  * mid: Number
+
+    The numbered user ID, appeared after <https://space.bilibili.com/>.
+
+  * note: Array
+
+    Just some Note...
+
 * #### info <https://api.vtbs.moe/v1/info>
 
   => Array, `[...{mid, uname, …}]`
@@ -104,8 +114,6 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-  
-
 * #### Detail <https://api.vtbs.moe/v1/detail/:mid>
 
   => Object, `{mid, uname, …}`
@@ -146,8 +154,6 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   }
   ```
 
-  
-
 * #### All Guards <https://api.vtbs.moe/v1/guard/all>
 
   => Object, `{...[mid]: {uname, face, …}}`
@@ -182,7 +188,12 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   }
   ```
 
-  
+  Keys:
+
+  * dd: Array
+    * 总督
+    * 提督
+    * 舰长
 
 * #### Some Guards <https://api.vtbs.moe/v1/guard/some>
 
@@ -218,13 +229,21 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-  
+  Keys:
+
+  * level: Number
+
+    `0`: 总督
+
+    `1`: 提督
+
+    `2`: 舰长
 
 * #### Guards update time <https://api.vtbs.moe/v1/guard/time>
 
   => Number, `Number`
 
-  Timestamp, when guards list updated
+  Timestamp, when guards list updated.
   
   **Example:** <https://api.vtbs.moe/v1/guard/time>
   
@@ -257,6 +276,20 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     ...
   ]
   ```
+
+  Keys:
+
+  * archiveView: Number
+
+    Video views
+
+  * follower: Number
+
+    Followers
+
+  * time: Number
+
+    Timestamp
 
 * #### Some active <https://api.vtbs.moe/v2/bulkActiveSome/:mid>
 
