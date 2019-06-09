@@ -26,7 +26,7 @@
       </el-col>
       <el-col :xs="24" :span="12">
         <h1>api.vtbs.moe</h1>
-        <router-link to="api">API Documents</router-link>
+        <a href="https://github.com/bilibili-dd-center/vtbs.moe#open-api">Open API Documents</a>
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>
