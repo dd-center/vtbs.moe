@@ -1,13 +1,13 @@
 <template>
 <transition-group name="flip-list">
-  <card v-for="vtb in list" :vtb="vtb" hover :key="vtb.mid" class="card"></card>
+  <card v-for="vtb in list" :vtb="vtb" :mini="mini" hover :key="vtb.mid" class="card"></card>
 </transition-group>
 </template>
 
 <script>
 import card from '@/components/card'
 export default {
-  props: ['list'],
+  props: ['list', 'mini'],
   components: {
     card,
   },

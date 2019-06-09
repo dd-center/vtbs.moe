@@ -1,7 +1,7 @@
 <template>
 <div>
-  <el-row>
-    <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
+  <el-row v-if="!mini">
+    <el-col :span="6" :xl="4" :xs="12">
       <div class="discover" v-if="hover">
         <router-link :to="`/detail/${mid}`">
           <span class="el-icon-discover discoverButton"></span>
@@ -33,7 +33,35 @@
       <badge :status="status" v-if="info.uname"></badge>
     </el-col>
   </el-row>
-  <div class="hidden-sm-and-up">
+  <el-row v-else>
+    <el-col :span="12" class="center">
+      <h3>
+        {{uname}}
+      </h3>
+      <br>
+      <div class="discover" v-if="hover">
+        <router-link :to="`/detail/${mid}`">
+          <span class="el-icon-discover discoverButton"></span>
+        </router-link>
+      </div>
+      <img :src="`${face.replace('http:','https:')}@256h_256w`" class="face" v-if="face">
+      <img src="@/assets/face.jpg" class="face" v-else>
+    </el-col>
+    <el-col :span="12">
+      <el-row class="center">
+        <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank" class="miniButton">
+          <el-tag size="small">直播中</el-tag>
+        </a>
+        <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="miniButton">
+          <el-tag size="small" type="info">{{mid}}</el-tag>
+        </a>
+      </el-row>
+      <el-row>
+        <badge :status="status" v-if="info.uname"></badge>
+      </el-row>
+    </el-col>
+  </el-row>
+  <div class="hidden-sm-and-up" v-if="!mini">
     <el-divider></el-divider>
   </div>
 </div>
@@ -52,6 +80,7 @@ export default {
   props: {
     vtb: Object,
     hover: Boolean,
+    mini: Boolean,
   },
   computed: {
     info: function() {
@@ -127,8 +156,13 @@ h3 {
 
 .discover {
   position: absolute;
-  width: 120px;
+  width: 50%;
   height: 120px;
+}
+
+.miniButton {
+  display: inline-block;
+  margin: 8px;
 }
 
 .discoverButton {
@@ -137,10 +171,16 @@ h3 {
   color: #409EFF;
   transition-property: opacity;
   transition-duration: 0.5s;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .discoverButton:hover {
   font-size: 120px;
   opacity: 0.4;
+}
+
+.center {
+  text-align: center;
 }
 </style>
