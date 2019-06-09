@@ -1,8 +1,8 @@
 <template>
 <div>
   <el-row v-if="!mini">
-    <el-col :span="6" :xl="4" :xs="12">
-      <div class="discover" v-if="hover">
+    <el-col :span="6" :xl="4" :xs="12" v-loading="!face">
+      <div class="discover" v-if="hover && !worm">
         <router-link :to="`/detail/${mid}`">
           <span class="el-icon-discover discoverButton"></span>
         </router-link>
@@ -22,6 +22,11 @@
           <el-tag size="small" type="info">没播</el-tag>
         </a>
         {{uname}}
+        <el-tooltip effect="dark" v-if="worm" content="如何扩充名单: 关于" placement="top-start">
+          <router-link to="about">
+            <el-tag size="small" type="info">未收录</el-tag>
+          </router-link>
+        </el-tooltip>
         <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space">
           <el-tag size="small" type="info">{{mid}}</el-tag>
         </a>
@@ -84,7 +89,7 @@ export default {
   },
   computed: {
     info: function() {
-      return this.$store.state.info[this.mid] || {}
+      return this.$store.state.info[this.mid] || this.vtb
     },
     face: function() {
       return this.$store.state.face[this.mid]
@@ -110,10 +115,15 @@ export default {
     livePage() {
       return this.$route.path.includes('live')
     },
+    worm() {
+      return this.info.worm
+    },
     status: function() {
       let object = {
         follower: this.info.follower,
-        rise: this.info.rise,
+      }
+      if (!this.worm) {
+        object.rise = this.info.rise
       }
       if (this.livePage) {
         if (this.info.guardNum) {

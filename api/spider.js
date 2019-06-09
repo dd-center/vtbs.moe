@@ -113,7 +113,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -131,6 +131,9 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io }) => {
     let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
+
+    let wormArray = await worm({ PARALLEL, vtbs, io })
+    io.emit('worm', wormArray)
 
     let endTime = Date.now()
     lastUpdate = endTime
