@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import { Notification } from 'element-ui'
 // import { get } from '@/socket'
 
 Vue.use(Vuex)
@@ -66,7 +66,16 @@ export default new Vuex.Store({
       let info = { ...state.info }
       let face = { ...state.face }
       for (let i = 0; i < data.length; i++) {
-        let { mid } = data[i]
+        let { mid, uname, title } = data[i]
+        if (info[mid] && !info[mid].liveStatus && data[i].liveStatus) {
+          setTimeout(() => {
+            Notification({
+              iconClass: 'el-icon-ship',
+              title: `${uname} 开播了!`,
+              message: title,
+            })
+          }, 5000 * Math.random())
+        }
         info[mid] = data[i]
         if (!face[mid]) {
           face[mid] = data[i].face
