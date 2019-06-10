@@ -45,7 +45,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
         await wait(1500 + time - Date.now())
         continue
       }
-      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank } = object
+      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot } = object
 
       let info = await db.info.get(mid)
       if (!info) {
@@ -96,7 +96,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
 
       let guardType = await db.guardType.get(mid)
 
-      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, time }
+      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
       io.to(mid).emit('detailInfo', { mid, data: newInfo })
       await db.info.put(mid, newInfo)
