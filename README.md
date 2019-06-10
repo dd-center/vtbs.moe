@@ -259,7 +259,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   => Array, `[...{archiveView, follower, time}]`
 
-  History of video views and follower count.
+  History of video views and follower counts.
 
   **Example:** https://api.vtbs.moe/v2/bulkActive/349991143
 
@@ -303,7 +303,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   => Array, `[...{online, time}]`
 
-  History of strems on bilibili.
+  History of live streams on bilibili.
 
   **Example:** https://api.vtbs.moe/v2/bulkLive/349991143
 
@@ -323,7 +323,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   => Array, `[...{online, time}]`
 
-  History of strems on bilibili,
+  History of live streams on bilibili,
 
   Same as above, but limited to recent `2016` entries.
 
