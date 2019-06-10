@@ -1,3 +1,5 @@
+const bot = true
+
 module.exports = [
   // Project Paryi
   { mid: 1576121, note: ['Paryi', 'p妈'] },
@@ -367,6 +369,9 @@ module.exports = [
   { mid: 5730, note: ['星乃めあ'] },
   { mid: 394918929, note: ['ウタゴエ'] },
   { mid: 3608875, note: ['魔王城ch'] },
+  { mid: 1740548, note: ['小伞'] },
+  { mid: 11617542, note: ['米莉安'] },
+  { mid: 23268, note: ['Hoshino'] },
 
   // 快看快看是Menhera
   { mid: 326968804, note: ['Menhera'] },
@@ -374,6 +379,8 @@ module.exports = [
   // 「你也是VTB了」大赏
   { mid: 12895828, note: ['莫叁'] },
 
-  // 24小时的直播
-  { mid: 7595, note: ['米娜', '辣条'] },
+  // 24小时的直播 不 是 人
+  { mid: 7595, note: ['米娜', '辣条'], bot },
+  { mid: 411812743, note: ['嫣汐'], bot },
+  { mid: 430774867, note: ['罚站AI'], bot },
 ]
