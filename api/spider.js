@@ -8,7 +8,7 @@ const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
-  if (time - currentActive.time > 3 * oneHours) {
+  if (time - currentActive.time > 6 * oneHours) {
     return true
   }
   if (Math.abs(object.follower - currentActive.follower) > 35) {
