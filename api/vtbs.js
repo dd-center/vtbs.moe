@@ -370,6 +370,7 @@ module.exports = [
   { mid: 394918929, note: ['ウタゴエ'] },
   { mid: 3608875, note: ['魔王城ch'] },
   { mid: 1740548, note: ['小伞'] },
+  { mid: 408099062, note: ['KotoriRushiru'] }, // DuckDriver TODO: alias
   { mid: 11617542, note: ['米莉安'] },
   { mid: 23268, note: ['Hoshino'] },
 
