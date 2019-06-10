@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test": "npm run repeat",
+    "test": "npm run build && npm run repeat",
     "lint": "vue-cli-service lint",
     "favicon": "node favicon",
     "repeat": "node repeat"
