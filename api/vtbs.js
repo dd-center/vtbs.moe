@@ -219,7 +219,11 @@ module.exports = [
   { mid: 49694204, note: ['转圈'] },
 
   // CodeEcho
+  { mid: 415295159, note: ['CodeEchoOfficial'] },
   { mid: 416203727, note: ['铃果'] },
+  { mid: 415578378, note: ['七柠'] },
+  { mid: 429285255, note: ['橘九'] },
+  { mid: 431537245, note: ['陆桃'] },
 
   // Kenlos
   { mid: 1421667, note: ['丹羽加奈'] },
