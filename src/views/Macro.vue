@@ -80,6 +80,16 @@ export default {
       setTimeout(() => {
         this.hawkProxyDay = [...this.hawk.day]
         this.hawkProxyH = [...this.hawk.h]
+        if (!this.hawk.h.length) {
+          let downloadHawk = setInterval(() => {
+            console.log(2333)
+            this.hawkProxyDay = [...this.hawk.day]
+            this.hawkProxyH = [...this.hawk.h]
+            if (this.hawk.h.length) {
+              clearInterval(downloadHawk)
+            }
+          }, 1000)
+        }
       }, 1000)
       this.hawkUpdater = setInterval(() => {
         this.hawkProxyDay = [...this.hawk.day]
