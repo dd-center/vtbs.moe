@@ -411,6 +411,7 @@ export default {
         let info = await get('info', this.mid)
         this.info = info
         let { recordNum, liveNum, guardChange, mid } = info
+        this.DD = !!JSON.parse(localStorage.getItem(this.mid))
         let active = await get('bulkActiveSome', { recordNum, mid })
         this.active = active
         if (liveNum) {

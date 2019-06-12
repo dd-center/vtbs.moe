@@ -4,12 +4,12 @@ import { Notification } from 'element-ui'
 import Push from 'push.js'
 import router from './router'
 
-const liveNotification = ({ mid, uname, title }) => {
-  Push.create(`${uname} 开播了!`, {
+const liveNotification = ({ mid, uname, title }, msg = '开播了') => {
+  Push.create(`${uname} ${msg}!`, {
     body: title,
     requireInteraction: true,
     onClick: function() {
-      router.push(`detail/${mid}`)
+      router.push(`/detail/${mid}`)
       this.close()
     },
   })
@@ -89,6 +89,8 @@ export default new Vuex.Store({
               message: title,
             })
           }, 5000 * Math.random())
+        } else if (!info[mid] && data[i].liveStatus && JSON.parse(localStorage.getItem(mid))) {
+          liveNotification({ mid, uname, title }, '直播中')
         }
         info[mid] = data[i]
         if (!face[mid]) {
