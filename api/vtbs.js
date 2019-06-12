@@ -373,6 +373,10 @@ module.exports = [
   { mid: 408099062, note: ['KotoriRushiru'] }, // DuckDriver TODO: alias
   { mid: 11617542, note: ['米莉安'] },
   { mid: 23268, note: ['Hoshino'] },
+  { mid: 865868, note: ['游戏vtuber']},
+  { mid: 128912828, note: ['paryiの歌']},
+  { mid: 422501642, note: ['惠惠']},
+  { mid: 793061, note: ['丧女']},
 
   // 快看快看是Menhera
   { mid: 326968804, note: ['Menhera'] },
