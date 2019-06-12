@@ -1,9 +1,9 @@
-[submodule "public/BiliChat"]
-	path = public/BiliChat
-	url = https://github.com/bilibili-dd-center/BiliChat
 [submodule "src/assets/biliob-frontend"]
 	path = src/assets/biliob-frontend
 	url = https://github.com/Jannchie/biliob-frontend.git
 [submodule "hawk/dictionary"]
 	path = hawk/dictionary
 	url = https://github.com/bilibili-dd-center/dictionary
+[submodule "BiliChat"]
+	path = BiliChat
+	url = https://github.com/bilibili-dd-center/BiliChat
