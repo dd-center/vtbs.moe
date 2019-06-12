@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   lintOnSave: false,
@@ -23,6 +24,9 @@ module.exports = {
         /moment[/\\]locale$/,
         /zh-cn/,
       ),
+      new CopyPlugin([
+        { from: 'BiliChat/docs', to: 'public/BiliChat' },
+      ]),
     ],
   },
 }
