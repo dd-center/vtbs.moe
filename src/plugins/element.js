@@ -30,7 +30,7 @@ import {
   // TimeSelect,
   // TimePicker,
   // Popover,
-  // Tooltip,
+  Tooltip,
   // MessageBox,
   // Breadcrumb,
   // BreadcrumbItem,
@@ -41,7 +41,7 @@ import {
   Tag,
   // Tree,
   // Alert,
-  // Notification,
+  Notification,
   // Slider,
   Loading,
   // Icon,
@@ -108,7 +108,7 @@ Vue.use(TableColumn)
 // Vue.use(TimeSelect)
 // Vue.use(TimePicker)
 // Vue.use(Popover)
-// Vue.use(Tooltip)
+Vue.use(Tooltip)
 // Vue.use(Breadcrumb)
 // Vue.use(BreadcrumbItem)
 // Vue.use(Form)
@@ -157,5 +157,5 @@ Vue.prototype.$loading = Loading.service
 // Vue.prototype.$alert = MessageBox.alert
 // Vue.prototype.$confirm = MessageBox.confirm
 // Vue.prototype.$prompt = MessageBox.prompt
-// Vue.prototype.$notify = Notification
+Vue.prototype.$notify = Notification
 // Vue.prototype.$message = Message

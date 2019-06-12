@@ -1,12 +1,12 @@
 <template>
 <el-container>
-  <el-aside class="hidden-sm-and-down" v-if="aside">
+  <!-- <el-aside class="hidden-sm-and-down" v-if="aside">
   </el-aside>
   <div class="hidden-sm-and-down aside" v-if="aside">
     <list></list>
   </div>
   <el-button icon="el-icon-close" size="mini" type="danger" circle class="hidden-sm-and-down sideButtonClose" @click="aside=!aside" v-if="aside"></el-button>
-  <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button>
+  <el-button icon="el-icon-search" circle size="mini" class="hidden-sm-and-down sideButton" @click="aside=!aside" v-if="!aside"></el-button> -->
   <el-main v-loading="!topPhoto">
     <img :src="topPhoto.replace('http:','https:')" alt="topPhoto" class="topPhoto" v-if="topPhoto">
 
@@ -304,7 +304,7 @@
           </el-col>
           <el-col :span="16" :xs="24">
             JSON数据:
-            <pre><code>{{info}}</code></pre>
+            <tree-view :data="info" :options="{maxDepth: 3, rootObjectKey: 'info'}"></tree-view>
           </el-col>
         </el-row>
 
@@ -319,7 +319,7 @@
 import Vue from 'vue'
 // import { mapState, mapGetters } from 'vuex'
 import moment from 'moment'
-import List from '@/components/list'
+import TreeView from 'vue-json-tree-view'
 
 import VeLine from 'v-charts/lib/line.common'
 
@@ -327,6 +327,7 @@ import 'echarts/lib/component/dataZoom'
 
 import { get } from '@/socket'
 
+Vue.use(TreeView)
 Vue.component(VeLine.name, VeLine)
 
 export default {
@@ -724,9 +725,7 @@ export default {
       return this.active.length >= this.recordNum
     },
   },
-  components: {
-    List,
-  },
+  components: {},
   methods: {
     async loadFullLive() {
       this.loadingLive = true
@@ -743,11 +742,6 @@ export default {
 </script>
 
 <style scoped>
-pre {
-  background-color: rgba(0, 0, 0, 0.1);
-  word-wrap: break-word;
-}
-
 .topPhoto {
   width: 100%;
   margin-top: 1px;

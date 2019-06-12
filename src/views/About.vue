@@ -21,20 +21,12 @@
         <a href="https://github.com/simon300000/vtbs.moe/" target="_blank">github:simon300000/vtbs.moe</a>
         <br>
         <br>
-        其他有趣的项目:
+        其他有趣的项目: <a href="https://bilibili-dd-center.github.io">bilibili-dd-center.github.io</a>
         <br>
-        Vtuber Bilibili 直播间弹幕记录
-        <a href="https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/" target="_blank">https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku/</a>
-        <br>
-        直播用 BiliChat
-        <a href="https://github.com/3Shain/BiliChat" target="_blank">https://github.com/3Shain/BiliChat</a>
-        <br>
-        BiliOB 观察者
-        <a href="https://www.biliob.com" target="_blank">https://www.biliob.com</a>
       </el-col>
       <el-col :xs="24" :span="12">
         <h1>api.vtbs.moe</h1>
-        <router-link to="api">API Documents</router-link>
+        <a href="https://github.com/bilibili-dd-center/vtbs.moe#open-api">Open API Documents</a>
         <h1>服务器数据：</h1>
         <p v-loading="!spiders">Spiders: {{spiders}}</p>
         <p v-loading="!interval">Interval: {{interval}} ms</p>

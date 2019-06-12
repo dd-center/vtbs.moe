@@ -5,7 +5,6 @@ import Rank from './views/Rank.vue'
 import About from './views/About.vue'
 import List from './views/List.vue'
 import DD from './views/DD.vue'
-import API from './views/API.vue'
 // import Macro from './views/Macro.vue'
 
 Vue.use(Router)
@@ -41,9 +40,6 @@ export default new Router({
     component: () =>
       import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
     props: true,
-  }, {
-    path: '/api',
-    component: API,
   }, {
     path: '/about',
     name: 'about',

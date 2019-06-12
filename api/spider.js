@@ -8,7 +8,7 @@ const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
-  if (time - currentActive.time > 3 * oneHours) {
+  if (time - currentActive.time > 6 * oneHours) {
     return true
   }
   if (Math.abs(object.follower - currentActive.follower) > 35) {
@@ -45,7 +45,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
         await wait(1500 + time - Date.now())
         continue
       }
-      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank } = object
+      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot } = object
 
       let info = await db.info.get(mid)
       if (!info) {
@@ -96,7 +96,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
 
       let guardType = await db.guardType.get(mid)
 
-      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, time }
+      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
       io.to(mid).emit('detailInfo', { mid, data: newInfo })
       await db.info.put(mid, newInfo)
@@ -113,7 +113,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -131,6 +131,9 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io }) => {
     let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
+
+    worm({ PARALLEL, vtbs, io })
+      .then(wormArray => io.emit('worm', wormArray))
 
     let endTime = Date.now()
     lastUpdate = endTime

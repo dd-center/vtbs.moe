@@ -48,7 +48,29 @@ import { mapState } from 'vuex'
 
 export default {
   props: ['search'],
-  computed: { ...mapState(['vtbs', 'info']),
+  data() {
+    return {
+      show: 64,
+    }
+  },
+  mounted() {
+    this.$nextTick(function() {
+      document.onscroll = () => {
+        if (document.body.clientHeight - window.scrollY - window.innerHeight < (document.body.clientHeight / this.show * 20) && this.vtbs.length) {
+          if (!this.allDisplay) {
+            this.show += 32
+          } else {
+            document.onscroll = null
+          }
+        }
+      }
+    })
+  },
+  destroyed() {
+    document.onscroll = null
+  },
+  computed: {
+    ...mapState(['vtbs', 'info']),
     list() {
       return this.vtbs.map(({ mid, note }) => {
         let { uname, video, roomid, follower, guardNum, rise, archiveView } = this.info[mid] || {}
@@ -65,6 +87,10 @@ export default {
           .filter(({ index }) => index)
       })
       return result
+        .filter((n, index) => index < this.show)
+    },
+    allDisplay() {
+      return this.show >= this.vtbs.length
     },
   },
 }

@@ -1,3 +1,5 @@
+const bot = true
+
 module.exports = [
   // Project Paryi
   { mid: 1576121, note: ['Paryi', 'p妈'] },
@@ -219,7 +221,11 @@ module.exports = [
   { mid: 49694204, note: ['转圈'] },
 
   // CodeEcho
+  { mid: 415295159, note: ['CodeEchoOfficial'] },
   { mid: 416203727, note: ['铃果'] },
+  { mid: 415578378, note: ['七柠'] },
+  { mid: 429285255, note: ['橘九'] },
+  { mid: 431537245, note: ['陆桃'] },
 
   // Kenlos
   { mid: 1421667, note: ['丹羽加奈'] },
@@ -341,6 +347,7 @@ module.exports = [
   { mid: 22296560, note: ['塔西亚'] },
   { mid: 588034, note: ['博士'] },
   { mid: 178214, note: ['maoyalu27'] },
+  { mid: 432762700, note: ['鹦鹉ふぇありす'] },
 
   // 从直播区抓过来的
   { mid: 7858535, note: ['豆腐'] },
@@ -362,6 +369,10 @@ module.exports = [
   { mid: 5730, note: ['星乃めあ'] },
   { mid: 394918929, note: ['ウタゴエ'] },
   { mid: 3608875, note: ['魔王城ch'] },
+  { mid: 1740548, note: ['小伞'] },
+  { mid: 408099062, note: ['KotoriRushiru'] }, // DuckDriver TODO: alias
+  { mid: 11617542, note: ['米莉安'] },
+  { mid: 23268, note: ['Hoshino'] },
 
   // 快看快看是Menhera
   { mid: 326968804, note: ['Menhera'] },
@@ -369,6 +380,8 @@ module.exports = [
   // 「你也是VTB了」大赏
   { mid: 12895828, note: ['莫叁'] },
 
-  // 24小时的直播
-  { mid: 7595, note: ['米娜', '辣条'] },
+  // 24小时的直播 不 是 人
+  { mid: 7595, note: ['米娜', '辣条'], bot },
+  { mid: 411812743, note: ['嫣汐'], bot },
+  { mid: 430774867, note: ['罚站AI'], bot },
 ]

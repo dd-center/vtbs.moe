@@ -4,13 +4,13 @@
     <h1>1小时直播弹幕</h1>
     <el-row>
       <el-col>
-        <ve-wordcloud v-loading="!hawk.h.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.h }" :extend="wordCloudExtend"></ve-wordcloud>
+        <ve-wordcloud v-loading="!hawkProxyH.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyH }" :extend="wordCloudExtend"></ve-wordcloud>
       </el-col>
     </el-row>
     <h1>24小时直播弹幕</h1>
     <el-row>
       <el-col>
-        <ve-wordcloud v-loading="!hawk.day.length" :settings="{ sizeMax: 128, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawk.day }" :extend="wordCloudExtend"></ve-wordcloud>
+        <ve-wordcloud v-loading="!hawkProxyDay.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyDay }" :extend="wordCloudExtend"></ve-wordcloud>
       </el-col>
     </el-row>
     <h1>虚拟世界宏观经济走势</h1>
@@ -76,6 +76,29 @@ export default {
       get('guardMacro')
         .then(guard => this.updateMacro({ guard }))
     }
+    this.$nextTick(function() {
+      setTimeout(() => {
+        this.hawkProxyDay = [...this.hawk.day]
+        this.hawkProxyH = [...this.hawk.h]
+        if (!this.hawk.h.length) {
+          let downloadHawk = setInterval(() => {
+            console.log(2333)
+            this.hawkProxyDay = [...this.hawk.day]
+            this.hawkProxyH = [...this.hawk.h]
+            if (this.hawk.h.length) {
+              clearInterval(downloadHawk)
+            }
+          }, 1000)
+        }
+      }, 1000)
+      this.hawkUpdater = setInterval(() => {
+        this.hawkProxyDay = [...this.hawk.day]
+        this.hawkProxyH = [...this.hawk.h]
+      }, 1000 * 60)
+    })
+  },
+  destroyed: function() {
+    clearInterval(this.hawkUpdater)
   },
   methods: {
     loadVtbMacroAll() {
@@ -244,6 +267,9 @@ export default {
     }
     return {
       loading: false,
+      hawkProxyDay: [],
+      hawkProxyH: [],
+      hawkUpdater: undefined,
     }
   },
 }

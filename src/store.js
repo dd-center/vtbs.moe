@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import { Notification } from 'element-ui'
 // import { get } from '@/socket'
 
 Vue.use(Vuex)
@@ -30,18 +30,32 @@ export default new Vuex.Store({
     vupMacro: [],
     vtbMacro: [],
     guardMacro: [],
-    showAll: false,
     hawk: { day: [], h: [] },
+    wormArray: [],
   },
   getters: {
     followerRank: rank((state, a, b) => b.follower - a.follower),
     riseRank: rank((state, a, b) => b.rise - a.rise),
-    liveRank: rank((state, a, b) => {
-      let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
-      let guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
-      let roomDifference = (b.roomid ? 1 : 0) - (a.roomid ? 1 : 0)
-      return 100000000000 * (liveDifference + roomDifference) + 1000000 * guardDifference + b.follower - a.follower
-    }),
+    liveRank(state) {
+      return state.vtbs
+        .map(({ mid }) => state.info[mid])
+        .concat(state.wormArray)
+        .sort((a, b) => {
+          if (!a && !b) {
+            return 0
+          }
+          if (!a) {
+            return 1
+          }
+          if (!b) {
+            return -1
+          }
+          let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
+          let guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
+          let roomDifference = (b.roomid ? 1 : 0) - (a.roomid ? 1 : 0)
+          return 100000000000 * (liveDifference + roomDifference) + 1000000 * guardDifference + b.follower - a.follower
+        })
+    },
   },
   mutations: {
     SOCKET_vtbs(state, data) {
@@ -51,7 +65,16 @@ export default new Vuex.Store({
       let info = { ...state.info }
       let face = { ...state.face }
       for (let i = 0; i < data.length; i++) {
-        let { mid } = data[i]
+        let { mid, uname, title } = data[i]
+        if (info[mid] && !info[mid].liveStatus && data[i].liveStatus) {
+          setTimeout(() => {
+            Notification({
+              iconClass: 'el-icon-ship',
+              title: `${uname} 开播了!`,
+              message: title,
+            })
+          }, 5000 * Math.random())
+        }
         info[mid] = data[i]
         if (!face[mid]) {
           face[mid] = data[i].face
@@ -96,6 +119,17 @@ export default new Vuex.Store({
     SOCKET_hawk(state, data) {
       state.hawk = data
     },
+    SOCKET_worm(state, data) {
+      let face = { ...state.face }
+      for (let i = 0; i < data.length; i++) {
+        let { mid } = data[i]
+        if (!face[mid]) {
+          face[mid] = data[i].face
+        }
+      }
+      state.face = { ...face }
+      state.wormArray = data
+    },
     updateMacro(state, { vup, vtb, guard }) {
       if (vup) {
         state.vupMacro = [...vup]
@@ -106,9 +140,6 @@ export default new Vuex.Store({
       if (guard) {
         state.guardMacro = [...guard]
       }
-    },
-    enableShowAll(state) {
-      state.showAll = true
     },
   },
   actions: {},
