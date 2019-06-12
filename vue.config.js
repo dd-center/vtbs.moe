@@ -25,7 +25,7 @@ module.exports = {
         /zh-cn/,
       ),
       new CopyPlugin([
-        { from: 'BiliChat/docs', to: 'public/BiliChat' },
+        { from: 'BiliChat/docs', to: 'BiliChat' },
       ]),
     ],
   },
