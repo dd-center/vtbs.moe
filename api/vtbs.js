@@ -247,6 +247,13 @@ module.exports = [
   { mid: 5174606, note: ['北上双叶'] },
   { mid: 454530, note: ['花京院ちえり'] },
 
+  // DuckDriver
+  { mid: 719049, note: ['提斯卡', 'DuckDriver'] },
+  { mid: 6621297, note: ['可可亚', 'DuckDriver'] },
+  { mid: 408099062, note: ['KotoriRushiru', '小鳥ルシル', 'DuckDriver'] }, // TODO: alias
+  { mid: 412477175, note: ['DuckDriver'] },
+  { mid: 1950658, note: ['DuckDriver'] },
+
   // 音乐组
   { mid: 360221708, note: ['Tenjin Kotone', '天神子兔音'] },
   { mid: 7078836, note: ['富士葵'] },
@@ -370,13 +377,12 @@ module.exports = [
   { mid: 394918929, note: ['ウタゴエ'] },
   { mid: 3608875, note: ['魔王城ch'] },
   { mid: 1740548, note: ['小伞'] },
-  { mid: 408099062, note: ['KotoriRushiru'] }, // DuckDriver TODO: alias
   { mid: 11617542, note: ['米莉安'] },
   { mid: 23268, note: ['Hoshino'] },
-  { mid: 865868, note: ['游戏vtuber']},
-  { mid: 128912828, note: ['paryiの歌']},
-  { mid: 422501642, note: ['惠惠']},
-  { mid: 793061, note: ['丧女']},
+  { mid: 865868, note: ['游戏vtuber'] },
+  { mid: 128912828, note: ['paryiの歌'] },
+  { mid: 422501642, note: ['惠惠'] },
+  { mid: 793061, note: ['丧女'] },
 
   // 快看快看是Menhera
   { mid: 326968804, note: ['Menhera'] },
