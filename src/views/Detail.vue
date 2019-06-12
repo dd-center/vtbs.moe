@@ -126,7 +126,7 @@
           <el-col :span="6" :xs="12" :xl="4" v-if="roomid">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                直播间
+                直播间 <el-checkbox v-model="DD" title="开播提示"></el-checkbox>
                 <a :href="`https://live.bilibili.com/${roomid}`" v-if="liveStatus" target="_blank" class="right">
                   <el-tag size="medium">人气 {{online}}</el-tag>
                 </a>
@@ -320,6 +320,7 @@ import Vue from 'vue'
 // import { mapState, mapGetters } from 'vuex'
 import moment from 'moment'
 import TreeView from 'vue-json-tree-view'
+import Push from 'push.js'
 
 import VeLine from 'v-charts/lib/line.common'
 
@@ -396,6 +397,7 @@ export default {
       guard: [],
       loadingLive: false,
       loadingActive: false,
+      DD: !!JSON.parse(localStorage.getItem(this.mid)),
     }
   },
   watch: {
@@ -420,6 +422,10 @@ export default {
           this.guard = guard
         }
       },
+    },
+    DD: function(newValue) {
+      localStorage.setItem(this.mid, JSON.stringify(newValue))
+      Push.create(`${this.uname} 直播提示 (${newValue ? '开启' : '关闭'})`, { timeout: 2000 })
     },
   },
   sockets: {

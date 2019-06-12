@@ -22,6 +22,8 @@
         <br>
         <br>
         其他有趣的项目: <a href="https://bilibili-dd-center.github.io">bilibili-dd-center.github.io</a>
+        <br><br>
+        <el-button round @click="push('→_→！')" size="mini">测试Local Notification</el-button>
         <br>
       </el-col>
       <el-col :xs="24" :span="12">
@@ -54,6 +56,7 @@
 import { mapState } from 'vuex'
 import moment from 'moment'
 import { get } from '@/socket'
+import Push from 'push.js'
 
 export default {
   data() {
@@ -100,6 +103,7 @@ export default {
   async mounted() {
     this.uptime = await get('uptime')
   },
+  methods: { push: w => Push.create(w) },
   filters: {
     parseTime: function(time = 0) {
       let timeNow = moment(time)

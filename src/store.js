@@ -1,7 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { Notification } from 'element-ui'
-// import { get } from '@/socket'
+import Push from 'push.js'
+import router from './router'
+
+const liveNotification = ({ mid, uname, title }) => {
+  Push.create(`${uname} 开播了!`, {
+    body: title,
+    requireInteraction: true,
+    onClick: function() {
+      router.push(`detail/${mid}`)
+      this.close()
+    },
+  })
+}
 
 Vue.use(Vuex)
 
@@ -68,6 +80,9 @@ export default new Vuex.Store({
         let { mid, uname, title } = data[i]
         if (info[mid] && !info[mid].liveStatus && data[i].liveStatus) {
           setTimeout(() => {
+            if (JSON.parse(localStorage.getItem(mid))) {
+              liveNotification({ mid, uname, title })
+            }
             Notification({
               iconClass: 'el-icon-ship',
               title: `${uname} 开播了!`,
