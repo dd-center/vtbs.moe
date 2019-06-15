@@ -153,6 +153,10 @@ module.exports = [
   // VirtuaReal Project
   { mid: 421267475, note: ['艾因Eine'] },
   { mid: 420249427, note: ['琉绮Ruki'] },
+  // VirtuaReal 2nd
+  { mid: 434341786, note: ['Virtuareal'] },
+  { mid: 434334701, note: ['VirtuaReal'] },
+  { mid: 434401868, note: ['VirtuaReal'] },
   // 上海2434
   { mid: 1631724, note: ['塞塔nya'] },
 
