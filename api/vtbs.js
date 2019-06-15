@@ -171,10 +171,11 @@ module.exports = [
   { mid: 403894805, note: ['柯里克'] },
 
   // SOW
-  { mid: 408231448, note: ['Misa'] },
-  { mid: 405037911, note: ['莲娜'] },
-  { mid: 82803440, note: ['凛星'] },
-  { mid: 166617, note: ['Ita'] },
+  { mid: 408231448, note: ['Misa', 'SOW'] },
+  { mid: 405037911, note: ['莲娜', 'SOW'] },
+  { mid: 82803440, note: ['凛星', 'SOW'] },
+  { mid: 166617, note: ['Ita', 'SOW'] },
+  { mid: 416622817, note: ['步玎Pudding', 'SOW'] },
 
   { mid: 403080854, note: ['Nia'] },
   { mid: 1337624, note: ['奈木'] },
