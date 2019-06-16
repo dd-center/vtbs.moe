@@ -57,7 +57,7 @@ module.exports = [
   { mid: 90100786, note: ['青家大院AVtuber'] },
   { mid: 80387576, note: ['Hime', '大头'] },
   { mid: 15095071, note: ['Kerin', '爆破'] },
-  { mid: 5847902, note: ['Omega姐妹'] },
+  { mid: 423728837, note: ['Ωsisters'] },
 
   // ENTUM
   { mid: 238537745, note: ['未来明', '金发渣男'] },
