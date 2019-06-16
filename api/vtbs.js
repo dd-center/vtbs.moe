@@ -360,6 +360,7 @@ module.exports = [
   { mid: 588034, note: ['博士'] },
   { mid: 178214, note: ['maoyalu27'] },
   { mid: 432762700, note: ['鹦鹉ふぇありす'] },
+  { mid: 431113669, note: ['梦月真白', 'Mutsuki Mashiro'] },
 
   // 从直播区抓过来的
   { mid: 7858535, note: ['豆腐'] },
