@@ -72,36 +72,34 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) 
         lastLive = { online, time }
       }
 
-      let bulkLive = cache.get(`bulkLive_${roomid}`)
-      if (!bulkLive) {
-        bulkLive = await falcon('bulkLive', roomid)
-        cache.set(`bulkLive_${roomid}`, bulkLive)
-      }
-      let bulkLiveWeek = cache.get(`bulkLiveWeek_${roomid}`)
-      if (!bulkLiveWeek) {
-        bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
-        cache.set(`bulkLiveWeek_${roomid}`, bulkLiveWeek)
-      }
-      let liveTime = 0
-      bulkLive.forEach(({ time, online }, index) => {
-        if (online - 1 && index) {
-          liveTime += time - bulkLive[index - 1].time
-        }
-      })
-      let liveNum = liveTime / (1000 * 60 * 5)
+      let liveCache = cache.get(`liveInfo_${roomid}`)
+      if (!liveCache) {
+        liveCache = {}
+        let bulkLive = await falcon('bulkLive', roomid)
+        let bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
+        let liveTime = 0
+        bulkLive.forEach(({ time, online }, index) => {
+          if (online - 1 && index) {
+            liveTime += time - bulkLive[index - 1].time
+          }
+        })
+        liveCache.liveNum = liveTime / (1000 * 60 * 5)
 
-      let averageLive = 0
-      if (bulkLive.length) {
-        let firstLive = bulkLive[0]
-        averageLive = liveTime * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
-      }
-
-      let weekLive = 0
-      bulkLiveWeek.forEach(({ time, online }, index) => {
-        if (online - 1 && index) {
-          weekLive += time - bulkLiveWeek[index - 1].time
+        liveCache.averageLive = 0
+        if (bulkLive.length) {
+          let firstLive = bulkLive[0]
+          liveCache.averageLive = liveTime * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
         }
-      })
+
+        liveCache.weekLive = 0
+        bulkLiveWeek.forEach(({ time, online }, index) => {
+          if (online - 1 && index) {
+            liveCache.weekLive += time - bulkLiveWeek[index - 1].time
+          }
+        })
+        cache.set(`liveInfo_${roomid}`, liveCache)
+      }
+      let { liveNum, averageLive, weekLive } = liveCache
 
       if (guardNum !== info.guardNum) {
         guardChange++
