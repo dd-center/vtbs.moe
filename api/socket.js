@@ -1,16 +1,6 @@
 exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
-      if (e === 'live') {
-        arc(await live.get(target))
-        // DEPRECATED
-        // Remove in the future
-      }
-      if (e === 'liveBulk') {
-        arc(await Promise.all([...target].map(e => live.get(e))))
-        // DEPRECATED
-        // Remove in the future
-      }
       if (e === 'vupMacro') {
         socket.join('vupMacro', async () => {
           let macroNum = await num.get('vupMacroNum')
@@ -83,8 +73,6 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
   })
 
   console.log('a user connected')
-  handler('live')
-  handler('liveBulk')
   handler('vupMacro')
   handler('vtbMacro')
   handler('vtbMacroWeek')
@@ -131,10 +119,6 @@ exports.connect = ({ io, site, macro, num, info, active, live, guard, vtbs, full
 Socket
 
 // Client Request
-live: mid -> {time, online}
-
-liveBulk: [mid] -> [{time, online}]
-
 vupMacro: -> [{vupMacro}]
 vtbMacro: -> [{vtbMacro}]
 vtbMacroWeek: -> [{vtbMacro}]
