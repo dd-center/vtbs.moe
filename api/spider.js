@@ -1,5 +1,10 @@
 const biliAPI = require('bili-api')
 
+const LRU = require('lru-cache')
+const cache = new LRU({
+  maxAge: 1000 * 60 * 60,
+})
+
 const race = (...args) => Promise.race([biliAPI(...args), wait(1000 * 15)])
 
 let oneHours = 1000 * 60 * 60
@@ -67,8 +72,16 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) 
         lastLive = { online, time }
       }
 
-      let bulkLive = await falcon('bulkLive', roomid)
-      let bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
+      let bulkLive = cache.get(`bulkLive_${roomid}`)
+      if (!bulkLive) {
+        bulkLive = await falcon('bulkLive', roomid)
+        cache.set(`bulkLive_${roomid}`, bulkLive)
+      }
+      let bulkLiveWeek = cache.get(`bulkLiveWeek_${roomid}`)
+      if (!bulkLiveWeek) {
+        bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
+        cache.set(`bulkLiveWeek_${roomid}`, bulkLiveWeek)
+      }
       let liveTime = 0
       bulkLive.forEach(({ time, online }, index) => {
         if (online - 1 && index) {
