@@ -6,12 +6,9 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const monster = require('./monster')
-const { vd, vdSocket } = require('./vd')
-const falcon = require('./falcon')
+const { monster, vd, vdSocket, falcon, hawk } = require('./interface')
 
 const snake = require('./snake')
-const hawk = require('./hawk')
 const { worm, wormResult } = require('./worm')
 
 const { connect } = require('./socket')
