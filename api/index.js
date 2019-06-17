@@ -16,7 +16,7 @@ const httpAPI = require('./http')
 
 const { init } = require('./database')
 
-const PARALLEL = 3
+const PARALLEL = 5
 const INTERVAL = 1000 * 60 * 5
 
 ;

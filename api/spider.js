@@ -25,7 +25,7 @@ const notable = ({ object, time, currentActive }) => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, falcon }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -114,7 +114,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon }) => {
       infoArray.push(newInfo)
 
       log(`UPDATED: ${mid} - ${uname}`)
-      await wait(1500 + time - Date.now())
+      await wait(500 * PARALLEL + time - Date.now())
     } else {
       let update = { time, spiderId: spiderId, duration: time - startTime }
       io.emit('spiderUpdate', update)
@@ -139,7 +139,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm, falcon }) => {
     let startTime = Date.now()
     let pending = [...vtbs]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, falcon }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 
