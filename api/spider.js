@@ -25,7 +25,7 @@ const notable = ({ object, time, currentActive }) => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, falcon }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -51,8 +51,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
       if (!info) {
         info = {}
       }
-      let { recordNum = 0, liveNum = 0, guardChange = 0 } = info
-      let { lastLive = (await db.live.get({ mid, num: liveNum })) || {} } = info
+      let { recordNum = 0, guardChange = 0 } = info
 
       let currentActive = await db.active.get({ mid, num: recordNum })
       if (notable({ object, time, currentActive })) {
@@ -61,23 +60,35 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
         await db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
       }
 
+      let { lastLive = {} } = info
+
       if (liveStatus) {
-        liveNum++
         io.to(mid).emit('detailLive', { mid, data: { online, time } })
         lastLive = { online, time }
-        await db.live.put({ mid, num: liveNum, value: { online, time } })
       }
+
+      let bulkLive = await falcon('bulkLive', roomid)
+      let bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
+      let liveTime = 0
+      bulkLive.forEach(({ time, online }, index) => {
+        if (online - 1 && index) {
+          liveTime += time - bulkLive[index - 1].time
+        }
+      })
+      let liveNum = liveTime / (1000 * 60 * 5)
 
       let averageLive = 0
-      let weekLive = 0
-      if (liveNum) {
-        let allLive = await db.live.bulkGet({ mid, num: liveNum })
-        let firstLive = allLive[0]
-        averageLive = (1000 * 60 * 5 * liveNum) * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
-
-        let thisWeek = allLive.filter((live) => live.time > time - 1000 * 60 * 60 * 24 * 7)
-        weekLive = thisWeek.length * 1000 * 60 * 5
+      if (bulkLive.length) {
+        let firstLive = bulkLive[0]
+        averageLive = liveTime * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
       }
+
+      let weekLive = 0
+      bulkLiveWeek.forEach(({ time, online }, index) => {
+        if (online - 1 && index) {
+          weekLive += time - bulkLiveWeek[index - 1].time
+        }
+      })
 
       if (guardNum !== info.guardNum) {
         guardChange++
@@ -113,7 +124,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL }) => {
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm, falcon }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -128,7 +139,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm }) => {
     let startTime = Date.now()
     let pending = [...vtbs]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, falcon }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 

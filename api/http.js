@@ -86,12 +86,14 @@ module.exports = ({ vtbs, info, fullGuard, monster, active, live }) => {
     ctx.body = await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) })
   })
 
+  // DEPRECATED
   v2.get('/bulkLive/:mid', async ctx => {
     const mid = ctx.params.mid
     const { liveNum } = await info.get(mid)
     ctx.body = await live.bulkGet({ mid, num: liveNum })
   })
 
+  // DEPRECATED
   v2.get('/bulkLiveSome/:mid', async ctx => {
     const mid = ctx.params.mid
     const { liveNum } = await info.get(mid)

@@ -8,6 +8,7 @@ const Server = require('socket.io')
 
 const monster = require('./monster')
 const { vd, vdSocket } = require('./vd')
+const falcon = require('./falcon')
 
 const snake = require('./snake')
 const hawk = require('./hawk')
@@ -28,12 +29,12 @@ const INTERVAL = 1000 * 60 * 5
   const server = http.createServer(httpAPI({ vtbs, info, fullGuard, monster, active, live }))
   io.attach(server)
   vd.attach(server)
-  spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, live, guard, guardType }, io, worm })
+  spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, guard, guardType }, io, worm, falcon })
   snake({ vdSocket, io, info })
   hawk({ io })
   setTimeout(() => {
     ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
-  io.on('connection', connect({ io, vtbs, macro, site, num, info, active, live, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
+  io.on('connection', connect({ io, vtbs, macro, site, num, info, active, falcon, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
   server.listen(8001)
 })()

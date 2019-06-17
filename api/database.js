@@ -53,7 +53,7 @@ exports.init = async () => {
 
   let info = new LevelDatabase({ name: 'info', db })
   let active = new ArrayDatabase({ name: 'active', db })
-  let live = new ArrayDatabase({ name: 'live', db })
+  let live = new ArrayDatabase({ name: 'live', db }) // DEPRECATED
   let guard = new ArrayDatabase({ name: 'guard', db })
 
   let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
@@ -78,8 +78,8 @@ mid: {mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView
 active
 mid_recordNum: {archiveView, follower, time}
 
-live
-mid_liveNum: {online, time}
+live // DEPRECATED
+mid_liveNum: {online, time} // DEPRECATED
 
 guard
 mid_guardChange: {guardNum, time}
@@ -105,7 +105,7 @@ all: time: timestamp
 
 Increase index:
   recordNum
-  liveNum
+  liveNum // DEPRECATED, calculated
   guardChange
   vupMacroNum
   vtbMacroNum

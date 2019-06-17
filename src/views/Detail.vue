@@ -192,7 +192,7 @@
               <div slot="header">
                 直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loadingLive" title="显示完整" class="right">(一部分)</el-button>
               </div>
-              <ve-line :data="{rows:live}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!live.length"></ve-line>
+              <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
             </el-card>
           </el-col>
           <el-col :span="12" :xs="24" v-if="maxGuardNum">
@@ -398,6 +398,7 @@ export default {
       loadingLive: false,
       loadingActive: false,
       DD: !!JSON.parse(localStorage.getItem(this.mid)),
+      fullLive: false,
     }
   },
   watch: {
@@ -415,7 +416,7 @@ export default {
         let active = await get('bulkActiveSome', { recordNum, mid })
         this.active = active
         if (liveNum) {
-          let live = await get('bulkLiveWeek', { liveNum, mid })
+          let live = await get('bulkLiveWeek', { mid })
           this.rawLive = live
         }
         if (guardChange > 0) {
@@ -443,7 +444,7 @@ export default {
         if (this.fullLive) {
           this.rawLive = await get('bulkLive', { liveNum, mid })
         } else {
-          this.rawLive = await get('bulkLiveWeek', { liveNum, mid })
+          this.rawLive = await get('bulkLiveWeek', { mid })
         }
       }
       if (guardChange > 0) {
@@ -472,27 +473,6 @@ export default {
     },
   },
   computed: {
-    live: function() {
-      let rawLive = [...this.rawLive]
-      let live = []
-      for (let i = 0; i < rawLive.length; i++) {
-        let before = rawLive[i - 1] || {}
-        let current = rawLive[i]
-        let after = rawLive[i + 1] || {}
-        if (current.time - before.time > 1000 * 60 * 5 * 3) {
-          live.push({ time: current.time - 1000 * 60 * 5, online: 0 })
-        }
-        live.push(current)
-        if (after.time - current.time > 1000 * 60 * 5 * 3) {
-          live.push({ time: current.time + 1000 * 60 * 5, online: 0 })
-        }
-      }
-      if (live.length && (new Date()).getTime() - live[live.length - 1].time > 1000 * 60 * 5 * 1.5) {
-        live.push({ time: live[live.length - 1].time + 1000 * 60 * 5, online: 0 })
-        live.push({ time: (new Date()).getTime(), online: 0 })
-      }
-      return live
-    },
     pastWeek: function() {
       let active = [...this.active]
       let guard = [...this.guard]
@@ -725,9 +705,6 @@ export default {
         { name: '上次更新', value: moment(this.time).fromNow() },
       ]
     },
-    fullLive() {
-      return this.rawLive.length >= this.liveNum
-    },
     fullActive() {
       return this.active.length >= this.recordNum
     },
@@ -738,6 +715,7 @@ export default {
       this.loadingLive = true
       let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
       this.rawLive = live
+      this.fullLive = true
     },
     async loadFullActive() {
       this.loadingActive = true
