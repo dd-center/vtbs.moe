@@ -7,7 +7,7 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 let wormArray = []
 
-const round = async ({ pending, wormId, io }) => {
+const round = async ({ pending, wormId, io, PARALLEL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -30,7 +30,7 @@ const round = async ({ pending, wormId, io }) => {
       infoArray.push({ mid, uname, video, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, guardNum, areaRank, online, title, time, worm: true })
 
       log(`UPDATED: ${mid} - ${uname}`)
-      await wait(1500 + time - Date.now())
+      await wait(500 * PARALLEL + time - Date.now())
     } else {
       return infoArray
     }
@@ -45,7 +45,7 @@ const worm = async ({ PARALLEL, vtbs, io }) => {
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
     .filter(({ mid }) => !mids.includes(mid))
 
-  let worms = Array(PARALLEL).fill().map((c, wormId) => round({ pending, wormId, io }))
+  let worms = Array(PARALLEL).fill().map((c, wormId) => round({ pending, wormId, io, PARALLEL }))
   wormArray = [].concat(...await Promise.all(worms))
   return wormArray
 }
