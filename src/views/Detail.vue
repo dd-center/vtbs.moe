@@ -29,8 +29,8 @@
               <el-divider></el-divider>
               个人空间:
               <br>
-              <a :href="`http://space.bilibili.com/${mid}`" target="_blank">
-                {{`http://space.bilibili.com/${mid}`}}
+              <a :href="`https://space.bilibili.com/${mid}`" target="_blank">
+                {{`https://space.bilibili.com/${mid}`}}
               </a>
               <template v-if="roomid">
                 <el-divider></el-divider>
@@ -278,7 +278,7 @@
                     <span>{{scope.row.value}}</span>
                   </template>
                   <template v-if="scope.row.space">
-                    <a :href="`http://space.bilibili.com/${scope.row.space}`" target="_blank">
+                    <a :href="`https://space.bilibili.com/${scope.row.space}`" target="_blank">
                       {{scope.row.space}}
                     </a>
                   </template>
