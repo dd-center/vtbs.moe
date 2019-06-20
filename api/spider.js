@@ -25,7 +25,7 @@ const notable = ({ object, time, currentActive }) => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -50,13 +50,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
       let averageLive = 0
       let weekLive = 0
 
-      let bulkLive = await wiki.liveHistory(uuid)
-      if (!bulkLive) {
-        pending.push(vtb)
-        log(`RETRY PENDING: ${vtb.mid}, wiki`)
-        await wait(1500)
-        continue
-      }
+      let bulkLive = await parrot.getLiveHistory(uuid)
 
       let liveNum = bulkLive.LiveTime / (60 * 5)
 
@@ -127,7 +121,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -142,7 +136,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 

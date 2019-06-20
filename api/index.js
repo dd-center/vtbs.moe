@@ -9,6 +9,7 @@ const { vd, vdSocket, falcon, hawk, vdb, wiki } = require('./interface')
 
 const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
+const parrot = require('./parrot')({ wiki, vdb })
 
 const { connect } = require('./socket')
 const httpAPI = require('./http')
@@ -23,10 +24,11 @@ const INTERVAL = 1000 * 60 * 5
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   const io = new Server({ serveClient: false })
   vdb.bind(io)
+  parrot.start({ io })
   const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live }))
   io.attach(server)
   vd.attach(server)
-  spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, wiki })
+  spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, parrot })
   snake({ vdSocket, io, info })
   hawk({ io })
   setTimeout(() => {
