@@ -313,55 +313,6 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Same as above, but limited to recent `512` entries.
 
-* #### Live <https://api.vtbs.moe/v2/bulkLive/:mid>
-
-  => Array, `[...{online, time}]`
-
-  History of live streams on bilibili.
-
-  **Example:** https://api.vtbs.moe/v2/bulkLive/349991143
-
-  ```json
-  [{
-      "online": 16579,
-      "time": 1555334979260
-    }, {
-      "online": 70715,
-      "time": 1555335279261
-    },
-    ...
-  ]
-  ```
-
-* #### Some live <https://api.vtbs.moe/v2/bulkLiveSome/:mid>
-
-  => Array, `[...{online, time}]`
-
-  History of live streams on bilibili,
-
-  Same as above, but limited to recent `2016` entries.
-
-### vdMonster (JSON)
-
-​	Live Danmaku Analyze.
-
-​	Document: <https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku#json>
-
-* #### rooms() <https://api.vtbs.moe/vd/rooms>
-
-  => Array
-
-* #### records() <https://api.vtbs.moe/vd/records/:roomid>
-
-  => Array
-
-* #### roomsRecords() <https://api.vtbs.moe/vd/rr>
-
-  => Object
-
-* #### read() <https://api.vtbs.moe/vd/read/:roomid/:date>
-
-  => Object
 
 ### vdSocket
 
