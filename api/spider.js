@@ -108,7 +108,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
 
       let guardType = await db.guardType.get(mid)
 
-      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
+      let newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
       io.to(mid).emit('detailInfo', { mid, data: newInfo })
       await db.info.put(mid, newInfo)
