@@ -44,6 +44,8 @@ export default new Vuex.Store({
     guardMacro: [],
     hawk: { day: [], h: [] },
     wormArray: [],
+    parrotNow: 0,
+    spiderLeft: 0,
   },
   getters: {
     followerRank: rank((state, a, b) => b.follower - a.follower),
@@ -146,6 +148,12 @@ export default new Vuex.Store({
       }
       state.face = { ...face }
       state.wormArray = data
+    },
+    SOCKET_parrotNow(state, data) {
+      state.parrotNow = data
+    },
+    SOCKET_spiderLeft(state, data) {
+      state.spiderLeft = data
     },
     updateMacro(state, { vup, vtb, guard }) {
       if (vup) {

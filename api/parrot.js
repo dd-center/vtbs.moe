@@ -16,6 +16,7 @@ module.exports = ({ wiki, vdb }) => {
         if (result) {
           liveHistoryCache[uuid] = result
         }
+        io.emit('parrotNow', i + 1)
       }
       liveHistoryLastUpdate = Date.now()
       console.log('Parrot: liveHistory UPDATED')
