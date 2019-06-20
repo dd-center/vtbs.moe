@@ -55,7 +55,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
       let liveNum = bulkLive.LiveTime / (60 * 5)
 
       if (bulkLive.Lives.length) {
-        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime)
+        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime * 1000)
       }
 
       bulkLive.Lives
