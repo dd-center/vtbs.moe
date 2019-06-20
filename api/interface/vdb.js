@@ -8,8 +8,10 @@ const update = async () => {
   if (body) {
     console.log('vdb update')
     if (vtbs && vtbs.length !== body.length) {
-      io.emit('vtbs', body)
-      io.emit('log', 'vdb Change')
+      if (io) {
+        io.emit('vtbs', body)
+        io.emit('log', 'vdb Change')
+      }
       console.log('vdb Change')
     }
     vtbs = body
@@ -27,6 +29,8 @@ const get = async () => {
     return update()
   }
 }
+
+setInterval(update, 1000 * 60)
 
 const bind = server => {
   io = server

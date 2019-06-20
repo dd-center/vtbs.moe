@@ -138,7 +138,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
   }, 1000 * 60 * 2)
   for (;;) {
     let startTime = Date.now()
-    let pending = [...(await vdb.update())]
+    let pending = [...(await vdb.get())]
 
     let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }))
     let infoArray = [].concat(...await Promise.all(spiders))
