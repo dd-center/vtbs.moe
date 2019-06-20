@@ -5,10 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test": "npm run build && npm run repeat",
+    "test": "npm run build",
     "lint": "vue-cli-service lint",
-    "favicon": "node favicon",
-    "repeat": "node repeat"
+    "favicon": "node favicon"
   },
   "dependencies": {
     "bili-api": "^1.0.1",
