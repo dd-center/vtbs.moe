@@ -1,3 +1,5 @@
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 module.exports = ({ wiki, vdb }) => {
   let liveHistoryCache = {}
   let liveHistoryLastUpdate = 0
@@ -6,6 +8,7 @@ module.exports = ({ wiki, vdb }) => {
 
   const liveHistoryWorker = async ({ io }) => {
     for (;;) {
+      let startTime = Date.now()
       let vtbs = [...await vdb.get()]
       for (let i = 0; i < vtbs.length; i++) {
         let { uuid } = vtbs[i]
@@ -17,6 +20,7 @@ module.exports = ({ wiki, vdb }) => {
       liveHistoryLastUpdate = Date.now()
       console.log('Parrot: liveHistory UPDATED')
       io.emit('log', 'Parrot: liveHistory UPDATED')
+      await wait(startTime + 1000 * 60 * 2 - Date.now())
     }
   }
 
