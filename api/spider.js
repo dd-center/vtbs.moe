@@ -64,13 +64,15 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
         averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime)
       }
 
-      bulkLive.Lives.forEach(({ BeginTime, EndTime }) => {
-        if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-          weekLive += EndTime - BeginTime
-        } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-          weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
-        }
-      })
+      bulkLive.Lives
+        .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
+        .forEach(({ BeginTime, EndTime }) => {
+          if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - BeginTime
+          } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
+          }
+        })
 
       let info = await db.info.get(mid)
       if (!info) {
