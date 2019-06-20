@@ -595,6 +595,9 @@ export default {
       if (m) {
         result.push(`${m} 分钟`)
       }
+      if (!result.length) {
+        console.log('一分钟不到')
+      }
       return result.join(' ')
       // return moment.duration(this.liveNum * 5, 'minutes').humanize()
     },
