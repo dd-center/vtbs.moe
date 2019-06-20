@@ -25,7 +25,7 @@ const notable = ({ object, time, currentActive }) => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -50,27 +50,23 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
       let averageLive = 0
       let weekLive = 0
 
-      let bulkLive = await wiki.liveHistory(uuid)
-      if (!bulkLive) {
-        pending.push(vtb)
-        log(`RETRY PENDING: ${vtb.mid}, wiki`)
-        await wait(1500)
-        continue
-      }
+      let bulkLive = await parrot.getLiveHistory(uuid)
 
       let liveNum = bulkLive.LiveTime / (60 * 5)
 
       if (bulkLive.Lives.length) {
-        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime)
+        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime * 1000)
       }
 
-      bulkLive.Lives.forEach(({ BeginTime, EndTime }) => {
-        if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-          weekLive += EndTime - BeginTime
-        } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-          weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
-        }
-      })
+      bulkLive.Lives
+        .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
+        .forEach(({ BeginTime, EndTime }) => {
+          if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - BeginTime
+          } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
+          }
+        })
 
       let info = await db.info.get(mid)
       if (!info) {
@@ -108,9 +104,10 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
 
       let guardType = await db.guardType.get(mid)
 
-      let newInfo = { mid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
+      let newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
       io.to(mid).emit('detailInfo', { mid, data: newInfo })
+      io.emit('spiderLeft', pending.length)
       await db.info.put(mid, newInfo)
       infoArray.push(newInfo)
 
@@ -125,7 +122,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -138,9 +135,9 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
   }, 1000 * 60 * 2)
   for (;;) {
     let startTime = Date.now()
-    let pending = [...(await vdb.update())]
+    let pending = [...(await vdb.get())]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 

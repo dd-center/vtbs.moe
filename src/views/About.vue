@@ -35,6 +35,16 @@
         <p v-loading="!upMoment">Uptime: {{upMoment}}</p>
         <p v-loading="!number">共收录VTB/VUP: {{number}} 个</p>
         <p v-if="online">目前在线: {{online}}</p>
+        <el-row>
+          <el-col :span="8" :xs="12">
+            <h4>Spider: <small>({{spiderLeft}}/{{number}})</small></h4>
+            <el-progress type="circle" :percentage="spiderProgress" :status="spiderProgress === 100 ? 'success' : undefined"></el-progress>
+          </el-col>
+          <el-col :span="8" :xs="12">
+            <h4>Parrot: <small>({{parrotNow}}/{{number}})</small></h4>
+            <el-progress type="circle" :percentage="parrotProgress" :status="parrotProgress === 100 ? 'success' : undefined"></el-progress>
+          </el-col>
+        </el-row>
         <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
           <h4>Spiders {{spiderId}}</h4>
           <p>上次更新: {{time | parseTime}} <br>
@@ -64,7 +74,7 @@ export default {
       uptime: undefined,
     }
   },
-  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs']),
+  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs', 'parrotNow', 'spiderLeft']),
     spiders: function() {
       return this.status.PARALLEL
     },
@@ -73,6 +83,12 @@ export default {
     },
     number: function() {
       return this.vtbs && this.vtbs.length
+    },
+    parrotProgress() {
+      return Math.round(this.parrotNow / (this.number || 1) * 100)
+    },
+    spiderProgress() {
+      return 100 - Math.round(this.spiderLeft / (this.number || 1) * 100)
     },
     upMoment() {
       if (this.uptime) {
