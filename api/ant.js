@@ -7,7 +7,7 @@ const race = (...args) => new Promise((resolve, reject) => {
     .then(resolve)
 })
 
-const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
+const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
   for (;;) {
     let startTime = (new Date()).getTime()
@@ -20,6 +20,8 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
       archiveView: 0,
       time: startTime,
     }
+
+    let vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
       let { video = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -36,7 +38,7 @@ const vup = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
+const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -48,6 +50,8 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
       online: 0,
       time: startTime,
     }
+
+    let vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
       let { liveStatus = 0, online = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -74,7 +78,7 @@ const vtb = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
+const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -85,6 +89,8 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
       guardNum: 0,
       time: startTime,
     }
+
+    let vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
       let { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -108,9 +114,11 @@ const guard = async ({ vtbs, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
+const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
+
+    let vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
@@ -156,13 +164,13 @@ const dd = async ({ vtbs, INTERVAL, fullGuard, guardType, log }) => {
   }
 }
 
-module.exports = ({ vtbs, macro, info, num, fullGuard, guardType, INTERVAL, io }) => {
+module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io }) => {
   const log = log => {
     console.log(log)
     io.emit('log', log)
   }
-  vup({ vtbs, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
-  vtb({ vtbs, macro, info, num, INTERVAL, log, io })
-  guard({ vtbs, macro, info, num, INTERVAL, log, io })
-  dd({ vtbs, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log })
+  vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
+  vtb({ vdb, macro, info, num, INTERVAL, log, io })
+  guard({ vdb, macro, info, num, INTERVAL, log, io })
+  dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log })
 }

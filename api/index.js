@@ -1,12 +1,11 @@
 const spider = require('./spider')
-const vtbs = require('./vtbs')
 
 const ant = require('./ant')
 
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, falcon, hawk } = require('./interface')
+const { vd, vdSocket, falcon, hawk, vdb, wiki } = require('./interface')
 
 const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
@@ -23,15 +22,16 @@ const INTERVAL = 1000 * 60 * 5
 (async () => {
   let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   const io = new Server({ serveClient: false })
-  const server = http.createServer(httpAPI({ vtbs, info, fullGuard, active, live }))
+  vdb.bind(io)
+  const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live }))
   io.attach(server)
   vd.attach(server)
-  spider({ PARALLEL, INTERVAL, vtbs, db: { site, info, active, guard, guardType }, io, worm, falcon })
+  spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, wiki })
   snake({ vdSocket, io, info })
   hawk({ io })
   setTimeout(() => {
-    ant({ vtbs, macro, num, info, fullGuard, guardType, INTERVAL, io })
+    ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
-  io.on('connection', connect({ io, vtbs, macro, site, num, info, active, falcon, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
+  io.on('connection', connect({ io, vdb, macro, site, num, info, active, falcon, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
   server.listen(8001)
 })()

@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vtbs, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'vupMacro') {
@@ -88,6 +88,7 @@ exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vtbs, fu
   handler('fullGuard')
   handler('uptime')
   socket.emit('log', `ID: ${socket.id}`)
+  let vtbs = await vdb.get()
   socket.emit('vtbs', vtbs)
   socket.on('disconnect', () => {
     io.clients((error, clients) => {

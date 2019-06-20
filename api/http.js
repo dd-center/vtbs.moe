@@ -8,7 +8,7 @@ const cache = new LRU({
   max: 100,
 })
 
-module.exports = ({ vtbs, info, fullGuard, active, live }) => {
+module.exports = ({ vdb, info, fullGuard, active, live }) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {
@@ -23,12 +23,12 @@ module.exports = ({ vtbs, info, fullGuard, active, live }) => {
 
   const v1 = new Router({ prefix: '/v1' })
 
-  v1.get('/vtbs', ctx => {
-    ctx.body = vtbs
+  v1.get('/vtbs', async ctx => {
+    ctx.body = await vdb.get()
   })
 
   v1.get('/info', async ctx => {
-    ctx.body = (await Promise.all(vtbs.map(({ mid }) => info.get(mid)))).filter(info => info)
+    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }) => info.get(mid)))).filter(info => info)
   })
 
   v1.get('/detail/:mid', async ctx => {

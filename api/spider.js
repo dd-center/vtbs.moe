@@ -1,10 +1,5 @@
 const biliAPI = require('bili-api')
 
-const LRU = require('lru-cache')
-const cache = new LRU({
-  maxAge: 1000 * 60 * 60,
-})
-
 const race = (...args) => Promise.race([biliAPI(...args), wait(1000 * 15)])
 
 let oneHours = 1000 * 60 * 60
@@ -30,7 +25,7 @@ const notable = ({ object, time, currentActive }) => {
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -50,7 +45,32 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) 
         await wait(1500 + time - Date.now())
         continue
       }
-      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot } = object
+      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot, uuid } = object
+
+      let averageLive = 0
+      let weekLive = 0
+
+      let bulkLive = await wiki.liveHistory(uuid)
+      if (!bulkLive) {
+        pending.push(vtb)
+        log(`RETRY PENDING: ${vtb.mid}, wiki`)
+        await wait(1500)
+        continue
+      }
+
+      let liveNum = bulkLive.LiveTime / (60 * 5)
+
+      if (bulkLive.Lives.length) {
+        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime)
+      }
+
+      bulkLive.Lives.forEach(({ BeginTime, EndTime }) => {
+        if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+          weekLive += EndTime - BeginTime
+        } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+          weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
+        }
+      })
 
       let info = await db.info.get(mid)
       if (!info) {
@@ -71,35 +91,6 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) 
         io.to(mid).emit('detailLive', { mid, data: { online, time } })
         lastLive = { online, time }
       }
-
-      let liveCache = cache.get(`liveInfo_${roomid}`)
-      if (!liveCache) {
-        liveCache = {}
-        let bulkLive = await falcon('bulkLive', roomid)
-        let bulkLiveWeek = await falcon('bulkLiveWeek', roomid)
-        let liveTime = 0
-        bulkLive.forEach(({ time, online }, index) => {
-          if (online - 1 && index) {
-            liveTime += time - bulkLive[index - 1].time
-          }
-        })
-        liveCache.liveNum = liveTime / (1000 * 60 * 5)
-
-        liveCache.averageLive = 0
-        if (bulkLive.length) {
-          let firstLive = bulkLive[0]
-          liveCache.averageLive = liveTime * 1000 * 60 * 60 * 24 * 7 / (time - firstLive.time)
-        }
-
-        liveCache.weekLive = 0
-        bulkLiveWeek.forEach(({ time, online }, index) => {
-          if (online - 1 && index) {
-            liveCache.weekLive += time - bulkLiveWeek[index - 1].time
-          }
-        })
-        cache.set(`liveInfo_${roomid}`, liveCache)
-      }
-      let { liveNum, averageLive, weekLive } = liveCache
 
       if (guardNum !== info.guardNum) {
         guardChange++
@@ -135,7 +126,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }) 
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm, falcon }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, wiki }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     // Auto restart when spider are dead
@@ -148,13 +139,13 @@ module.exports = async ({ PARALLEL, INTERVAL, vtbs, db, io, worm, falcon }) => {
   }, 1000 * 60 * 2)
   for (;;) {
     let startTime = Date.now()
-    let pending = [...vtbs]
+    let pending = [...(await vdb.update())]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, falcon, PARALLEL }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 
-    worm({ PARALLEL, vtbs, io })
+    worm({ PARALLEL, vtbs: await vdb.get(), io })
       .then(wormArray => io.emit('worm', wormArray))
 
     let endTime = Date.now()
