@@ -5,6 +5,9 @@ const liveHistory = async uuid => {
   if (!history) {
     return undefined
   }
+  if (!history.Success) {
+    history.LiveTime = 0
+  }
   if (!history.Lives) {
     history.Lives = []
   }
