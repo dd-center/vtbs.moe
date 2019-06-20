@@ -88,7 +88,6 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, wiki, PARALLEL }) =>
       let { lastLive = {} } = info
 
       if (liveStatus) {
-        io.to(mid).emit('detailLive', { mid, data: { online, time } })
         lastLive = { online, time }
       }
 

@@ -29,6 +29,7 @@ module.exports = ({ vdSocket, io, info }) => {
       infoArray.push(currentInfo)
       io.to(mid).emit('detailInfo', { mid, data: currentInfo })
     }
+    io.to(mid).emit('detailLive', { mid, data: { online, time: Date.now() } })
   })
   setInterval(() => {
     if (infoArray.length) {
