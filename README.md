@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="https://avatars3.githubusercontent.com/u/50539309?s=24&v=4">
+  <img src="https://avatars3.githubusercontent.com/u/50539309?s=200&v=4" width=24>
   vtbs.moe
-  <img src="https://avatars3.githubusercontent.com/u/50539309?s=24&v=4">
+  <img src="https://avatars3.githubusercontent.com/u/50539309?s=200&v=4" width=24>
 </h1>
 
 <h3 align="center">
