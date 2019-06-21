@@ -8,7 +8,7 @@ const cache = new LRU({
   max: 100,
 })
 
-module.exports = ({ vdb, info, fullGuard, active, live }) => {
+module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {
@@ -97,22 +97,24 @@ module.exports = ({ vdb, info, fullGuard, active, live }) => {
   })
 
   endpoint.get('/guardNum', async ctx => {
+    let guardMacroNum = await num.get('guardMacroNum')
+    let { guardNum } = await macro.get({ mid: 'guard', num: guardMacroNum })
     ctx.body = {
       ...endpointSchema,
-      message: String(await fullGuard.get('number')),
+      message: String(guardNum),
       label: '舰团',
       color: 'black',
     }
   })
 
-  endpoint.get('/guardTime', async ctx => {
-    ctx.body = {
-      ...endpointSchema,
-      message: new Date(await fullGuard.get('time')).toLocaleString(),
-      label: '舰团更新',
-      color: 'green',
-    }
-  })
+  // endpoint.get('/guardTime', async ctx => {
+  //   ctx.body = {
+  //     ...endpointSchema,
+  //     message: new Date(await fullGuard.get('time')).toLocaleString(),
+  //     label: '舰团更新',
+  //     color: 'green',
+  //   }
+  // })
 
   endpoint.get('/live', async ctx => {
     let vtbs = [...await vdb.get()]
