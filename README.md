@@ -1,7 +1,7 @@
 <h1 align="center">
-  <img src="./dd-left.png" width=24>
+  <img src="./assets/dd-left.png" width=24>
   vtbs.moe
-  <img src="./dd-right.png" width=24>
+  <img src="./assets/dd-right.png" width=24>
 </h1>
 
 <h3 align="center">
@@ -9,9 +9,25 @@
 </h3>
 
 <p align="center">
-  <img src="https://img.shields.io/github/commit-activity/w/bilibili-dd-center/vtbs.moe.svg?color=green">
-  <img src="https://img.shields.io/badge/dynamic/json.svg?label=vtubers&query=%24.length&url=https%3A%2F%2Fapi.vtbs.moe%2Fv1%2Fvtbs?color=blue">
-  <img src="https://img.shields.io/github/contributors/bilibili-dd-center/vtbs.moe.svg">
+  <a href="https://github.com/bilibili-dd-center/vtbs.moe/commits/master">
+    <img src="https://img.shields.io/github/commit-activity/w/bilibili-dd-center/vtbs.moe.svg?color=green">
+  </a>
+  <a href="https://github.com/bilibili-dd-center/vtbs.moe/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/bilibili-dd-center/vtbs.moe.svg">
+  </a>
+  <br>
+  <a href="https://vtbs.moe/">
+    <img src="https://img.shields.io/endpoint.svg?url=https://api.vtbs.moe/endpoint/vtbs">
+  </a>
+  <a href="https://vtbs.moe/live">
+    <img src="https://img.shields.io/endpoint.svg?url=https://api.vtbs.moe/endpoint/live">
+  </a>
+  <a href="https://vtbs.moe/macro">
+    <img src="https://img.shields.io/endpoint.svg?url=https://api.vtbs.moe/endpoint/guardNum">
+  </a>
+  <a href="https://vtbs.moe/macro">
+    <img src="https://img.shields.io/endpoint.svg?url=https://api.vtbs.moe/endpoint/onlineSum">
+  </a>
 </p>
 
 你好呀→\_→
@@ -25,6 +41,8 @@
 这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面
 
 > 现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 [vtbs.moe](https://vtbs.moe/)
+
+<img alt="demo" src="./assets/demo.png" width="420" align="right" style="max-width: 50%">
 
 网站用到的部分开源软件:
 
