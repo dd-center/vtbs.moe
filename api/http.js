@@ -79,5 +79,90 @@ module.exports = ({ vdb, info, fullGuard, active, live }) => {
 
   app.use(v2.routes())
 
+  const endpoint = new Router({ prefix: '/endpoint' })
+
+  const endpointSchema = {
+    schemaVersion: 1,
+    label: '',
+    message: 'Default message',
+  }
+
+  endpoint.get('/vtbs', async ctx => {
+    ctx.body = {
+      ...endpointSchema,
+      message: String((await vdb.get()).length),
+      label: 'vtubers',
+      color: 'blue',
+    }
+  })
+
+  endpoint.get('/guardNum', async ctx => {
+    ctx.body = {
+      ...endpointSchema,
+      message: String(await fullGuard.get('number')),
+      label: '舰团',
+      color: 'black',
+    }
+  })
+
+  endpoint.get('/guardTime', async ctx => {
+    ctx.body = {
+      ...endpointSchema,
+      message: new Date(await fullGuard.get('time')).toLocaleString(),
+      label: '舰团更新',
+      color: 'green',
+    }
+  })
+
+  endpoint.get('/live', async ctx => {
+    let vtbs = [...await vdb.get()]
+    let liveStatusSum = (await Promise.all([...vtbs
+      .map(({ mid }) => info.get(mid))
+      .map(async promise => (await promise || {}).liveStatus || 0)]))
+      .reduce((a, b) => a + b)
+    ctx.body = {
+      ...endpointSchema,
+      message: String(liveStatusSum),
+      label: '直播中',
+      color: 'blue',
+    }
+  })
+
+  endpoint.get('/onlineSum', async ctx => {
+    let vtbs = [...await vdb.get()]
+    let onlineSum = (await Promise.all([...vtbs
+      .map(({ mid }) => info.get(mid))
+      .map(async promise => (await promise || {}).online || 0)]))
+      .reduce((a, b) => a + b)
+    ctx.body = {
+      ...endpointSchema,
+      message: String(onlineSum),
+      label: '总人气',
+      color: 'red',
+    }
+  })
+
+  endpoint.get('/guard/:mid', async ctx => {
+    const mid = ctx.params.mid
+    ctx.body = {
+      ...endpointSchema,
+      message: String((await info.get(mid) || {}).guardNum),
+      label: '舰团',
+    }
+  })
+
+  endpoint.get('/online/:mid', async ctx => {
+    const mid = ctx.params.mid
+    let online = (await info.get(mid) || {}).online || 0
+    ctx.body = {
+      ...endpointSchema,
+      message: String(online),
+      label: '人气',
+      color: 'red',
+    }
+  })
+
+  app.use(endpoint.routes())
+
   return app.callback()
 }
