@@ -160,7 +160,7 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
       ...endpointSchema,
       message: String(online),
       label: '人气',
-      color: 'red',
+      color: online ? 'blue' : 'red',
     }
   })
 
