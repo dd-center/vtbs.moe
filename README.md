@@ -1,4 +1,18 @@
-# vtbs.moe
+<h1 align="center">
+  <img src="./dd-left.png" width=24>
+  vtbs.moe
+  <img src="./dd-right.png" width=24>
+</h1>
+
+<h3 align="center">
+  VTBs on bilibili - B站虚拟主播统计网站
+</h3>
+
+<p align="center">
+  <img src="https://img.shields.io/github/commit-activity/w/bilibili-dd-center/vtbs.moe.svg?color=green">
+  <img src="https://img.shields.io/badge/dynamic/json.svg?label=vtubers&query=%24.length&url=https%3A%2F%2Fapi.vtbs.moe%2Fv1%2Fvtbs?color=blue">
+  <img src="https://img.shields.io/github/contributors/bilibili-dd-center/vtbs.moe.svg">
+</p>
 
 你好呀→\_→
 
@@ -8,9 +22,9 @@
 
 ## 介绍
 
-这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面，目前只在NGA宣传过
+这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面
 
-现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 vtbs.moe
+> 现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 [vtbs.moe](https://vtbs.moe/)
 
 网站用到的部分开源软件:
 
@@ -299,55 +313,6 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Same as above, but limited to recent `512` entries.
 
-* #### Live <https://api.vtbs.moe/v2/bulkLive/:mid>
-
-  => Array, `[...{online, time}]`
-
-  History of live streams on bilibili.
-
-  **Example:** https://api.vtbs.moe/v2/bulkLive/349991143
-
-  ```json
-  [{
-      "online": 16579,
-      "time": 1555334979260
-    }, {
-      "online": 70715,
-      "time": 1555335279261
-    },
-    ...
-  ]
-  ```
-
-* #### Some live <https://api.vtbs.moe/v2/bulkLiveSome/:mid>
-
-  => Array, `[...{online, time}]`
-
-  History of live streams on bilibili,
-
-  Same as above, but limited to recent `2016` entries.
-
-### vdMonster (JSON)
-
-​	Live Danmaku Analyze.
-
-​	Document: <https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku#json>
-
-* #### rooms() <https://api.vtbs.moe/vd/rooms>
-
-  => Array
-
-* #### records() <https://api.vtbs.moe/vd/records/:roomid>
-
-  => Array
-
-* #### roomsRecords() <https://api.vtbs.moe/vd/rr>
-
-  => Object
-
-* #### read() <https://api.vtbs.moe/vd/read/:roomid/:date>
-
-  => Object
 
 ### vdSocket
 
