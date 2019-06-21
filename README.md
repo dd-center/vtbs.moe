@@ -42,11 +42,7 @@
 
 > 现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 [vtbs.moe](https://vtbs.moe/)
 
-<div style="max-width: 50%; float: right;">
-  <img alt="demo" src="./assets/mainpage.png">
-  <br>
-  <img alt="demo" src="./assets/ddpage.png">
-</div>
+<img alt="demo" src="./assets/demo.png" width="420" align="right" style="max-width: 50%">
 
 网站用到的部分开源软件:
 
