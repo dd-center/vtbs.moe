@@ -47,32 +47,32 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
       }
       let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot, uuid } = object
 
-      // let averageLive = 0
-      // let weekLive = 0
+      let averageLive = 0
+      let weekLive = 0
 
-      // let bulkLive = await parrot.getLiveHistory(uuid)
+      let bulkLive = await parrot.getLiveHistory(uuid)
 
-      // let liveNum = bulkLive.LiveTime / (60 * 5)
+      let liveNum = bulkLive.LiveTime / (60 * 5)
 
-      // if (bulkLive.Lives.length) {
-      //   averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime * 1000)
-      // }
+      if (bulkLive.Lives.length) {
+        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime * 1000)
+      }
 
-      // bulkLive.Lives
-      //   .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
-      //   .forEach(({ BeginTime, EndTime }) => {
-      //     if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-      //       weekLive += EndTime - BeginTime
-      //     } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-      //       weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
-      //     }
-      //   })
+      bulkLive.Lives
+        .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
+        .forEach(({ BeginTime, EndTime }) => {
+          if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - BeginTime
+          } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
+            weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
+          }
+        })
 
       let info = await db.info.get(mid)
       if (!info) {
         info = {}
       }
-      let { recordNum = 0, guardChange = 0, liveNum, averageLive, weekLive } = info
+      let { recordNum = 0, guardChange = 0 } = info
 
       let currentActive = await db.active.get({ mid, num: recordNum })
       if (notable({ object, time, currentActive })) {
