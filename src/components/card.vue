@@ -48,8 +48,6 @@
 import badge from '@/components/badge'
 import moment from 'moment'
 
-import 'element-ui/lib/theme-chalk/display.css'
-
 export default {
   components: {
     badge,
