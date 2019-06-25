@@ -37,6 +37,7 @@ module.exports = ({ wiki, vdb }) => {
     if (!result) {
       return getLiveHistory(uuid)
     } else {
+      liveHistoryCache[uuid] = result
       return result
     }
   }
