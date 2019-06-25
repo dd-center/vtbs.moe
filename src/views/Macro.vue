@@ -237,8 +237,8 @@ export default {
         lowest: '最低',
         highest: '最高',
       },
-      // upColor: '#ec0000',
-      // downColor: '#00da3c',
+      upColor: '#ec0000',
+      downColor: '#00da3c',
       showMA: true,
       // MA: [3],
       dimension: 'time',
@@ -256,6 +256,8 @@ export default {
       legendName: {
         日K: '周K',
       },
+      upColor: '#ec0000',
+      downColor: '#00da3c',
       dimension: 'time',
       metrics: ['open', 'close', 'lowest', 'highest'],
     }
