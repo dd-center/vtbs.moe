@@ -38,9 +38,7 @@
 
 ## 介绍
 
-这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面
-
-> 现在 vtb.simon3k.moe 和 vtbs.moe 两个地址都能用，内容没有区别；推荐用 [vtbs.moe](https://vtbs.moe/)
+这是我自娱自乐做出来的 Bilibili 虚拟主播状态记录页面 [vtbs.moe](https://vtbs.moe/)
 
 <img alt="demo" src="./assets/demo.png" width="420" align="right" style="max-width: 50%">
 
