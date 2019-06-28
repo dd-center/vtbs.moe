@@ -361,6 +361,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   // {message: "233", roomid: 12235923, mid: 3499295}
   ```
 
+### endpoint
+
+​	Endpoint, used for `shields.io` endpoint
+
+* Number of vtubers <https://api.vtbs.moe/endpoint/vtbs>
+* Number of guards <https://api.vtbs.moe/endpoint/guardNum>
+* Streaming now <https://api.vtbs.moe/endpoint/live>
+* Total online <https://api.vtbs.moe/endpoint/onlineSum>
+
 ### vtbs.moe api (Socket.IO)
 
 Advanced interface, please reference the source code available on GitHub.
