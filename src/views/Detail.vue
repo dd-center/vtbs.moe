@@ -571,11 +571,16 @@ export default {
         return this.active[0]
       }
       return this.active
-        .map(({ follower, time }, i) => i && ({
-          time,
-          follower,
-          change: Math.round((follower - hourAgo(time, i).follower) * 1000 * 60 * 60 / (time - hourAgo(time, i).time)),
-        }))
+        .map(({ follower, time }, i) => {
+          if (!i) {
+            return undefined
+          }
+          let change = (follower - hourAgo(time, i).follower) * 1000 * 60 * 60 / (time - hourAgo(time, i).time)
+          if (change > 10) {
+            change = Math.round(change)
+          }
+          return { time, follower, change }
+        })
         .filter(e => e)
     },
     averageLive: function() {
