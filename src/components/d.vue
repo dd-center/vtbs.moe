@@ -27,7 +27,9 @@
         <div :class="`guard guard-${i} right`"></div>
       </el-col>
       <el-col :span="14" :xs="17">
-        <div>{{name(vtb)}}</div>
+        <router-link :to="`/detail/${vtb}`" class="detail" title="打开详细页">
+          {{name(vtb)}}
+        </router-link>
       </el-col>
     </el-row>
   </template>
