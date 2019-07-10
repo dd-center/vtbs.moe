@@ -200,7 +200,7 @@
               <div slot="header">
                 舰团
               </div>
-              <ve-line :data="{rows:guard}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+              <ve-line :data="{rows:guardFilter}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
             </el-card>
           </el-col>
         </el-row>
@@ -582,6 +582,20 @@ export default {
           return { time, follower, change }
         })
         .filter(e => e)
+    },
+    guardFilter() {
+      return this.guard
+        .map(({ guardNum, time }, index) => {
+          if (guardNum === 0) {
+            let previous = this.guard[index - 1]
+            let next = this.guard[index + 1]
+            if (!previous || (previous.guardNum !== 0 && next && next.guardNum !== 0 && next.time - time < 1000 * 60 * 5 * 2)) {
+              return undefined
+            }
+          }
+          return { guardNum, time }
+        })
+        .filter(Boolean)
     },
     averageLive: function() {
       if (!this.info.averageLive) {
