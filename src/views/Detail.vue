@@ -360,6 +360,7 @@ export default {
     }
     this.activeExtend = {
       'series.0.symbol': 'none',
+      'series.1.symbol': 'none',
     }
     this.liveLine = {
       dimension: ['time'],
