@@ -8,9 +8,7 @@
   <el-row class="name">
     <el-col class="center">
       <span>
-        <el-tag size="mini" type="success" v-if="isMeaQua" title="Meaqua贴贴">Meaqua</el-tag>
-        <el-tag size="mini" v-else-if="isDD">DD</el-tag>
-        <el-tag type="warning" size="mini" v-else>单推</el-tag>
+        <el-tag :type="tag.type" size="mini" :title="tag.title">{{tag.name}}</el-tag>
         <router-link :to="`/detail/${dd.mid}`" v-if="isVTB" class="detail" title="这是一名本站收录的VTB/VUP">
           {{uname}}
           <el-tag type="danger" size="mini" v-if="isVTB">V</el-tag>
@@ -37,6 +35,16 @@
 </template>
 
 <script>
+const ddTypes = [
+  {
+    name: 'Meaqua',
+    title: 'Meaqua贴贴',
+    demand: [349991143, 375504219],
+    type: 'success',
+    strict: true,
+  },
+]
+
 export default {
   components: {},
   props: {
@@ -48,6 +56,25 @@ export default {
         return this.dd.face
       }
       return `${this.dd.face}@96w_96h`
+    },
+    tag() {
+      let vtbs = this.vtbs.flat()
+      let type = ddTypes.find(({ strict, demand }) => {
+        if (strict) {
+          if (vtbs.length !== demand.length) {
+            return false
+          }
+        }
+        return !demand.find(uid => !vtbs.includes(uid))
+      })
+      if (!type) {
+        if (vtbs.length === 1) {
+          type = { type: 'warning', name: '单推' }
+        } else {
+          type = { name: 'DD' }
+        }
+      }
+      return type
     },
     uname: function() {
       return this.dd.uname
