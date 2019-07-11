@@ -55,6 +55,7 @@ export default {
   props: {
     vtb: Object,
     hover: Boolean,
+    livePage: Boolean,
   },
   computed: {
     info: function() {
@@ -80,9 +81,6 @@ export default {
     },
     lastLive() {
       return this.info.lastLive || {}
-    },
-    livePage() {
-      return this.$route.path.includes('live')
     },
     worm() {
       return this.info.worm
