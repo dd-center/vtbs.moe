@@ -7,7 +7,7 @@
           <span class="el-icon-discover discoverButton"></span>
         </router-link>
       </div>
-      <img :src="`${face.replace('http:','https:')}@256h_256w`" class="face" v-if="face">
+      <img :src="face" class="face" v-if="face">
       <img src="@/assets/face.jpg" class="face" v-else>
     </el-col>
     <el-col :span="12" class="hidden-sm-and-up">
@@ -61,7 +61,11 @@ export default {
       return this.$store.state.info[this.mid] || this.vtb
     },
     face: function() {
-      return this.$store.state.face[this.mid]
+      let face = this.$store.state.face[this.mid].replace('http:', 'https:')
+      if (face.includes('noface')) {
+        return face
+      }
+      return `${face}@256h_256w`
     },
     mid: function() {
       return this.vtb.mid
