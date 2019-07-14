@@ -23,9 +23,9 @@ export default {
     }
   },
   async mounted() {
-    for (;;) {
-      document.head.innerHTML += `<style>
-      .el-loading-mask {
+    let style = document.createElement('style')
+    style.innerHTML = `
+    .el-loading-mask {
         display: none;
       }
 
@@ -36,8 +36,10 @@ export default {
       .el-notification {
         display: none;
       }
-      </style>`
+    `
+    document.head.appendChild(style)
 
+    for (;;) {
       let start = Date.now()
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&client=Fly_snow&ts=${Date.now()}`)).text()
       txt = txt
