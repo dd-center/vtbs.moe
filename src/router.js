@@ -36,6 +36,11 @@ export default new Router({
       import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
     props: true,
   }, {
+    path: '/bot/:n',
+    component: () =>
+      import(/* webpackChunkName: "detail" */ './views/Bot.vue'),
+    props: true,
+  }, {
     path: '/about',
     name: 'about',
     // route level code-splitting
