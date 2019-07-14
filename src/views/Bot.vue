@@ -40,10 +40,14 @@ export default {
 
       let start = Date.now()
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&client=Fly_snow&ts=${Date.now()}`)).text()
-      this.text = txt
+      txt = txt
         .split('\n')
         .filter((_, index) => index < 256)
         .reverse()
+
+      if (this.text.join('') !== txt.join('')) {
+        this.text = txt
+      }
       await wait(1000 - Date.now() + start)
     }
   },
