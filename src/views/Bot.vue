@@ -39,7 +39,7 @@ export default {
       </style>`
 
       let start = Date.now()
-      let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&ts=${Date.now()}`)).text()
+      let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&client=Fly_snow&ts=${Date.now()}`)).text()
       this.text = txt
         .split('\n')
         .filter((_, index) => index < 256)
