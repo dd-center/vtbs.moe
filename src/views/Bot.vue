@@ -66,11 +66,20 @@ export default {
   margin: 8px;
 }
 
-.big {
-  font-size: 32px;
+body{
+    background-color:black
+
+}
+.box div {
+    color:#ddd;
+    margin-top:3px;
+    font-size:14px;
 }
 
-.middle {
-  font-size: 24px;
+.box div:first-of-type {
+    color:#FFF;
+    margin-top:3px;
+    font-size:20px;
+
 }
 </style>
