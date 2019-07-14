@@ -22,7 +22,6 @@ export default {
     for (;;) {
       let start = Date.now()
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.n}/history?filter=【&text=true&ts=${Date.now()}`)).text()
-      console.log(txt)
       this.text = txt
         .split('\n')
         .filter((_, index) => index < 100)
