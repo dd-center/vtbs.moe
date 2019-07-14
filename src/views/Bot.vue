@@ -24,6 +24,20 @@ export default {
   },
   async mounted() {
     for (;;) {
+      document.head.innerHTML += `<style>
+      .el-loading-mask {
+        display: none;
+      }
+
+      header {
+        display: none;
+      }
+
+      .el-notification {
+        display: none;
+      }
+      </style>`
+
       let start = Date.now()
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&ts=${Date.now()}`)).text()
       this.text = txt
@@ -41,7 +55,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .box {
   margin: 8px;
 }
@@ -52,17 +66,5 @@ export default {
 
 .middle {
   font-size: 24px;
-}
-
-.el-loading-mask {
-  display: none;
-}
-
-header {
-  display: none;
-}
-
-.el-notification {
-  display: none;
 }
 </style>
