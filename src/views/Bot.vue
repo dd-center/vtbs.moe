@@ -1,8 +1,10 @@
 <template>
-<div class="box">
-  <div v-for="(txt, index) in text" :class="!index? 'big' : !(index-1)? 'middle' : '' ">
-    {{txt}}
-  </div>
+<div>
+  <transition-group name="flip-list" tag="div">
+    <div v-for="(txt, index) in text" :class="!index? 'big' : !(index-1)? 'middle' : '' " :key="txt" class="word">
+      {{txt}}
+    </div>
+  </transition-group>
 </div>
 </template>
 
@@ -42,6 +44,10 @@ export default {
 </script>
 
 <style>
+.word {
+  transition: all 0.4s ease 0s;
+}
+
 .box {
   margin: 8px;
 }
