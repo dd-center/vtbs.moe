@@ -65,13 +65,13 @@ export default {
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&client=Fly_snow&ts=${Date.now()}`)).text()
       txt = txt
         .split('\n')
-        .filter((_, index) => index < 256)
         .reverse()
+        .filter((_, index) => index < 256)
 
       if (this.text.join('') !== txt.join('')) {
         this.text = txt
       }
-      await wait(1000 - Date.now() + start)
+      await wait(768 - Date.now() + start)
     }
   },
   computed: {
