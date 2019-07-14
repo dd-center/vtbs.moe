@@ -36,6 +36,27 @@ export default {
       .el-notification {
         display: none;
       }
+
+      .box {
+        margin: 8px;
+      }
+
+      body{
+          background-color:black
+
+      }
+      .box div {
+          color:#ddd;
+          margin-top:3px;
+          font-size:14px;
+      }
+
+      .box div:first-of-type {
+          color:#FFF;
+          margin-top:3px;
+          font-size:20px;
+
+      }
     `
     document.head.appendChild(style)
 
@@ -62,24 +83,5 @@ export default {
 </script>
 
 <style scoped>
-.box {
-  margin: 8px;
-}
 
-body{
-    background-color:black
-
-}
-.box div {
-    color:#ddd;
-    margin-top:3px;
-    font-size:14px;
-}
-
-.box div:first-of-type {
-    color:#FFF;
-    margin-top:3px;
-    font-size:20px;
-
-}
 </style>
