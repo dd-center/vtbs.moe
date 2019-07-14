@@ -61,4 +61,8 @@ export default {
 header {
   display: none;
 }
+
+.el-notification {
+  display: none;
+}
 </style>
