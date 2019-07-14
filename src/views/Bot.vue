@@ -28,7 +28,7 @@ export default {
       let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&ts=${Date.now()}`)).text()
       this.text = txt
         .split('\n')
-        .filter((_, index) => index < 100)
+        .filter((_, index) => index < 256)
         .reverse()
       await wait(1000 - Date.now() + start)
     }
