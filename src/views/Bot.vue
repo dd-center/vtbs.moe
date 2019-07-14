@@ -11,6 +11,10 @@ import ky from 'ky'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+const num = {
+  matsuri: 834327334
+}
+
 export default {
   props: ['n'],
   data() {
@@ -21,21 +25,27 @@ export default {
   async mounted() {
     for (;;) {
       let start = Date.now()
-      let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.n}/history?filter=【&text=true&ts=${Date.now()}`)).text()
+      let txt = await (await ky.get(`https://api.vtb.wiki/webapi/message/${this.m}/history?filter=【&text=true&ts=${Date.now()}`)).text()
       this.text = txt
         .split('\n')
         .filter((_, index) => index < 100)
         .reverse()
       await wait(1000 - Date.now() + start)
     }
+  },
+  computed: {
+    m() {
+      return num[this.n] || this.n
+    }
   }
 }
 </script>
 
 <style>
-.box{
+.box {
   margin: 8px;
 }
+
 .big {
   font-size: 32px;
 }
