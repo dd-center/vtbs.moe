@@ -61,6 +61,9 @@ export default {
       return this.$store.state.info[this.mid] || this.vtb
     },
     face: function() {
+      if (!this.$store.state.face[this.mid]) {
+        return undefined
+      }
       let face = this.$store.state.face[this.mid].replace('http:', 'https:')
       if (face.includes('noface')) {
         return face
