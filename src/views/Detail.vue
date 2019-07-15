@@ -162,6 +162,17 @@
               </div>
             </el-card>
           </el-col>
+          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!liveNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                共直播
+              </div>
+              <div class="center">
+                <span class="big el-icon-time"></span>
+                <h3>{{liveTime}}</h3>
+              </div>
+            </el-card>
+          </el-col>
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
@@ -619,7 +630,26 @@ export default {
         console.log('一分钟不到')
       }
       return result.join(' ')
-      // return moment.duration(this.liveNum * 5, 'minutes').humanize()
+    },
+    liveTime() {
+      let duration = moment.duration((this.liveNum || 0) * 5, 'minutes')
+      let result = []
+      let d = Math.floor(duration.asDays())
+      let h = duration.hours()
+      let m = duration.minutes()
+      if (d) {
+        result.push(`${d} 天`)
+      }
+      if (h) {
+        result.push(`${h} 小时`)
+      }
+      if (m) {
+        result.push(`${m} 分钟`)
+      }
+      if (!result.length) {
+        console.log('一分钟不到')
+      }
+      return result.join(' ')
     },
     weekLive() {
       if (this.info.weekLive === undefined) {
