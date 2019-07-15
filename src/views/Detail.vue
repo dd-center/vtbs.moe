@@ -315,7 +315,7 @@
           </el-col>
           <el-col :span="16" :xs="24">
             JSON数据:
-            <tree-view :data="info" :options="{maxDepth: 3, rootObjectKey: 'info'}"></tree-view>
+            <tree-view :data="info" :options="{maxDepth: 2, rootObjectKey: 'info'}"></tree-view>
           </el-col>
         </el-row>
 
