@@ -129,8 +129,8 @@ guardMacro: -> [{guardMacro}]
 info: mid -> {info}
 bulkActive: { recordNum, mid } -> [active]
 bulkActiveSome: { recordNum, mid } -> [active]
-bulkLive: { mid } -> [live]
-bulkLiveWeek: { mid } -> [live]
+bulkLive: { mid } -> [live] // DEPRECATED
+bulkLiveWeek: { mid } -> [live] // DEPRECATED
 bulkGuard: { guardNum, mid } -> [guard]
 
 guardType: mid -> [n,n,n]

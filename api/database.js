@@ -73,7 +73,8 @@ vtbMacroNum: Number
 guardMacroNum: Number
 
 info
-mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time}
+mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveHistory, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time}
+DEPRECATED: liveNum
 
 active
 mid_recordNum: {archiveView, follower, time}

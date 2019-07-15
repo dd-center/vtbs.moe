@@ -50,15 +50,15 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
       let averageLive = 0
       let weekLive = 0
 
-      let bulkLive = await parrot.getLiveHistory(uuid)
+      let liveHistory = await parrot.getLiveHistory(uuid)
 
-      let liveNum = bulkLive.LiveTime / (60 * 5)
+      let liveNum = liveHistory.LiveTime / (60 * 5)
 
-      if (bulkLive.Lives.length) {
-        averageLive = bulkLive.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - bulkLive.Lives[0].BeginTime * 1000)
+      if (liveHistory.Lives.length) {
+        averageLive = liveHistory.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - liveHistory.Lives[0].BeginTime * 1000)
       }
 
-      bulkLive.Lives
+      liveHistory.Lives
         .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
         .forEach(({ BeginTime, EndTime }) => {
           if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
@@ -104,7 +104,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
 
       let guardType = await db.guardType.get(mid)
 
-      let newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
+      let newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveHistory, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
       io.to(mid).emit('detailInfo', { mid, data: newInfo })
       io.emit('spiderLeft', pending.length)

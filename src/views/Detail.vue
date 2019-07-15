@@ -189,7 +189,7 @@
         </el-row>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
-          <el-col :span="24">
+          <el-col :span="maxGuardNum?12:24">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
@@ -198,22 +198,22 @@
               <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!hourFollowerChange.length"></ve-line>
             </el-card>
           </el-col>
-          <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
+          <el-col :span="12" :xs="24" v-if="maxGuardNum">
+            <el-card class="box-card" shadow="hover">
+              <div slot="header">
+                舰团变化
+              </div>
+              <ve-line :data="{rows:guardFilter}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+            </el-card>
+          </el-col>
+          <!-- <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loadingLive" title="显示完整" class="right">(一部分)</el-button>
               </div>
               <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
             </el-card>
-          </el-col>
-          <el-col :span="12" :xs="24" v-if="maxGuardNum">
-            <el-card class="box-card" shadow="hover">
-              <div slot="header">
-                舰团
-              </div>
-              <ve-line :data="{rows:guardFilter}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
-            </el-card>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
@@ -423,14 +423,10 @@ export default {
         this.guard = []
         let info = await get('info', this.mid)
         this.info = info
-        let { recordNum, liveNum, guardChange, mid } = info
+        let { recordNum, guardChange, mid } = info
         this.DD = !!JSON.parse(localStorage.getItem(this.mid))
         let active = await get('bulkActiveSome', { recordNum, mid })
         this.active = active
-        if (liveNum) {
-          let live = await get('bulkLiveWeek', { mid })
-          this.rawLive = live
-        }
         if (guardChange > 0) {
           let guard = await get('bulkGuard', { guardChange, mid })
           this.guard = guard
@@ -446,19 +442,19 @@ export default {
     async connect() {
       let info = await get('info', this.mid)
       this.info = info
-      let { recordNum, liveNum, guardChange, mid } = info
+      let { recordNum, guardChange, mid } = info
       if (this.fullActive) {
         this.active = await get('bulkActive', { recordNum, mid })
       } else {
         this.active = await get('bulkActiveSome', { recordNum, mid })
       }
-      if (liveNum) {
-        if (this.fullLive) {
-          this.rawLive = await get('bulkLive', { liveNum, mid })
-        } else {
-          this.rawLive = await get('bulkLiveWeek', { mid })
-        }
-      }
+      // if (liveNum) {
+      //   if (this.fullLive) {
+      //     this.rawLive = await get('bulkLive', { liveNum, mid })
+      //   } else {
+      //     this.rawLive = await get('bulkLiveWeek', { mid })
+      //   }
+      // }
       if (guardChange > 0) {
         this.guard = await get('bulkGuard', { guardChange, mid })
       }
@@ -632,7 +628,7 @@ export default {
       return result.join(' ')
     },
     liveTime() {
-      let duration = moment.duration((this.liveNum || 0) * 5, 'minutes')
+      let duration = moment.duration(this.liveHistory.LiveTime, 'seconds')
       let result = []
       let d = Math.floor(duration.asDays())
       let h = duration.hours()
@@ -707,6 +703,9 @@ export default {
     guardNum: function() {
       return this.info.guardNum
     },
+    liveHistory() {
+      return this.info.liveHistory
+    },
     liveNum: function() {
       return this.info.liveNum
     },
@@ -764,12 +763,12 @@ export default {
   },
   components: {},
   methods: {
-    async loadFullLive() {
-      this.loadingLive = true
-      let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
-      this.rawLive = live
-      this.fullLive = true
-    },
+    // async loadFullLive() {
+    //   this.loadingLive = true
+    //   let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
+    //   this.rawLive = live
+    //   this.fullLive = true
+    // },
     async loadFullActive() {
       this.loadingActive = true
       let active = await get('bulkActive', { recordNum: this.recordNum, mid: this.mid })
