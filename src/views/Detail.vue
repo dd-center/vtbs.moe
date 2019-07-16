@@ -215,6 +215,23 @@
             </el-card>
           </el-col> -->
         </el-row>
+        <template v-if="((liveHistory || {}).Lives || []).length">
+          <el-divider>直播历史</el-divider>
+          <el-row>
+            <el-col>
+              <el-table :data="liveHistoryParse" height="320" border style="width: 100%" v-loading="!liveHistory" :default-sort="{prop: 'beginTime', order: 'descending'}">
+                <el-table-column prop="beginTime" label="时间" sortable :formatter="timeFormatter">
+                </el-table-column>
+                <el-table-column prop="duration" label="时长" sortable :formatter="durationFormatter">
+                </el-table-column>
+                <el-table-column prop="title" label="标题">
+                </el-table-column>
+                <el-table-column prop="online" label="最高人气" sortable>
+                </el-table-column>
+              </el-table>
+            </el-col>
+          </el-row>
+        </template>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
           <el-col :span="24">
@@ -643,7 +660,7 @@ export default {
         result.push(`${m} 分钟`)
       }
       if (!result.length) {
-        console.log('一分钟不到')
+        result.push('一分钟不到')
       }
       return result.join(' ')
     },
@@ -669,6 +686,10 @@ export default {
         result.push(`${m} 分钟`)
       }
       return result.join(' ')
+    },
+    liveHistoryParse() {
+      let { Lives = [] } = this.liveHistory || {}
+      return Lives.map(({ Title, MaxPopularity, BeginTime, EndTime }) => ({ beginTime: BeginTime, title: Title, online: MaxPopularity, duration: EndTime - BeginTime }))
     },
     face: function() {
       return this.info.face
@@ -763,6 +784,25 @@ export default {
   },
   components: {},
   methods: {
+    durationFormatter({ duration }) {
+      duration = moment.duration(duration, 'seconds')
+      let result = []
+      let h = Math.floor(duration.asHours())
+      let m = duration.minutes()
+      if (h) {
+        result.push(`${h} 小时`)
+      }
+      if (m) {
+        result.push(`${m} 分钟`)
+      }
+      if (!result.length) {
+        result.push('一分钟不到')
+      }
+      return result.join(' ')
+    },
+    timeFormatter({ beginTime }) {
+      return moment(beginTime * 1000).format('M月D日 H:mm')
+    },
     // async loadFullLive() {
     //   this.loadingLive = true
     //   let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
