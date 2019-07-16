@@ -206,14 +206,6 @@
               <ve-line :data="{rows:guardFilter}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
             </el-card>
           </el-col>
-          <!-- <el-col :span="maxGuardNum?12:24" :xs="24" v-if="liveNum">
-            <el-card class="box-card" shadow="hover">
-              <div slot="header">
-                直播·人气 <el-button size="mini" @click="loadFullLive" v-if="!fullLive" :loading="loadingLive" title="显示完整" class="right">(一部分)</el-button>
-              </div>
-              <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
-            </el-card>
-          </el-col> -->
         </el-row>
         <template v-if="((liveHistory || {}).Lives || []).length">
           <el-divider>直播历史</el-divider>
@@ -227,8 +219,24 @@
                 <el-table-column prop="title" label="标题">
                 </el-table-column>
                 <el-table-column prop="online" label="最高人气" sortable>
+                  <template slot-scope="scope">
+                    <el-button icon="el-icon-search" circle @click="showLive(scope.row)" size="small"></el-button>
+                    {{scope.row.online | parseNumber}}
+                  </template>
                 </el-table-column>
               </el-table>
+            </el-col>
+          </el-row>
+          <el-row type="flex" justify="space-around">
+            <el-col :span="23">
+              <el-progress :percentage="liveDisplayInfo.progress"></el-progress>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col v-if="liveDisplayTime">
+              <el-card class="box-card" shadow="hover">
+                <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="[liveDisplayZoom]" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
+              </el-card>
             </el-col>
           </el-row>
         </template>
@@ -349,6 +357,7 @@ import Vue from 'vue'
 import moment from 'moment'
 import TreeView from 'vue-json-tree-view'
 import Push from 'push.js'
+import ky from 'ky'
 
 import VeLine from 'v-charts/lib/line.common'
 
@@ -362,10 +371,6 @@ Vue.component(VeLine.name, VeLine)
 export default {
   props: ['mid'],
   data: function() {
-    this.dataZoomDay = [{
-      type: 'slider',
-      startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24,
-    }]
     this.dataZoomWeek = [{
       type: 'slider',
       startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7,
@@ -428,6 +433,13 @@ export default {
       loadingActive: false,
       DD: !!JSON.parse(localStorage.getItem(this.mid)),
       fullLive: false,
+      liveDisplayTime: undefined,
+      liveDisplayZoom: {
+        type: 'slider',
+        startValue: 0,
+        endValue: 0,
+      },
+      liveDisplayInfo: {},
     }
   },
   watch: {
@@ -436,7 +448,7 @@ export default {
       handler: async function() {
         this.active = []
         this.info = {}
-        this.rawLive = []
+        // this.rawLive = []
         this.guard = []
         let info = await get('info', this.mid)
         this.info = info
@@ -486,11 +498,11 @@ export default {
         this.active.push(data)
       }
     },
-    detailLive: function({ mid, data }) {
-      if (mid === Number(this.mid)) {
-        this.rawLive.push(data)
-      }
-    },
+    // detailLive: function({ mid, data }) {
+    //   if (mid === Number(this.mid)) {
+    //     this.rawLive.push(data)
+    //   }
+    // },
     detailGuard: function({ mid, data }) {
       if (mid === Number(this.mid)) {
         this.guard.push(data)
@@ -640,7 +652,7 @@ export default {
         result.push(`${m} 分钟`)
       }
       if (!result.length) {
-        console.log('一分钟不到')
+        result.push('一分钟不到')
       }
       return result.join(' ')
     },
@@ -689,7 +701,7 @@ export default {
     },
     liveHistoryParse() {
       let { Lives = [] } = this.liveHistory || {}
-      return Lives.map(({ Title, MaxPopularity, BeginTime, EndTime }) => ({ beginTime: BeginTime, title: Title, online: MaxPopularity, duration: EndTime - BeginTime }))
+      return Lives.map(({ Title, MaxPopularity, BeginTime, EndTime, Id }) => ({ beginTime: BeginTime, endTime: EndTime, title: Title, online: MaxPopularity, duration: EndTime - BeginTime, id: Id }))
     },
     face: function() {
       return this.info.face
@@ -781,6 +793,9 @@ export default {
     fullActive() {
       return this.active.length >= this.recordNum
     },
+    uuid() {
+      return this.info.uuid
+    },
   },
   components: {},
   methods: {
@@ -803,6 +818,35 @@ export default {
     timeFormatter({ beginTime }) {
       return moment(beginTime * 1000).format('M月D日 H:mm')
     },
+    async showLive({ beginTime, endTime, title, id }) {
+      this.rawLive = []
+      this.liveDisplayZoom = {
+        type: 'slider',
+        startValue: (beginTime - 60 * 5) * 1000,
+        endValue: (endTime + 60 * 5) * 1000,
+      }
+      this.liveDisplayInfo = { beginTime, endTime, title, id, progress: 0 }
+      let timeNow = Date.now()
+      this.liveDisplayTime = timeNow
+      for (let time = beginTime - 60 * 5; time < (endTime + 60 * 5);) {
+        let { Comments } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`).json()
+        if (timeNow !== this.liveDisplayTime) {
+          break
+        }
+        time = Comments[Comments.length - 1].PublishTime + 1
+        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round((((endTime + 60 * 5) - time) / ((endTime + 60 * 5) - (beginTime - 60 * 5))) * 1000)) / 10)
+        Comments.forEach(({ Popularity, PublishTime }) => {
+          let { online } = this.rawLive[this.rawLive.length - 1] || {}
+          let { endValue } = this.liveDisplayZoom
+          if (online !== Popularity) {
+            this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
+            if (PublishTime * 1000 > endValue) {
+              this.liveDisplayZoom.endValue = PublishTime * 1000
+            }
+          }
+        })
+      }
+    },
     // async loadFullLive() {
     //   this.loadingLive = true
     //   let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
@@ -814,6 +858,9 @@ export default {
       let active = await get('bulkActive', { recordNum: this.recordNum, mid: this.mid })
       this.active = active
     },
+  },
+  beforeDestroy: function() {
+    this.liveDisplayTime = Date.now()
   },
 }
 </script>
