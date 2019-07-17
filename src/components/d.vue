@@ -8,7 +8,7 @@
   <el-row class="name">
     <el-col class="center">
       <span>
-        <el-tag :type="tag.type" size="mini" :title="tag.title">{{tag.name}}</el-tag>
+        <el-tag class="tag" v-for="tag in tags" :type="tag.type" size="mini" :title="tag.title" :key="`${tag.name}_${dd.mid}`">{{tag.name}}</el-tag>
         <router-link :to="`/detail/${dd.mid}`" v-if="isVTB" class="detail" title="这是一名本站收录的VTB/VUP">
           {{uname}}
           <el-tag type="danger" size="mini" v-if="isVTB">V</el-tag>
@@ -69,14 +69,14 @@ const ddTypes = [
     title: '夏色梅露贴贴',
     demand: [336731767, 332704117],
     type: 'success',
-    strict: true,
+    strict: false,
   },
   {
     name: '夏夸',
     title: '夏色啊夸',
     demand: [336731767, 375504219],
     type: 'success',
-    strict: true,
+    strict: false,
   },
   {
     name: '夏色Mio',
@@ -104,7 +104,7 @@ const ddTypes = [
     title: 'aquayame',
     demand: [375504219, 389858027],
     type: 'success',
-    strict: true,
+    strict: false,
   },
 ]
 
@@ -120,9 +120,9 @@ export default {
       }
       return `${this.dd.face}@96w_96h`
     },
-    tag() {
+    tags() {
       let vtbs = this.vtbs.flat()
-      let type = ddTypes.find(({ strict, demand }) => {
+      let type = ddTypes.filter(({ strict, demand }) => {
         if (strict) {
           if (vtbs.length !== demand.length) {
             return false
@@ -130,11 +130,11 @@ export default {
         }
         return !demand.find(uid => !vtbs.includes(uid))
       })
-      if (!type) {
+      if (!type.length) {
         if (vtbs.length === 1) {
-          type = { type: 'warning', name: '单推' }
+          type.push({ type: 'warning', name: '单推' })
         } else {
-          type = { name: 'DD' }
+          type.push({ name: 'DD' })
         }
       }
       return type
@@ -201,6 +201,10 @@ export default {
 
 .right {
   float: right;
+}
+
+.tag{
+  margin-left: 2px;
 }
 
 .guard {
