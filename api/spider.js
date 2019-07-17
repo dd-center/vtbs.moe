@@ -38,14 +38,14 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
     let vtb = pending.shift()
     let time = Date.now()
     if (vtb) {
-      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
+      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)
         await wait(1500 + time - Date.now())
         continue
       }
-      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, online, title, face, topPhoto, areaRank, bot, uuid } = object
+      let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
 
       let averageLive = 0
       let weekLive = 0
@@ -72,7 +72,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
       if (!info) {
         info = {}
       }
-      let { recordNum = 0, guardChange = 0 } = info
+      let { recordNum = 0, guardChange = 0, online = 0 } = info
 
       let currentActive = await db.active.get({ mid, num: recordNum })
       if (notable({ object, time, currentActive })) {
