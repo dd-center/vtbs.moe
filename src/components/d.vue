@@ -53,7 +53,7 @@ const ddTypes = [
   {
     name: '夏紫',
     title: '夏色诗音贴贴',
-    demand: [336731767, 332704117],
+    demand: [336731767, 389857640],
     type: 'success',
     strict: false,
   },
