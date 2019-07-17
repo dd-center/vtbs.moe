@@ -926,11 +926,12 @@ export default {
         time = Comments[Comments.length - 1].PublishTime + 1
         this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
         pendingAppend = pendingAppend.concat(Comments.concat(Gifts)
-          .sort((a, b) => a.PublishTime > b.PublishTime)
           .filter(({ PublishTime }) => PublishTime < endTimeBuffer))
 
         if (Date.now() - lastAppendTime > 500) {
-          pendingAppend.forEach(appendEvent)
+          pendingAppend
+            .sort((a, b) => a.PublishTime > b.PublishTime)
+            .forEach(appendEvent)
           pendingAppend = []
           this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
           this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
