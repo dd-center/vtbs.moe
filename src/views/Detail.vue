@@ -232,13 +232,47 @@
               <el-progress :percentage="liveDisplayInfo.progress"></el-progress>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col v-if="liveDisplayTime">
-              <el-card class="box-card" shadow="hover">
-                <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="[liveDisplayZoom]" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
-              </el-card>
-            </el-col>
-          </el-row>
+          <template v-if="liveDisplayTime">
+            <el-row>
+              <el-col>
+                <el-card class="box-card" shadow="hover">
+                  <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="[liveDisplayZoom]" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
+                </el-card>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12" :xs="24">
+                <el-card class="box-card" shadow="hover">
+                  <h3 class="center">弹幕榜</h3>
+                  <transition-group name="flip-list">
+                    <el-row v-for="person in liveDisplayDanmakuByPersonRank" :key="`danmaku_${person.name}`">
+                      <el-col :span="12">
+                        <span class="right">{{person.name}}</span>
+                      </el-col>
+                      <el-col :span="12">
+                        {{person.number | parseNumber}}
+                      </el-col>
+                    </el-row>
+                  </transition-group>
+                </el-card>
+              </el-col>
+              <el-col :span="12" :xs="24">
+                <el-card class="box-card" shadow="hover">
+                  <h3 class="center">礼物榜</h3>
+                  <transition-group name="flip-list">
+                    <el-row v-for="person in liveDisplayGiftByPersonRank" :key="`gift_${person.name}`">
+                      <el-col :span="12">
+                        <span class="right">{{person.name}}</span>
+                      </el-col>
+                      <el-col :span="12">
+                        {{person.coin | parseNumber}}
+                      </el-col>
+                    </el-row>
+                  </transition-group>
+                </el-card>
+              </el-col>
+            </el-row>
+          </template>
         </template>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
@@ -439,6 +473,8 @@ export default {
         endValue: 0,
       },
       liveDisplayInfo: {},
+      liveDisplayDanmakuByPerson: {},
+      liveDisplayGiftByPerson: {},
       liveHistory: undefined,
     }
   },
@@ -716,6 +752,16 @@ export default {
       let { Lives = [] } = this.liveHistory || {}
       return Lives.map(({ Title, MaxPopularity, BeginTime, EndTime, Id }) => ({ beginTime: BeginTime, endTime: EndTime, title: Title, online: MaxPopularity, duration: EndTime - BeginTime, id: Id }))
     },
+    liveDisplayDanmakuByPersonRank() {
+      return Object.values(this.liveDisplayDanmakuByPerson)
+        .sort((a, b) => a.number < b.number)
+        .filter((_, index) => index < 5)
+    },
+    liveDisplayGiftByPersonRank() {
+      return Object.values(this.liveDisplayGiftByPerson)
+        .sort((a, b) => a.coin < b.coin)
+        .filter((_, index) => index < 5)
+    },
     face: function() {
       return this.info.face
     },
@@ -830,6 +876,8 @@ export default {
     },
     async showLive({ beginTime, endTime, title, id }) {
       this.rawLive = []
+      this.liveDisplayDanmakuByPerson = {}
+      this.liveDisplayGiftByPerson = {}
       let beginTimeBuffer = beginTime - 60 * 5
       let endTimeBuffer = endTime + 60 * 5
 
@@ -842,30 +890,55 @@ export default {
 
       let timeNow = Date.now()
       this.liveDisplayTime = timeNow
+      let lastAppendTime = 0
+      let pendingAppend = []
+
+      const appendEvent = ({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, CostAmount }) => {
+        let { online } = this.rawLive[this.rawLive.length - 1] || {}
+        let { endValue } = this.liveDisplayZoom
+        if (online !== Popularity) {
+          this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
+          if (PublishTime * 1000 > endValue) {
+            this.liveDisplayZoom.endValue = PublishTime * 1000
+          }
+        }
+        if (!GiftName) {
+          if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
+            this.liveDisplayDanmakuByPerson[AuthorId] = { number: 0 }
+          }
+          this.liveDisplayDanmakuByPerson[AuthorId].name = AuthorName
+          this.liveDisplayDanmakuByPerson[AuthorId].number++
+        } else if (CostType === 'gold') {
+          if (!this.liveDisplayGiftByPerson[AuthorId]) {
+            this.liveDisplayGiftByPerson[AuthorId] = { coin: 0 }
+          }
+          this.liveDisplayGiftByPerson[AuthorId].name = AuthorName
+          this.liveDisplayGiftByPerson[AuthorId].coin += CostAmount
+        }
+      }
 
       this.rawLive.push({ online: 0, time: beginTimeBuffer * 1000 })
       for (let time = beginTimeBuffer; time < endTimeBuffer;) {
-        let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`).json()
+        let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`, { retry: 3 }).json()
         if (timeNow !== this.liveDisplayTime) {
           break
         }
         time = Comments[Comments.length - 1].PublishTime + 1
         this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
-        Comments.concat(Gifts)
+        pendingAppend = pendingAppend.concat(Comments.concat(Gifts)
           .sort((a, b) => a.PublishTime > b.PublishTime)
-          .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
-          .forEach(({ Popularity, PublishTime }) => {
-            let { online } = this.rawLive[this.rawLive.length - 1] || {}
-            let { endValue } = this.liveDisplayZoom
-            if (online !== Popularity) {
-              this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
-              if (PublishTime * 1000 > endValue) {
-                this.liveDisplayZoom.endValue = PublishTime * 1000
-              }
-            }
-          })
+          .filter(({ PublishTime }) => PublishTime < endTimeBuffer))
+
+        if (Date.now() - lastAppendTime > 500) {
+          pendingAppend.forEach(appendEvent)
+          pendingAppend = []
+          lastAppendTime = Date.now()
+        }
+        this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
+        this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
       }
       if (timeNow === this.liveDisplayTime) {
+        pendingAppend.forEach(appendEvent)
         this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
       }
     },
@@ -888,6 +961,26 @@ export default {
 </script>
 
 <style scoped>
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
+.flip-list-enter {
+  opacity: 0;
+}
+
+.flip-list-enter-active {
+  transition: opacity 0.5s;
+}
+
+.flip-list-leave {
+  display: none;
+}
+
+.flip-list-leave-active {
+  display: none;
+}
+
 .topPhoto {
   width: 100%;
   margin-top: 1px;
@@ -939,6 +1032,10 @@ export default {
 .center {
   text-align: center;
   word-wrap: break-word;
+}
+
+.right {
+  text-align: right;
 }
 
 .big {
