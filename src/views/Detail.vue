@@ -162,7 +162,7 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!liveNum">
+          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!liveHistory">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 共直播
@@ -207,11 +207,11 @@
             </el-card>
           </el-col>
         </el-row>
-        <template v-if="((liveHistory || {}).Lives || []).length">
-          <el-divider>直播历史</el-divider>
+        <template v-if="roomid">
+          <el-divider>直播记录</el-divider>
           <el-row>
             <el-col>
-              <el-table :data="liveHistoryParse" height="320" border style="width: 100%" v-loading="!liveHistory" :default-sort="{prop: 'beginTime', order: 'descending'}">
+              <el-table :data="liveHistoryParse" height="320" border style="width: 100%" v-loading="!liveHistory" :default-sort="{prop: 'beginTime', order: 'descending'}" empty-text="无直播记录">
                 <el-table-column prop="beginTime" label="时间" sortable :formatter="timeFormatter">
                 </el-table-column>
                 <el-table-column prop="duration" label="时长" sortable :formatter="durationFormatter">
@@ -440,6 +440,7 @@ export default {
         endValue: 0,
       },
       liveDisplayInfo: {},
+      liveHistory: undefined,
     }
   },
   watch: {
@@ -452,7 +453,17 @@ export default {
         this.guard = []
         let info = await get('info', this.mid)
         this.info = info
-        let { recordNum, guardChange, mid } = info
+        let { recordNum, guardChange, mid, uuid } = info
+
+        let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json()
+        if (!liveHistory.Success) {
+          liveHistory.LiveTime = 0
+        }
+        if (!liveHistory.Lives) {
+          liveHistory.Lives = []
+        }
+        this.liveHistory = liveHistory
+
         this.DD = !!JSON.parse(localStorage.getItem(this.mid))
         let active = await get('bulkActiveSome', { recordNum, mid })
         this.active = active
@@ -657,7 +668,10 @@ export default {
       return result.join(' ')
     },
     liveTime() {
-      let duration = moment.duration(this.liveHistory.LiveTime, 'seconds')
+      if (!this.liveHistory) {
+        return undefined
+      }
+      let duration = moment.duration(this.liveHistory.LiveTime || 0, 'seconds')
       let result = []
       let d = Math.floor(duration.asDays())
       let h = duration.hours()
@@ -735,9 +749,6 @@ export default {
     },
     guardNum: function() {
       return this.info.guardNum
-    },
-    liveHistory() {
-      return this.info.liveHistory
     },
     liveNum: function() {
       return this.info.liveNum
