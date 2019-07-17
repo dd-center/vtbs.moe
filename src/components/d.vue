@@ -67,7 +67,7 @@ const ddTypes = [
   {
     name: '夏空',
     title: '夏色梅露贴贴',
-    demand: [336731767, 332704117],
+    demand: [336731767, 389856447],
     type: 'success',
     strict: false,
   },
@@ -92,6 +92,13 @@ const ddTypes = [
     type: 'success',
     strict: false,
   },
+  {
+    name: '夏皆',
+    title: '夏色皆守',
+    demand: [336731767, 395814787],
+    type: 'success',
+    strict: false,
+  },  
   {
     name: 'Fubumio',
     title: 'Fubumio贴贴',
