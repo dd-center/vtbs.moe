@@ -406,7 +406,6 @@ export default {
     }
     this.liveExtend = {
       'series.0.symbol': 'none',
-      'series.0.smoothMonotone': 'x',
       'series.0.sampling': 'average',
     }
     this.guardLine = {
