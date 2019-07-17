@@ -831,31 +831,37 @@ export default {
     },
     async showLive({ beginTime, endTime, title, id }) {
       this.rawLive = []
+      let beginTimeBuffer = beginTime - 60 * 5
+      let endTimeBuffer = endTime + 60 * 5
       this.liveDisplayZoom = {
         type: 'slider',
-        startValue: (beginTime - 60 * 5) * 1000,
-        endValue: (endTime + 60 * 5) * 1000,
+        startValue: beginTimeBuffer * 1000,
+        endValue: endTimeBuffer * 1000,
       }
       this.liveDisplayInfo = { beginTime, endTime, title, id, progress: 0 }
       let timeNow = Date.now()
       this.liveDisplayTime = timeNow
-      for (let time = beginTime - 60 * 5; time < (endTime + 60 * 5);) {
+      this.rawLive.push({ online: 0, time: beginTimeBuffer * 1000 })
+      for (let time = beginTimeBuffer; time < endTimeBuffer;) {
         let { Comments } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`).json()
         if (timeNow !== this.liveDisplayTime) {
           break
         }
         time = Comments[Comments.length - 1].PublishTime + 1
-        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round((((endTime + 60 * 5) - time) / ((endTime + 60 * 5) - (beginTime - 60 * 5))) * 1000)) / 10)
+        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
         Comments.forEach(({ Popularity, PublishTime }) => {
           let { online } = this.rawLive[this.rawLive.length - 1] || {}
           let { endValue } = this.liveDisplayZoom
-          if (online !== Popularity) {
+          if (online !== Popularity && PublishTime < endTimeBuffer) {
             this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
             if (PublishTime * 1000 > endValue) {
               this.liveDisplayZoom.endValue = PublishTime * 1000
             }
           }
         })
+      }
+      if (timeNow === this.liveDisplayTime) {
+        this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
       }
     },
     // async loadFullLive() {
