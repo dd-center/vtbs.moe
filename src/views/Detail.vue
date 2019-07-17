@@ -932,13 +932,15 @@ export default {
         if (Date.now() - lastAppendTime > 500) {
           pendingAppend.forEach(appendEvent)
           pendingAppend = []
+          this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
+          this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
           lastAppendTime = Date.now()
         }
-        this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
-        this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
       }
       if (timeNow === this.liveDisplayTime) {
         pendingAppend.forEach(appendEvent)
+        this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
+        this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
         this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
       }
     },
