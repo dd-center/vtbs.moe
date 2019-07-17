@@ -189,7 +189,7 @@
         </el-row>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
-          <el-col :span="maxGuardNum?12:24">
+          <el-col :span="maxGuardNum?12:24" :xs="24">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
