@@ -754,12 +754,12 @@ export default {
     },
     liveDisplayDanmakuByPersonRank() {
       return Object.values(this.liveDisplayDanmakuByPerson)
-        .sort((a, b) => a.number < b.number)
+        .sort((a, b) => b.number - a.number)
         .filter((_, index) => index < 5)
     },
     liveDisplayGiftByPersonRank() {
       return Object.values(this.liveDisplayGiftByPerson)
-        .sort((a, b) => a.coin < b.coin)
+        .sort((a, b) => b.coin - a.coin)
         .filter((_, index) => index < 5)
     },
     face: function() {
@@ -930,7 +930,7 @@ export default {
 
         if (Date.now() - lastAppendTime > 500) {
           pendingAppend
-            .sort((a, b) => a.PublishTime > b.PublishTime)
+            .sort((a, b) => a.PublishTime - b.PublishTime)
             .forEach(appendEvent)
           pendingAppend = []
           this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
