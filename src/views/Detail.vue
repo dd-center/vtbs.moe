@@ -241,7 +241,7 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="12" :xs="24">
+              <el-col :span="8" :xs="24">
                 <el-card class="box-card" shadow="hover">
                   <h3 class="center">弹幕榜</h3>
                   <transition-group name="flip-list">
@@ -256,7 +256,7 @@
                   </transition-group>
                 </el-card>
               </el-col>
-              <el-col :span="12" :xs="24">
+              <el-col :span="8" :xs="24">
                 <el-card class="box-card" shadow="hover">
                   <h3 class="center">礼物榜</h3>
                   <transition-group name="flip-list">
@@ -269,6 +269,15 @@
                       </el-col>
                     </el-row>
                   </transition-group>
+                </el-card>
+              </el-col>
+              <el-col :span="8" :xs="24">
+                <el-card class="box-card" shadow="hover">
+                  <h3 class="center">总计</h3>
+                  <p>弹幕数: {{liveDisplayDanmakuNumber | parseNumber}}</p>
+                  <p>发言人数: {{liveDisplayDanmakuByPersonNumber | parseNumber}}</p>
+                  <p>金瓜子: {{liveDisplayCoinGiftCost | parseNumber}} <small class="right">(~{{Math.round(liveDisplayCoinGiftCost/1000)}}元)</small></p>
+                  <p>银瓜子: {{liveDisplaySilverGiftCost | parseNumber}}</p>
                 </el-card>
               </el-col>
             </el-row>
@@ -473,7 +482,14 @@ export default {
         endValue: 0,
       },
       liveDisplayInfo: {},
+      liveDisplayDanmaku: [],
+      liveDisplayDanmakuNumber: 0,
       liveDisplayDanmakuByPerson: {},
+      liveDisplayCoinGift: [],
+      liveDisplayCoinGiftCost: 0,
+      liveDisplaySilverGift: [],
+      liveDisplaySilverGiftCost: 0,
+      liveDisplayGiftByType: {},
       liveDisplayGiftByPerson: {},
       liveHistory: undefined,
     }
@@ -757,10 +773,16 @@ export default {
         .sort((a, b) => b.number - a.number)
         .filter((_, index) => index < 5)
     },
+    liveDisplayDanmakuByPersonNumber() {
+      return Object.keys(this.liveDisplayDanmakuByPerson).length
+    },
     liveDisplayGiftByPersonRank() {
       return Object.values(this.liveDisplayGiftByPerson)
         .sort((a, b) => b.coin - a.coin)
         .filter((_, index) => index < 5)
+    },
+    liveDisplayGiftByPersonNumber() {
+      return Object.keys(this.liveDisplayGiftByPerson).length
     },
     face: function() {
       return this.info.face
@@ -876,8 +898,15 @@ export default {
     },
     async showLive({ beginTime, endTime, title, id }) {
       this.rawLive = []
+      this.liveDisplayDanmaku = []
+      this.liveDisplayDanmakuNumber = 0
       this.liveDisplayDanmakuByPerson = {}
+      this.liveDisplayCoinGift = []
+      this.liveDisplaySilverGift = []
+      this.liveDisplayGiftByType = {}
       this.liveDisplayGiftByPerson = {}
+      this.liveDisplayCoinGiftCost = 0
+      this.liveDisplaySilverGiftCost = 0
       let beginTimeBuffer = beginTime - 60 * 5
       let endTimeBuffer = endTime + 60 * 5
 
@@ -890,32 +919,6 @@ export default {
 
       let timeNow = Date.now()
       this.liveDisplayTime = timeNow
-      let lastAppendTime = 0
-      let pendingAppend = []
-
-      const appendEvent = ({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, CostAmount }) => {
-        let { online } = this.rawLive[this.rawLive.length - 1] || {}
-        let { endValue } = this.liveDisplayZoom
-        if (online !== Popularity) {
-          this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
-          if (PublishTime * 1000 > endValue) {
-            this.liveDisplayZoom.endValue = PublishTime * 1000
-          }
-        }
-        if (!GiftName) {
-          if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
-            this.liveDisplayDanmakuByPerson[AuthorId] = { number: 0 }
-          }
-          this.liveDisplayDanmakuByPerson[AuthorId].name = AuthorName
-          this.liveDisplayDanmakuByPerson[AuthorId].number++
-        } else if (CostType === 'gold') {
-          if (!this.liveDisplayGiftByPerson[AuthorId]) {
-            this.liveDisplayGiftByPerson[AuthorId] = { coin: 0 }
-          }
-          this.liveDisplayGiftByPerson[AuthorId].name = AuthorName
-          this.liveDisplayGiftByPerson[AuthorId].coin += CostAmount
-        }
-      }
 
       this.rawLive.push({ online: 0, time: beginTimeBuffer * 1000 })
       for (let time = beginTimeBuffer; time < endTimeBuffer;) {
@@ -925,25 +928,52 @@ export default {
         }
         time = Comments[Comments.length - 1].PublishTime + 1
         this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
-        pendingAppend = pendingAppend.concat(Comments.concat(Gifts)
-          .filter(({ PublishTime }) => PublishTime < endTimeBuffer))
-
-        if (Date.now() - lastAppendTime > 500) {
-          pendingAppend
-            .sort((a, b) => a.PublishTime - b.PublishTime)
-            .forEach(appendEvent)
-          pendingAppend = []
-          this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
-          this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
-          lastAppendTime = Date.now()
-        }
-      }
-      if (timeNow === this.liveDisplayTime) {
-        pendingAppend.forEach(appendEvent)
+        Comments.concat(Gifts)
+          .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
+          .sort((a, b) => a.PublishTime - b.PublishTime)
+          .forEach(({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, GiftCount, CostAmount, Content }) => {
+            let { online } = this.rawLive[this.rawLive.length - 1] || {}
+            let { endValue } = this.liveDisplayZoom
+            if (online !== Popularity) {
+              this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
+              if (PublishTime * 1000 > endValue) {
+                this.liveDisplayZoom.endValue = PublishTime * 1000
+              }
+            }
+            if (!GiftName) {
+              if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
+                this.liveDisplayDanmakuByPerson[AuthorId] = { number: 0 }
+              }
+              this.liveDisplayDanmakuByPerson[AuthorId].name = AuthorName
+              this.liveDisplayDanmakuByPerson[AuthorId].number++
+              this.liveDisplayDanmakuNumber++
+              // this.liveDisplayDanmaku.push({ name: AuthorName, content: Content })
+            } else {
+              if (!this.liveDisplayGiftByPerson[AuthorId]) {
+                this.liveDisplayGiftByPerson[AuthorId] = { coin: 0, silver: 0 }
+              }
+              if (!this.liveDisplayGiftByType[GiftName]) {
+                this.liveDisplayGiftByType[GiftName] = { coin: 0, silver: 0, count: 0 }
+              }
+              this.liveDisplayGiftByPerson[AuthorId].name = AuthorName
+              this.liveDisplayGiftByType[GiftName].count += GiftCount
+              if (CostType === 'gold') {
+                this.liveDisplayGiftByPerson[AuthorId].coin += CostAmount
+                this.liveDisplayGiftByType[GiftName].coin += CostAmount
+                // this.liveDisplayCoinGift.push({ name: AuthorName, cost: CostAmount, count: GiftCount })
+                this.liveDisplayCoinGiftCost += CostAmount
+              } else {
+                this.liveDisplayGiftByPerson[AuthorId].silver += CostAmount
+                this.liveDisplayGiftByType[GiftName].silver += CostAmount
+                // this.liveDisplaySilverGift.push({ name: AuthorName, cost: CostAmount, count: GiftCount })
+                this.liveDisplaySilverGiftCost += CostAmount
+              }
+            }
+          })
         this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
         this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
-        this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
       }
+      this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
     },
     // async loadFullLive() {
     //   this.loadingLive = true
