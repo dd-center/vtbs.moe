@@ -926,11 +926,16 @@ export default {
         if (timeNow !== this.liveDisplayTime) {
           break
         }
-        time = Comments[Comments.length - 1].PublishTime + 1
-        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
-        Comments.concat(Gifts)
-          .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
+        let mergeEvent = (Comments || []).concat(Gifts || [])
           .sort((a, b) => a.PublishTime - b.PublishTime)
+        if (!mergeEvent.length) {
+          this.liveDisplayInfo.progress = 100
+          break
+        }
+        time = mergeEvent[mergeEvent.length - 1].PublishTime + 1
+        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
+        mergeEvent
+          .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
           .forEach(({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, GiftCount, CostAmount, Content }) => {
             let { online } = this.rawLive[this.rawLive.length - 1] || {}
             let { endValue } = this.liveDisplayZoom
