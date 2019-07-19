@@ -22,10 +22,11 @@ module.exports = ({ vdSocket, io, info }) => {
     io.to(mid).emit('detailInfo', { mid, data: currentInfo })
   })
   vdSocket.on('online', async ({ online, mid }) => {
+    let currentInfo = await info.get(mid)
+    let { liveStatus } = currentInfo
+    currentInfo = { ...currentInfo, online: liveStatus && online }
+    await info.put(mid, currentInfo)
     if (online > 1) {
-      let currentInfo = info.get(mid)
-      currentInfo = { ...await currentInfo, online }
-      await info.put(mid, currentInfo)
       updatePending.push(mid)
       io.to(mid).emit('detailInfo', { mid, data: currentInfo })
     }
