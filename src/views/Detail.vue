@@ -440,12 +440,14 @@ export default {
     }
     this.liveLine = {
       dimension: ['time'],
-      metrics: ['online'],
+      metrics: ['online', 'gold'],
       labelMap: {
         online: '人气',
+        gold: '金瓜子',
       },
-      yAxisName: ['人气'],
+      yAxisName: ['人气', '每分钟金瓜子'],
       xAxisType: 'time',
+      axisSite: { right: ['gold'] },
     }
     this.liveExtend = {
       'series.0.symbol': 'none',
@@ -909,6 +911,7 @@ export default {
       this.liveDisplaySilverGiftCost = 0
       let beginTimeBuffer = beginTime - 60 * 5
       let endTimeBuffer = endTime + 60 * 5
+      let giftCache = []
 
       this.liveDisplayZoom = {
         type: 'slider',
@@ -940,7 +943,16 @@ export default {
             let { online, time } = this.rawLive[this.rawLive.length - 1] || {}
             let { endValue } = this.liveDisplayZoom
             if (online !== Popularity && time !== PublishTime * 1000) {
-              this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
+              if (giftCache.length < 1) {
+                giftCache.push({ gold: 0, time: 0 })
+              }
+              if (giftCache.length < 2) {
+                giftCache.push({ gold: 0, time: giftCache[0].time + 60 })
+              }
+              let timeDifference = giftCache[giftCache.length - 1].time - giftCache[0].time
+              let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
+              giftCache = []
+              this.rawLive.push({ online: Popularity, time: PublishTime * 1000, gold: gold * 60 / timeDifference })
               if (PublishTime * 1000 > endValue) {
                 this.liveDisplayZoom.endValue = PublishTime * 1000
               }
@@ -967,6 +979,7 @@ export default {
                 this.liveDisplayGiftByType[GiftName].coin += CostAmount
                 // this.liveDisplayCoinGift.push({ name: AuthorName, cost: CostAmount, count: GiftCount })
                 this.liveDisplayCoinGiftCost += CostAmount
+                giftCache.push({ time: PublishTime, gold: CostAmount })
               } else {
                 this.liveDisplayGiftByPerson[AuthorId].silver += CostAmount
                 this.liveDisplayGiftByType[GiftName].silver += CostAmount
