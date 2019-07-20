@@ -923,7 +923,7 @@ export default {
       let timeNow = Date.now()
       this.liveDisplayTime = timeNow
 
-      this.rawLive.push({ online: 0, time: beginTimeBuffer * 1000 })
+      this.rawLive.push({ online: 0, gold: 0, time: beginTimeBuffer * 1000 })
       for (let time = beginTimeBuffer; time < endTimeBuffer;) {
         let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`, { retry: 3 }).json()
         if (timeNow !== this.liveDisplayTime) {
@@ -948,10 +948,10 @@ export default {
               if (giftCache.length < 2) {
                 giftCache.push({ gold: 0, time: giftCache[0].time + 60 })
               }
-              let timeDifference = giftCache[giftCache.length - 1].time - giftCache[0].time
+              let timeDifference = PublishTime * 1000 - this.rawLive[this.rawLive.length - 1].time
               let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
               giftCache = []
-              this.rawLive.push({ online: Popularity, time: PublishTime * 1000, gold: gold * 60 / timeDifference })
+              this.rawLive.push({ online: Popularity, time: PublishTime * 1000, gold: Math.min(gold, gold * 60 * 1000 / timeDifference) })
             }
             if (!GiftName) {
               if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
@@ -987,7 +987,16 @@ export default {
         this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
         this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
       }
-      this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1 })
+      if (giftCache.length < 1) {
+        giftCache.push({ gold: 0, time: 0 })
+      }
+      if (giftCache.length < 2) {
+        giftCache.push({ gold: 0, time: giftCache[0].time + 60 })
+      }
+      let timeDifference = giftCache[giftCache.length - 1].time - giftCache[0].time
+      let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
+      giftCache = []
+      this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1, gold: gold * 60 / timeDifference })
     },
     // async loadFullLive() {
     //   this.loadingLive = true
