@@ -937,9 +937,9 @@ export default {
         mergeEvent
           .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
           .forEach(({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, GiftCount, CostAmount, Content }) => {
-            let { online } = this.rawLive[this.rawLive.length - 1] || {}
+            let { online, time } = this.rawLive[this.rawLive.length - 1] || {}
             let { endValue } = this.liveDisplayZoom
-            if (online !== Popularity) {
+            if (online !== Popularity && time !== PublishTime * 1000) {
               this.rawLive.push({ online: Popularity, time: PublishTime * 1000 })
               if (PublishTime * 1000 > endValue) {
                 this.liveDisplayZoom.endValue = PublishTime * 1000
