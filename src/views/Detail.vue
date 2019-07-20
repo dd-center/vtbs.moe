@@ -941,7 +941,6 @@ export default {
           .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
           .forEach(({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, GiftCount, CostAmount, Content }) => {
             let { online, time } = this.rawLive[this.rawLive.length - 1] || {}
-            let { endValue } = this.liveDisplayZoom
             if (online !== Popularity && time !== PublishTime * 1000) {
               if (giftCache.length < 1) {
                 giftCache.push({ gold: 0, time: 0 })
@@ -953,9 +952,6 @@ export default {
               let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
               giftCache = []
               this.rawLive.push({ online: Popularity, time: PublishTime * 1000, gold: gold * 60 / timeDifference })
-              if (PublishTime * 1000 > endValue) {
-                this.liveDisplayZoom.endValue = PublishTime * 1000
-              }
             }
             if (!GiftName) {
               if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
