@@ -70,6 +70,22 @@ export default {
   transition: transform 0.5s;
 }
 
+.flip-list-enter {
+  opacity: 0;
+}
+
+.flip-list-enter-active {
+  transition: opacity 0.5s;
+}
+
+.flip-list-leave {
+  display: none;
+}
+
+.flip-list-leave-active {
+  display: none;
+}
+
 .card {
   margin-bottom: 32px;
 }
