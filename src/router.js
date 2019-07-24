@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import About from './views/About.vue'
 import List from './views/List.vue'
+import Badge from './views/Badge.vue'
 import DD from './views/DD.vue'
 // import Macro from './views/Macro.vue'
 
@@ -34,6 +35,10 @@ export default new Router({
     path: '/detail/:mid',
     component: () =>
       import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
+    props: true,
+  }, {
+    path: '/badge/:mid',
+    component: Badge,
     props: true,
   }, {
     path: '/bot/:n',
