@@ -508,7 +508,7 @@ export default {
         this.info = info
         let { recordNum, guardChange, mid, uuid } = info
 
-        let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json()
+        let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json().catch(() => ({}))
         if (!liveHistory.Success) {
           liveHistory.LiveTime = 0
         }
@@ -913,7 +913,7 @@ export default {
 
       this.rawLive.push({ online: 0, gold: 0, time: beginTimeBuffer * 1000 })
       for (let time = beginTimeBuffer; time < endTimeBuffer;) {
-        let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`, { retry: 3 }).json()
+        let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`, { retry: 3 }).json().catch(() => ({}))
         if (timeNow !== this.liveDisplayTime) {
           break
         }
