@@ -45,22 +45,22 @@ class ArrayDatabase extends LevelDatabase {
   }
 }
 
-exports.init = async () => {
-  await fs.ensureDir('./db')
-  let db = level(`./db`, { valueEncoding: 'json' })
-  let site = new ArrayDatabase({ name: 'site', db })
-  let num = new LevelDatabase({ name: 'num', db })
+let db = level(`./db`, { valueEncoding: 'json' })
+let site = new ArrayDatabase({ name: 'site', db })
+let num = new LevelDatabase({ name: 'num', db })
 
-  let info = new LevelDatabase({ name: 'info', db })
-  let active = new ArrayDatabase({ name: 'active', db })
-  let live = new ArrayDatabase({ name: 'live', db }) // DEPRECATED
-  let guard = new ArrayDatabase({ name: 'guard', db })
+let info = new LevelDatabase({ name: 'info', db })
+let active = new ArrayDatabase({ name: 'active', db })
+let live = new ArrayDatabase({ name: 'live', db }) // DEPRECATED
+let guard = new ArrayDatabase({ name: 'guard', db })
 
-  let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
-  let guardType = new LevelDatabase({ name: 'guardType', db })
-  let macro = new ArrayDatabase({ name: 'macro', db })
-  return { site, num, info, active, live, guard, macro, fullGuard, guardType }
-}
+let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
+let guardType = new LevelDatabase({ name: 'guardType', db })
+let macro = new ArrayDatabase({ name: 'macro', db })
+
+let parrotCache = new LevelDatabase({ name: 'parrot', db })
+
+module.exports = { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache }
 
 /*
 数据库
@@ -103,6 +103,9 @@ vtb_vtbMacroNum: {liveStatus, online}
 guard_guardMacroNum: {guardNum}
 
 all: time: timestamp
+
+parrotCache
+id: liveHistory
 
 Increase index:
   recordNum

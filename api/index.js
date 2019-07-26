@@ -7,21 +7,20 @@ const Server = require('socket.io')
 
 const { vd, vdSocket, falcon, hawk, vdb, wiki } = require('./interface')
 
+const { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache } = require('./database')
+
 const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
-const parrot = require('./parrot')({ wiki, vdb })
+const parrot = require('./parrot')({ wiki, vdb, parrotCache })
 
 const { connect } = require('./socket')
 const httpAPI = require('./http')
-
-const { init } = require('./database')
 
 const PARALLEL = 5
 const INTERVAL = 1000 * 60 * 5
 
 ;
 (async () => {
-  let { site, num, info, active, live, guard, macro, fullGuard, guardType } = await init()
   const io = new Server({ serveClient: false })
   vdb.bind(io)
   parrot.start({ io })
