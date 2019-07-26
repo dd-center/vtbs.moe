@@ -541,13 +541,6 @@ export default {
       } else {
         this.active = await get('bulkActiveSome', { recordNum, mid })
       }
-      // if (liveNum) {
-      //   if (this.fullLive) {
-      //     this.rawLive = await get('bulkLive', { liveNum, mid })
-      //   } else {
-      //     this.rawLive = await get('bulkLiveWeek', { mid })
-      //   }
-      // }
       if (guardChange > 0) {
         this.guard = await get('bulkGuard', { guardChange, mid })
       }
@@ -562,11 +555,6 @@ export default {
         this.active.push(data)
       }
     },
-    // detailLive: function({ mid, data }) {
-    //   if (mid === Number(this.mid)) {
-    //     this.rawLive.push(data)
-    //   }
-    // },
     detailGuard: function({ mid, data }) {
       if (mid === Number(this.mid)) {
         this.guard.push(data)
@@ -998,12 +986,6 @@ export default {
       giftCache = []
       this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1, gold: gold * 60 / timeDifference })
     },
-    // async loadFullLive() {
-    //   this.loadingLive = true
-    //   let live = await get('bulkLive', { liveNum: this.liveNum, mid: this.mid })
-    //   this.rawLive = live
-    //   this.fullLive = true
-    // },
     async loadFullActive() {
       this.loadingActive = true
       let active = await get('bulkActive', { recordNum: this.recordNum, mid: this.mid })

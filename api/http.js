@@ -62,21 +62,6 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
     ctx.body = await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) })
   })
 
-  // DEPRECATED
-  v2.get('/bulkLive/:mid', async ctx => {
-    const mid = ctx.params.mid
-    const { liveNum } = await info.get(mid)
-    ctx.body = await live.bulkGet({ mid, num: liveNum })
-  })
-
-  // DEPRECATED
-  v2.get('/bulkLiveSome/:mid', async ctx => {
-    const mid = ctx.params.mid
-    const { liveNum } = await info.get(mid)
-    const skip = liveNum - 24 * 60 * 7 / 5
-    ctx.body = await live.bulkGet({ mid, num: Math.min(24 * 60 * 7 / 5, liveNum), skip: Math.max(0, skip) })
-  })
-
   app.use(v2.routes())
 
   const endpoint = new Router({ prefix: '/endpoint' })

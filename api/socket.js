@@ -1,4 +1,4 @@
-exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       if (e === 'vupMacro') {
@@ -40,16 +40,6 @@ exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vdb, ful
         let skip = recordNum - 512
         arc(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
       }
-      if (e === 'bulkLive') {
-        let { mid } = target
-        let { roomid } = await info.get(mid)
-        arc(await falcon('bulkLive', roomid))
-      }
-      if (e === 'bulkLiveWeek') {
-        let { mid } = target
-        let { roomid } = await info.get(mid)
-        arc(await falcon('bulkLiveWeek', roomid))
-      }
       if (e === 'bulkGuard') {
         let { guardChange, mid } = target
         arc(await guard.bulkGet({ mid, num: guardChange }))
@@ -81,8 +71,6 @@ exports.connect = ({ io, site, macro, num, info, active, falcon, guard, vdb, ful
   handler('info')
   handler('bulkActive')
   handler('bulkActiveSome')
-  handler('bulkLive')
-  handler('bulkLiveWeek')
   handler('bulkGuard')
   handler('guardType')
   handler('fullGuard')
@@ -129,8 +117,6 @@ guardMacro: -> [{guardMacro}]
 info: mid -> {info}
 bulkActive: { recordNum, mid } -> [active]
 bulkActiveSome: { recordNum, mid } -> [active]
-bulkLive: { mid } -> [live] // DEPRECATED
-bulkLiveWeek: { mid } -> [live] // DEPRECATED
 bulkGuard: { guardNum, mid } -> [guard]
 
 guardType: mid -> [n,n,n]

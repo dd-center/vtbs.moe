@@ -5,7 +5,7 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, falcon, hawk, vdb, wiki } = require('./interface')
+const { vd, vdSocket, hawk, vdb, wiki } = require('./interface')
 
 const { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache } = require('./database')
 
@@ -33,6 +33,6 @@ const INTERVAL = 1000 * 60 * 5
   setTimeout(() => {
     ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io })
   }, 1000 * 60 * 4)
-  io.on('connection', connect({ io, vdb, macro, site, num, info, active, falcon, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
+  io.on('connection', connect({ io, vdb, macro, site, num, info, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
   server.listen(8001)
 })()
