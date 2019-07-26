@@ -10,6 +10,7 @@
     "favicon": "node favicon"
   },
   "dependencies": {
+    "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "bili-api": "^1.0.1",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",

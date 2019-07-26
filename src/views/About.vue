@@ -82,7 +82,7 @@ export default {
       return this.status.INTERVAL
     },
     number: function() {
-      return this.vtbs && this.vtbs.length
+      return this.vtbs?.length
     },
     parrotProgress() {
       return Math.round(this.parrotNow / (this.number || 1) * 100)
