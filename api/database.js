@@ -1,6 +1,4 @@
 const level = require('level')
-const fs = require('fs-extra')
-
 const LRU = require('lru-cache')
 
 const cache = new LRU({
