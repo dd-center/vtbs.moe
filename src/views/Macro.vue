@@ -51,7 +51,7 @@ import { mapMutations, mapState } from 'vuex'
 
 import moment from 'moment'
 
-import { get } from '@/socket'
+import { getDeflateTimeSeries } from '@/socket'
 
 import VeLine from 'v-charts/lib/line.common'
 import VeCandle from 'v-charts/lib/candle.common'
@@ -65,15 +65,15 @@ Vue.component(VeWordCloud.name, VeWordCloud)
 export default {
   async mounted() {
     if (!this.vupMacro.length) {
-      get('vupMacroCompressed')
+      getDeflateTimeSeries('vupMacroCompressed')
         .then(vup => this.updateMacro({ vup }))
     }
     if (!this.vtbMacro.length) {
-      get('vtbMacroWeekCompressed')
+      getDeflateTimeSeries('vtbMacroWeekCompressed')
         .then(vtb => this.updateMacro({ vtb }))
     }
     if (!this.guardMacro.length) {
-      get('guardMacroCompressed')
+      getDeflateTimeSeries('guardMacroCompressed')
         .then(guard => this.updateMacro({ guard }))
     }
     this.$nextTick(function() {
@@ -102,7 +102,7 @@ export default {
   methods: {
     loadVtbMacroAll() {
       this.loading = true
-      get('vtbMacroCompressed')
+      getDeflateTimeSeries('vtbMacroCompressed')
         .then(vtb => {
           this.updateMacro({ vtb })
         })
