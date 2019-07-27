@@ -65,15 +65,15 @@ Vue.component(VeWordCloud.name, VeWordCloud)
 export default {
   async mounted() {
     if (!this.vupMacro.length) {
-      get('vupMacro')
+      get('vupMacroCompressed')
         .then(vup => this.updateMacro({ vup }))
     }
     if (!this.vtbMacro.length) {
-      get('vtbMacroWeek')
+      get('vtbMacroWeekCompressed')
         .then(vtb => this.updateMacro({ vtb }))
     }
     if (!this.guardMacro.length) {
-      get('guardMacro')
+      get('guardMacroCompressed')
         .then(guard => this.updateMacro({ guard }))
     }
     this.$nextTick(function() {
@@ -102,7 +102,7 @@ export default {
   methods: {
     loadVtbMacroAll() {
       this.loading = true
-      get('vtbMacro')
+      get('vtbMacroCompressed')
         .then(vtb => {
           this.updateMacro({ vtb })
         })

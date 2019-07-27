@@ -518,10 +518,10 @@ export default {
         this.liveHistory = liveHistory
 
         this.DD = !!JSON.parse(localStorage.getItem(this.mid))
-        let active = await get('bulkActiveSome', { recordNum, mid })
+        let active = await get('bulkActiveSomeCompressed', { recordNum, mid })
         this.active = active
         if (guardChange > 0) {
-          let guard = await get('bulkGuard', { guardChange, mid })
+          let guard = await get('bulkGuardCompressed', { guardChange, mid })
           this.guard = guard
         }
       },
@@ -537,12 +537,13 @@ export default {
       this.info = info
       let { recordNum, guardChange, mid } = info
       if (this.fullActive) {
-        this.active = await get('bulkActive', { recordNum, mid })
+        let active = await get('bulkActiveCompressed', { recordNum, mid })
+        this.active = active
       } else {
-        this.active = await get('bulkActiveSome', { recordNum, mid })
+        this.active = await get('bulkActiveSomeCompressed', { recordNum, mid })
       }
       if (guardChange > 0) {
-        this.guard = await get('bulkGuard', { guardChange, mid })
+        this.guard = await get('bulkGuardCompressed', { guardChange, mid })
       }
     },
     detailInfo: function({ mid, data }) {
@@ -988,7 +989,7 @@ export default {
     },
     async loadFullActive() {
       this.loadingActive = true
-      let active = await get('bulkActive', { recordNum: this.recordNum, mid: this.mid })
+      let active = await get('bulkActiveCompressed', { recordNum: this.recordNum, mid: this.mid })
       this.active = active
     },
   },
