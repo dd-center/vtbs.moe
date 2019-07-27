@@ -213,8 +213,8 @@ export default {
       'series.0.smooth': false,
       'series.0.symbol': 'none',
       // 'series.1.symbol': 'none',
-      'series.0.sampling': 'average',
-      'series.1.sampling': 'average',
+      'series.0.sampling': 'max',
+      'series.1.sampling': 'max',
     }
     this.guard = {
       dimension: ['time'],

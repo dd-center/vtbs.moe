@@ -451,7 +451,7 @@ export default {
     }
     this.liveExtend = {
       'series.0.symbol': 'none',
-      'series.0.sampling': 'average',
+      'series.0.sampling': 'max',
     }
     this.guardLine = {
       dimension: ['time'],
