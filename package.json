@@ -17,6 +17,7 @@
     "element-ui": "^2.8.2",
     "fs-extra": "^7.0.1",
     "got": "^9.6.0",
+    "is-array-buffer": "^1.0.1",
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
     "ky": "^0.11.1",
