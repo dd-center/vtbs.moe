@@ -44,6 +44,13 @@ const ddTypes = [
     strict: false,
   },
   {
+    name: 'MeAlice',
+    title: 'MeAlice',
+    demand: [349991143, 434565011],
+    type: 'success',
+    strict: false,
+  },
+  {
     name: '夏吹',
     title: '夏色吹雪贴贴',
     demand: [336731767, 332704117],
@@ -108,11 +115,13 @@ const ddTypes = [
   },
   {
     name: 'Aquayame',
-    title: 'aquayame',
+    title: 'Aquayame',
     demand: [375504219, 389858027],
     type: 'success',
     strict: false,
   },
+  
+
 ]
 
 export default {
