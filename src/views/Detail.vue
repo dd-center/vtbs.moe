@@ -464,7 +464,8 @@ export default {
     }
     this.guardExtend = {
       'series.0.symbol': 'none',
-      'series.0.smoothMonotone': 'x',
+      'series.0.step': 'end',
+      'series.0.smooth': false,
     }
     return {
       aside: false,
