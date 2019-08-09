@@ -409,7 +409,6 @@ import 'echarts/lib/component/dataZoom'
 import { get, getDeflateTimeSeries } from '@/socket'
 
 Vue.use(TreeView)
-Vue.component(VeLine.name, VeLine)
 
 export default {
   props: ['mid'],
@@ -866,7 +865,9 @@ export default {
       return this.info.uuid
     },
   },
-  components: {},
+  components: {
+    VeLine,
+  },
   methods: {
     durationFormatter({ duration }) {
       duration = moment.duration(duration, 'seconds')
