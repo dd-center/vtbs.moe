@@ -408,6 +408,8 @@ import 'echarts/lib/component/dataZoom'
 
 import { get, getDeflateTimeSeries } from '@/socket'
 
+import FollowerChangeWorker from '@/followerChange.worker.js'
+
 Vue.use(TreeView)
 
 export default {
@@ -467,9 +469,11 @@ export default {
       'series.0.step': 'end',
       'series.0.smooth': false,
     }
+    this.followerChangeWorker = new FollowerChangeWorker()
     return {
       aside: false,
       active: [],
+      activeWithFollowerChange: [],
       activeSkip: undefined,
       info: {},
       rawLive: [],
@@ -496,6 +500,15 @@ export default {
       liveDisplayGiftByPerson: {},
       liveHistory: undefined,
     }
+  },
+  mounted() {
+    this.followerChangeWorker.onmessage = ({ data }) => {
+      this.activeWithFollowerChange = data
+    }
+  },
+  beforeDestroy() {
+    this.liveDisplayTime = Date.now()
+    this.followerChangeWorker.terminate()
   },
   watch: {
     mid: {
@@ -536,6 +549,9 @@ export default {
     DD: function(newValue) {
       localStorage.setItem(this.mid, JSON.stringify(newValue))
       Push.create(`${this.uname} 直播提示 (${newValue ? '开启' : '关闭'})`, { timeout: 2000 })
+    },
+    active(newValue) {
+      this.followerChangeWorker.postMessage(newValue)
     },
   },
   sockets: {
@@ -650,30 +666,7 @@ export default {
       return max
     },
     hourFollowerChange: function() {
-      if (this.active.length < 2) {
-        return this.active
-      }
-      const hourAgo = (time, index) => {
-        for (let i = index; i > 0; i--) {
-          if (time - this.active[i].time > 1000 * 60 * 60) {
-            return this.active[i]
-          }
-        }
-        return this.active[0]
-      }
-      return this.active
-        .map(({ follower, time }, i) => {
-          if (!i) {
-            return undefined
-          }
-          const hourAgoInfo = hourAgo(time, i)
-          let change = (follower - hourAgoInfo.follower) * 1000 * 60 * 60 / (time - hourAgoInfo.time)
-          if (change > 10) {
-            change = Math.round(change)
-          }
-          return { time, follower, change }
-        })
-        .filter(e => e)
+      return this.active.length === this.activeWithFollowerChange.length + 1 ? this.activeWithFollowerChange : this.active
     },
     guardFilter() {
       return this.guard
@@ -995,13 +988,9 @@ export default {
       const num = this.activeSkip - skip
       this.activeSkip = skip
       let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { skip, num, mid: this.mid })
-      console.log(this.activeSkip)
       this.active = [...active, ...this.active]
       this.loadingActive = false
     },
-  },
-  beforeDestroy: function() {
-    this.liveDisplayTime = Date.now()
   },
 }
 </script>
