@@ -4,14 +4,14 @@ const deflateAsync = promisify(deflate)
 
 exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const handler = e => socket.on(e, async (target, arc) => {
-    const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
-    const arcTimeSeriesDeflate = data => {
-      const keys = Object.keys(data[0] || {})
-      const value = data.map(object => keys.map(key => object[key]))
-      return arcDeflate({ value, keys, timeSeries: true })
-    }
-
     if (typeof arc === 'function') {
+      const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
+      const arcTimeSeriesDeflate = data => {
+        const keys = Object.keys(data[0] || {})
+        const value = data.map(object => keys.map(key => object[key]))
+        return arcDeflate({ value, keys, timeSeries: true })
+      }
+
       if (e === 'vupMacroCompressed') {
         socket.join('vupMacro', async () => {
           let macroNum = await num.get('vupMacroNum')
