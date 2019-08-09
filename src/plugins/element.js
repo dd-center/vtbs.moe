@@ -57,7 +57,7 @@ import {
   // Steps,
   // Step,
   // Carousel,
-  Scrollbar,
+  // Scrollbar,
   // CarouselItem,
   // Collapse,
   // CollapseItem,
@@ -145,7 +145,7 @@ Vue.use(Main)
 // Vue.use(Image)
 Vue.use(Divider)
 // Vue.use(Spinner)
-Vue.use(Scrollbar)
+// Vue.use(Scrollbar)
 Vue.use(Timeline)
 Vue.use(TimelineItem)
 // Vue.use(Link)
