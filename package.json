@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.2.0",
     "bili-api": "^1.0.1",
+    "bulma": "^0.7.5",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
     "element-ui": "^2.8.2",

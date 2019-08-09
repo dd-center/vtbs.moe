@@ -69,8 +69,8 @@ import {
   Aside,
   Main,
   // Footer,
-  Timeline,
-  TimelineItem,
+  // Timeline,
+  // TimelineItem,
   // Link,
   Divider,
   // Image,
@@ -146,8 +146,8 @@ Vue.use(Main)
 Vue.use(Divider)
 // Vue.use(Spinner)
 // Vue.use(Scrollbar)
-Vue.use(Timeline)
-Vue.use(TimelineItem)
+// Vue.use(Timeline)
+// Vue.use(TimelineItem)
 // Vue.use(Link)
 
 Vue.use(Loading.directive)
