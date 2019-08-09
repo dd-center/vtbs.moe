@@ -104,6 +104,7 @@ export default {
       this.loading = true
       getDeflateTimeSeries('vtbMacroCompressed')
         .then(vtb => {
+          this.fullVtb = true
           this.updateMacro({ vtb })
         })
     },
@@ -169,9 +170,6 @@ export default {
       }
 
       return rows
-    },
-    fullVtb() {
-      return this.vtbMacro.length > 24 * 12 * 7
     },
   },
   data: function() {
@@ -271,6 +269,7 @@ export default {
       hawkProxyDay: [],
       hawkProxyH: [],
       hawkUpdater: undefined,
+      fullVtb: false,
     }
   },
 }
