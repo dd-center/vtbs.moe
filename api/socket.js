@@ -12,22 +12,10 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
     }
 
     if (typeof arc === 'function') {
-      if (e === 'vupMacro') {
-        socket.join('vupMacro', async () => {
-          let macroNum = await num.get('vupMacroNum')
-          arc(await macro.bulkGet({ mid: 'vup', num: macroNum }))
-        })
-      }
       if (e === 'vupMacroCompressed') {
         socket.join('vupMacro', async () => {
           let macroNum = await num.get('vupMacroNum')
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
-        })
-      }
-      if (e === 'vtbMacro') {
-        socket.join('vtbMacro', async () => {
-          let macroNum = await num.get('vtbMacroNum')
-          arc(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
         })
       }
       if (e === 'vtbMacroCompressed') {
@@ -36,24 +24,11 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
         })
       }
-      if (e === 'vtbMacroWeek') {
-        socket.join('vtbMacro', async () => {
-          let macroNum = await num.get('vtbMacroNum')
-          let skip = macroNum - 24 * 60 * 7 / 5
-          arc(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
-        })
-      }
       if (e === 'vtbMacroWeekCompressed') {
         socket.join('vtbMacro', async () => {
           let macroNum = await num.get('vtbMacroNum')
           let skip = macroNum - 24 * 60 * 7 / 5
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
-        })
-      }
-      if (e === 'guardMacro') {
-        socket.join('guardMacro', async () => {
-          let macroNum = await num.get('guardMacroNum')
-          arc(await macro.bulkGet({ mid: 'guard', num: macroNum }))
         })
       }
       if (e === 'guardMacroCompressed') {
@@ -67,28 +42,15 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
           arc(await info.get(target))
         })
       }
-      if (e === 'bulkActive') {
-        let { recordNum, mid } = target
-        arc(await active.bulkGet({ mid, num: recordNum }))
-      }
       if (e === 'bulkActiveCompressed') {
         let { recordNum, mid } = target
         let result = await active.bulkGet({ mid, num: recordNum })
         arcTimeSeriesDeflate(result)
       }
-      if (e === 'bulkActiveSome') {
-        let { recordNum, mid } = target
-        let skip = recordNum - 512
-        arc(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
-      }
       if (e === 'bulkActiveSomeCompressed') {
         let { recordNum, mid } = target
         let skip = recordNum - 512
         arcTimeSeriesDeflate(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
-      }
-      if (e === 'bulkGuard') {
-        let { guardChange, mid } = target
-        arc(await guard.bulkGet({ mid, num: guardChange }))
       }
       if (e === 'bulkGuardCompressed') {
         let { guardChange, mid } = target
@@ -114,20 +76,13 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   })
 
   console.log('a user connected')
-  handler('vupMacro') // Deprecated
   handler('vupMacroCompressed')
-  handler('vtbMacro') // Deprecated
   handler('vtbMacroCompressed')
-  handler('vtbMacroWeek') // Deprecated
   handler('vtbMacroWeekCompressed')
-  handler('guardMacro') // Deprecated
   handler('guardMacroCompressed')
   handler('info')
-  handler('bulkActive') // Deprecated
   handler('bulkActiveCompressed')
-  handler('bulkActiveSome') // Deprecated
   handler('bulkActiveSomeCompressed')
-  handler('bulkGuard') // Deprecated
   handler('bulkGuardCompressed')
   handler('guardType')
   handler('fullGuard')
@@ -166,21 +121,14 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
 Socket
 
 // Client Request
-vupMacro: -> [{vupMacro}] // Deprecated
 vupMacroCompressed: -> deflate([{vupMacro}])
-vtbMacro: -> [{vtbMacro}] // Deprecated
 vtbMacroCompressed: -> deflate([{vtbMacro}])
-vtbMacroWeek: -> [{vtbMacro}] // Deprecated
 vtbMacroWeekCompressed: -> deflate([{vtbMacro}])
-guardMacro: -> [{guardMacro}] // Deprecated
 guardMacroCompressed: -> deflate([{guardMacro}])
 
 info: mid -> {info}
-bulkActive: { recordNum, mid } -> [active] // Deprecated
 bulkActiveCompressed: { recordNum, mid } - > deflate([active])
-bulkActiveSome: { recordNum, mid } -> [active] // Deprecated
 bulkActiveSomeCompressed: { recordNum, mid } -> deflate([active])
-bulkGuard: { guardNum, mid } -> [guard] // Deprecated
 bulkGuardCompressed: { guardNum, mid } -> deflate([guard])
 
 guardType: mid -> [n,n,n]
