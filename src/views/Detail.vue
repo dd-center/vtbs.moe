@@ -193,7 +193,7 @@
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
-                <el-button size="mini" @click="loadFullActive" v-if="!fullActive" :loading="loadingActive" title="显示完整" class="right">(一部分)</el-button>
+                <el-button size="mini" @click="loadMoreActive" v-if="activeSkip" :loading="loadingActive" title="显示更多" class="right">(一部分)</el-button>
               </div>
               <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!hourFollowerChange.length"></ve-line>
             </el-card>
@@ -470,6 +470,7 @@ export default {
     return {
       aside: false,
       active: [],
+      activeSkip: undefined,
       info: {},
       rawLive: [],
       guard: [],
@@ -499,14 +500,28 @@ export default {
   watch: {
     mid: {
       immediate: true,
-      handler: async function() {
+      async handler() {
         this.active = []
         this.info = {}
-        // this.rawLive = []
         this.guard = []
         let info = await get('info', this.mid)
         this.info = info
         let { recordNum, guardChange, mid, uuid } = info
+
+        if (guardChange > 0) {
+          let guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
+          this.guard = guard
+        }
+
+        this.DD = !!JSON.parse(localStorage.getItem(this.mid))
+
+        this.activeSkip = recordNum
+        let active = []
+        for (; this.activeSkip && 7 * 24 * 60 * 60 * 1000 > ((active[active.length - 1]?.time || 0) - (active[0]?.time || 0));) {
+          this.activeSkip = Math.max(0, this.activeSkip - 500)
+          active = [...await getDeflateTimeSeries('bulkActiveRangeCompressed', { num: recordNum - active.length - this.activeSkip, skip: this.activeSkip, mid }), ...active]
+        }
+        this.active = active
 
         let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json().catch(() => ({}))
         if (!liveHistory.Success) {
@@ -516,14 +531,6 @@ export default {
           liveHistory.Lives = []
         }
         this.liveHistory = liveHistory
-
-        this.DD = !!JSON.parse(localStorage.getItem(this.mid))
-        let active = await getDeflateTimeSeries('bulkActiveSomeCompressed', { recordNum, mid })
-        this.active = active
-        if (guardChange > 0) {
-          let guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
-          this.guard = guard
-        }
       },
     },
     DD: function(newValue) {
@@ -535,13 +542,8 @@ export default {
     async connect() {
       let info = await get('info', this.mid)
       this.info = info
-      let { recordNum, guardChange, mid } = info
-      if (this.fullActive) {
-        let active = await getDeflateTimeSeries('bulkActiveCompressed', { recordNum, mid })
-        this.active = active
-      } else {
-        this.active = await getDeflateTimeSeries('bulkActiveSomeCompressed', { recordNum, mid })
-      }
+      let { guardChange, mid, recordNum } = info
+      this.active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip: this.activeSkip, num: recordNum - this.activeSkip })
       if (guardChange > 0) {
         this.guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
       }
@@ -664,7 +666,8 @@ export default {
           if (!i) {
             return undefined
           }
-          let change = (follower - hourAgo(time, i).follower) * 1000 * 60 * 60 / (time - hourAgo(time, i).time)
+          const hourAgoInfo = hourAgo(time, i)
+          let change = (follower - hourAgoInfo.follower) * 1000 * 60 * 60 / (time - hourAgoInfo.time)
           if (change > 10) {
             change = Math.round(change)
           }
@@ -859,9 +862,6 @@ export default {
         { name: '上次更新', value: moment(this.time).fromNow() },
       ]
     },
-    fullActive() {
-      return this.active.length >= this.recordNum
-    },
     uuid() {
       return this.info.uuid
     },
@@ -989,10 +989,15 @@ export default {
       giftCache = []
       this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1, gold: gold * 60 / timeDifference })
     },
-    async loadFullActive() {
+    async loadMoreActive() {
       this.loadingActive = true
-      let active = await getDeflateTimeSeries('bulkActiveCompressed', { recordNum: this.recordNum, mid: this.mid })
-      this.active = active
+      const skip = Math.max(this.activeSkip - 1000, 0)
+      const num = this.activeSkip - skip
+      this.activeSkip = skip
+      let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { skip, num, mid: this.mid })
+      console.log(this.activeSkip)
+      this.active = [...active, ...this.active]
+      this.loadingActive = false
     },
   },
   beforeDestroy: function() {

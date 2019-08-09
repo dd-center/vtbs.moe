@@ -52,6 +52,10 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
         let skip = recordNum - 512
         arcTimeSeriesDeflate(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
       }
+      if (e === 'bulkActiveRangeCompressed') {
+        const { skip, num, mid } = target
+        arcTimeSeriesDeflate(await active.bulkGet({ mid, num, skip }))
+      }
       if (e === 'bulkGuardCompressed') {
         let { guardChange, mid } = target
         arcTimeSeriesDeflate(await guard.bulkGet({ mid, num: guardChange }))
@@ -81,8 +85,9 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   handler('vtbMacroWeekCompressed')
   handler('guardMacroCompressed')
   handler('info')
-  handler('bulkActiveCompressed')
-  handler('bulkActiveSomeCompressed')
+  handler('bulkActiveCompressed') // Deprecated
+  handler('bulkActiveSomeCompressed') // Deprecated
+  handler('bulkActiveRangeCompressed')
   handler('bulkGuardCompressed')
   handler('guardType')
   handler('fullGuard')
@@ -127,8 +132,9 @@ vtbMacroWeekCompressed: -> deflate([{vtbMacro}])
 guardMacroCompressed: -> deflate([{guardMacro}])
 
 info: mid -> {info}
-bulkActiveCompressed: { recordNum, mid } - > deflate([active])
-bulkActiveSomeCompressed: { recordNum, mid } -> deflate([active])
+bulkActiveCompressed: { recordNum, mid } - > deflate([active]) // Deprecated
+bulkActiveSomeCompressed: { recordNum, mid } -> deflate([active]) // Deprecated
+bulkActiveRangeCompressed: { mid, skip, num } - > deflate([active])
 bulkGuardCompressed: { guardNum, mid } -> deflate([guard])
 
 guardType: mid -> [n,n,n]
