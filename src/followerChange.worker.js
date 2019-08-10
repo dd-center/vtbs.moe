@@ -17,7 +17,7 @@ onmessage = ({ data }) => {
       }
       const hourAgoInfo = hourAgo(time, i)
       let change = (follower - hourAgoInfo.follower) * 1000 * 60 * 60 / (time - hourAgoInfo.time)
-      if (change > 10) {
+      if (Math.abs(change) > 10) {
         change = Math.round(change)
       }
       return { time, follower, change }
