@@ -1,17 +1,17 @@
-onmessage = ({ data }) => {
-  if (data.length < 2) {
-    return data
+export default active => {
+  if (active.length < 2) {
+    return active
   }
   const hourAgo = (time, index) => {
     for (let i = index; i > 0; i--) {
-      if (time - data[i].time > 1000 * 60 * 60) {
-        return data[i]
+      if (time - active[i].time > 1000 * 60 * 60) {
+        return active[i]
       }
     }
-    return data[0]
+    return active[0]
   }
-  postMessage(data
-    .map(({ follower, time }, i) => {
+  return active
+    .map(({ follower, time, archiveView }, i) => {
       if (!i) {
         return undefined
       }
@@ -20,7 +20,7 @@ onmessage = ({ data }) => {
       if (Math.abs(change) > 10) {
         change = Math.round(change)
       }
-      return { time, follower, change }
+      return { time, follower, change, archiveView }
     })
-    .filter(e => e))
+    .filter(e => e)
 }

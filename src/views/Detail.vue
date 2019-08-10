@@ -408,7 +408,7 @@ import 'echarts/lib/component/dataZoom'
 
 import { get, getDeflateTimeSeries } from '@/socket'
 
-import FollowerChangeWorker from '@/followerChange.worker.js'
+import { activeAnalyzer } from '@/worker'
 
 Vue.use(TreeView)
 
@@ -469,7 +469,6 @@ export default {
       'series.0.step': 'end',
       'series.0.smooth': false,
     }
-    this.followerChangeWorker = new FollowerChangeWorker()
     return {
       aside: false,
       active: [],
@@ -501,14 +500,8 @@ export default {
       liveHistory: undefined,
     }
   },
-  mounted() {
-    this.followerChangeWorker.onmessage = ({ data }) => {
-      this.activeWithFollowerChange = data
-    }
-  },
   beforeDestroy() {
     this.liveDisplayTime = Date.now()
-    this.followerChangeWorker.terminate()
   },
   watch: {
     mid: {
@@ -534,7 +527,7 @@ export default {
           this.activeSkip = Math.max(0, this.activeSkip - 500)
           active = [...await getDeflateTimeSeries('bulkActiveRangeCompressed', { num: recordNum - active.length - this.activeSkip, skip: this.activeSkip, mid }), ...active]
         }
-        this.active = active
+        this.active = await activeAnalyzer(active)
 
         let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json().catch(() => ({}))
         if (!liveHistory.Success) {
@@ -551,7 +544,7 @@ export default {
       Push.create(`${this.uname} 直播提示 (${newValue ? '开启' : '关闭'})`, { timeout: 2000 })
     },
     active(newValue) {
-      this.followerChangeWorker.postMessage(newValue)
+      // this.followerChangeWorker.postMessage(newValue)
     },
   },
   sockets: {
@@ -569,9 +562,9 @@ export default {
         this.info = data
       }
     },
-    detailActive: function({ mid, data }) {
+    async detailActive({ mid, data }) {
       if (mid === Number(this.mid)) {
-        this.active.push(data)
+        this.active = await activeAnalyzer([...this.active, data])
       }
     },
     detailGuard: function({ mid, data }) {
@@ -666,7 +659,7 @@ export default {
       return max
     },
     hourFollowerChange: function() {
-      return this.active.length === this.activeWithFollowerChange.length + 1 ? this.activeWithFollowerChange : this.active
+      return this.active
     },
     guardFilter() {
       return this.guard
@@ -988,7 +981,7 @@ export default {
       const num = this.activeSkip - skip
       this.activeSkip = skip
       let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { skip, num, mid: this.mid })
-      this.active = [...active, ...this.active]
+      this.active = await activeAnalyzer([...active, ...this.active])
       this.loadingActive = false
     },
   },
