@@ -2,17 +2,9 @@
 <el-container>
   <el-main>
     <h1>1小时直播弹幕</h1>
-    <el-row>
-      <el-col>
-        <ve-wordcloud v-loading="!hawkProxyH.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyH }" :extend="wordCloudExtend"></ve-wordcloud>
-      </el-col>
-    </el-row>
+    <ve-wordcloud v-loading="!hawkProxyH.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyH }" :extend="wordCloudExtend"></ve-wordcloud>
     <h1>24小时直播弹幕</h1>
-    <el-row>
-      <el-col>
-        <ve-wordcloud v-loading="!hawkProxyDay.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyDay }" :extend="wordCloudExtend"></ve-wordcloud>
-      </el-col>
-    </el-row>
+    <ve-wordcloud v-loading="!hawkProxyDay.length" :settings="{ sizeMax: 96, sizeMin: 12 }" :data="{ columns: ['word', 'weight'], rows: hawkProxyDay }" :extend="wordCloudExtend"></ve-wordcloud>
     <h1>虚拟世界宏观经济走势</h1>
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
@@ -74,33 +66,16 @@ export default {
         .then(vtb => this.updateMacro({ vtb }))
     }
     if (!this.guardMacro.length) {
-      getDeflateTimeSeries('guardMacroCompressed')
-        .then(async guard => {
-          this.updateMacro({ guard })
-          this.guardMacroK = await guardMacroK(guard)
-        })
-    } else {
-      this.guardMacroK = await guardMacroK(this.guardMacro)
+      let guard = await getDeflateTimeSeries('guardMacroCompressed')
+      this.updateMacro({ guard })
     }
-    this.$nextTick(function() {
-      setTimeout(() => {
-        this.hawkProxyDay = [...this.hawk.day]
-        this.hawkProxyH = [...this.hawk.h]
-        if (!this.hawk.h.length) {
-          let downloadHawk = setInterval(() => {
-            this.hawkProxyDay = [...this.hawk.day]
-            this.hawkProxyH = [...this.hawk.h]
-            if (this.hawk.h.length) {
-              clearInterval(downloadHawk)
-            }
-          }, 1000)
-        }
-      }, 1000)
-      this.hawkUpdater = setInterval(() => {
-        this.hawkProxyDay = [...this.hawk.day]
-        this.hawkProxyH = [...this.hawk.h]
-      }, 1000 * 60)
-    })
+    this.hawkUpdater = setInterval(() => {
+      this.hawkProxyDay = [...this.hawk.day]
+      this.hawkProxyH = [...this.hawk.h]
+    }, 1000 * 60)
+    this.guardMacroK = await guardMacroK(this.guardMacro)
+    this.hawkProxyDay = [...this.hawk.day]
+    this.hawkProxyH = [...this.hawk.h]
   },
   destroyed: function() {
     clearInterval(this.hawkUpdater)
