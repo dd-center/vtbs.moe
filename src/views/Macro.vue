@@ -26,11 +26,11 @@
       </el-col>
     </el-row>
     <el-row>
-      <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
+      <el-col :xs="24" :span="12" v-loading="!guardMacroK.length">
         <h1>舰团日K:</h1>
         <ve-candle :data="{rows:guardMacroK}" :settings="guardK" :not-set-unchange="['dataZoom']"></ve-candle>
       </el-col>
-      <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
+      <el-col :xs="24" :span="12" v-loading="!guardMacroWeekK.length">
         <h1>舰团周K:</h1>
         <ve-candle :data="{rows:guardMacroWeekK}" :settings="guardWeekK" :not-set-unchange="['dataZoom']"></ve-candle>
       </el-col>
@@ -52,6 +52,7 @@ import { mapMutations, mapState } from 'vuex'
 import moment from 'moment'
 
 import { getDeflateTimeSeries } from '@/socket'
+import { guardMacroK } from '@/worker'
 
 import VeLine from 'v-charts/lib/line.common'
 import VeCandle from 'v-charts/lib/candle.common'
@@ -74,7 +75,12 @@ export default {
     }
     if (!this.guardMacro.length) {
       getDeflateTimeSeries('guardMacroCompressed')
-        .then(guard => this.updateMacro({ guard }))
+        .then(async guard => {
+          this.updateMacro({ guard })
+          this.guardMacroK = await guardMacroK(guard)
+        })
+    } else {
+      this.guardMacroK = await guardMacroK(this.guardMacro)
     }
     this.$nextTick(function() {
       setTimeout(() => {
@@ -112,34 +118,6 @@ export default {
   },
   computed: {
     ...mapState(['vupMacro', 'vtbMacro', 'guardMacro', 'hawk']),
-    guardMacroK: function() {
-      let guardMacro = this.guardMacro
-      let rows = []
-
-      for (let i = 0; i < guardMacro.length; i++) {
-        let { time, guardNum } = guardMacro[i]
-        let ISO = new Date(time).toLocaleDateString()
-        let currentRow = rows[rows.length - 1] || {}
-
-        if (currentRow.time !== ISO) {
-          rows.push({
-            time: ISO,
-            rawTime: time,
-            open: currentRow.close !== undefined ? currentRow.close : guardNum,
-            close: guardNum,
-            lowest: guardNum,
-          })
-        } else {
-          if (currentRow.lowest > guardNum) {
-            rows[rows.length - 1].lowest = guardNum
-          }
-          rows[rows.length - 1].close = guardNum
-        }
-      }
-
-      return rows
-        .map(k => ({ highest: k.close, ...k }))
-    },
     guardMacroWeekK() {
       let guardMacro = this.guardMacroK
       let rows = []
@@ -270,6 +248,7 @@ export default {
       hawkProxyH: [],
       hawkUpdater: undefined,
       fullVtb: false,
+      guardMacroK: [],
     }
   },
 }
