@@ -59,17 +59,15 @@
             </div>
           </div>
           <br>
-          <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`">
-            <p class="is-size-5">Spiders {{spiderId}}</p>
-            <div class="columns">
-              <div class="column is-one-third">
-                <p>上次更新: {{time | parseTime}} <br>
-                  目前负载: {{duration | load(interval)}}</p>
-                <br>
-              </div>
-              <div class="column">
-                <progress class="progress" max="1" :value="duration/interval" :class="{'is-success': duration/interval < 1, 'is-warning': duration/interval > 1}"></progress>
-              </div>
+          <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`" class="columns">
+            <div class="column is-one-third">
+              <p class="is-size-5">Spiders {{spiderId}}</p>
+              <p>上次更新: {{time | parseTime}} <br>
+                目前负载: {{duration | load(interval)}}</p>
+              <br>
+            </div>
+            <div class="column">
+              <progress class="progress" max="1" :value="duration/interval" :class="{'is-success': duration/interval < 1, 'is-warning': duration/interval > 1}"></progress>
             </div>
           </div>
           <hr>
@@ -96,7 +94,8 @@ export default {
       uptime: undefined,
     }
   },
-  computed: { ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs', 'parrotNow', 'spiderLeft']),
+  computed: {
+    ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs', 'parrotNow', 'spiderLeft']),
     spiders: function() {
       return this.status.PARALLEL
     },
