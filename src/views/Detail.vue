@@ -195,7 +195,7 @@
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
                 <el-button size="mini" @click="loadMoreActive" v-if="activeSkip" :loading="loadingActive" title="显示更多" class="right">(一部分)</el-button>
               </div>
-              <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']" v-loading="!hourFollowerChange.length"></ve-line>
+              <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="unchange" v-loading="!hourFollowerChange.length"></ve-line>
             </el-card>
           </el-col>
           <el-col :span="12" :xs="24" v-if="maxGuardNum">
@@ -479,6 +479,7 @@ export default {
       guard: [],
       loadingLive: false,
       loadingActive: false,
+      unchange: [],
       DD: !!JSON.parse(localStorage.getItem(this.mid)),
       fullLive: false,
       liveDisplayTime: undefined,
@@ -528,6 +529,7 @@ export default {
           active = [...await getDeflateTimeSeries('bulkActiveRangeCompressed', { num: recordNum - active.length - this.activeSkip, skip: this.activeSkip, mid }), ...active]
         }
         this.active = await activeAnalyzer(active)
+        this.unchange = ['dataZoom']
 
         let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json().catch(() => ({}))
         if (!liveHistory.Success) {
@@ -552,7 +554,8 @@ export default {
       let info = await get('info', this.mid)
       this.info = info
       let { guardChange, mid, recordNum } = info
-      this.active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip: this.activeSkip, num: recordNum - this.activeSkip })
+      let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip: this.activeSkip, num: recordNum - this.activeSkip })
+      this.active = await activeAnalyzer(active)
       if (guardChange > 0) {
         this.guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
       }
