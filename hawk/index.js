@@ -43,10 +43,14 @@ const filter = message => {
 }
 
 const store = message => {
-  danmaku.push(message)
-  danmaku1h.push(message)
-  setTimeout(() => danmaku.shift(), 1000 * 60 * 60 * 24)
-  setTimeout(() => danmaku1h.shift(), 1000 * 60 * 60)
+  if (typeof message !== 'string') {
+    console.error(message)
+  } else {
+    danmaku.push(message)
+    danmaku1h.push(message)
+    setTimeout(() => danmaku.shift(), 1000 * 60 * 60 * 24)
+    setTimeout(() => danmaku1h.shift(), 1000 * 60 * 60)
+  }
 }
 
 vdSocket.on('danmaku', ({ message }) => {
