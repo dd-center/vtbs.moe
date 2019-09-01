@@ -1,40 +1,27 @@
 <template>
-  <div id="app">
-    <el-container v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器..." class="container">
-      <el-header v-if="!badgeView">
-        <el-menu :default-active="activeIndex" menu-trigger='click' mode="horizontal" :router="true">
-          <el-menu-item index="/">🍉</el-menu-item>
-          <el-menu-item index="/live">直播势<span class="el-icon-d-caret"></span></el-menu-item>
-          <el-menu-item class="hidden-xs-only" index="/rise">急上升<span class="el-icon-top"></span></el-menu-item>
-          <el-menu-item class="hidden-xs-only" index="/detail">详细<span class="el-icon-discover"></span></el-menu-item>
-          <el-menu-item class="hidden-xs-only" index="/dd">DD风云榜<span class="el-icon-s-promotion"></span></el-menu-item>
-          <el-menu-item class="hidden-xs-only" index="/macro">VTB宏观<span class="el-icon-zoom-in"></span></el-menu-item>
-          <el-menu-item class="float-right hidden-xs-only" index="/about">关于<span class="el-icon-document"></span></el-menu-item>
-          <el-submenu index="1" class="hidden-sm-and-up float-right">
-            <template slot="title" index="1">{{emoji}}</template>
-            <el-menu-item index="/rise">急上升<span class="el-icon-top"></span></el-menu-item>
-            <el-menu-item index="/detail">详细<span class="el-icon-discover"></span></el-menu-item>
-            <el-menu-item index="/dd">DD风云榜<span class="el-icon-s-promotion"></span></el-menu-item>
-            <el-menu-item index="/macro">VTB宏观<span class="el-icon-zoom-in"></span></el-menu-item>
-            <el-menu-item index="/about">关于<span class="el-icon-document"></span></el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-header>
-      <router-view>
-      </router-view>
-    </el-container>
+<div id="app" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
+  <div class="tabs">
+    <ul>
+      <router-link to="/" tag="li" exact-active-class="is-active"><a>🍉</a></router-link>
+      <router-link to="/live" tag="li" exact-active-class="is-active"><a>直播势<span class="el-icon-d-caret"></span></a></router-link>
+      <router-link to="/rise" tag="li" exact-active-class="is-active"><a>急上升<span class="el-icon-top"></span></a></router-link>
+      <router-link to="/detail" tag="li" exact-active-class="is-active"><a>详细<span class="el-icon-discover"></span></a></router-link>
+      <router-link to="/dd" tag="li" exact-active-class="is-active"><a>DD风云榜<span class="el-icon-s-promotion"></span></a></router-link>
+      <router-link to="/macro" tag="li" exact-active-class="is-active"><a>VTB宏观<span class="el-icon-zoom-in"></span></a></router-link>
+      <router-link to="/about" tag="li" exact-active-class="is-active"><a>关于<span class="el-icon-document"></span></a></router-link>
+    </ul>
   </div>
+  <router-view>
+  </router-view>
+</div>
 </template>
 
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
 
-let emojis = ['🍥', '⚓️', '🍡', '🍫', '🌽', '🦀', '🌶️', '🏮', '😈', '🌙', '🌲', '🦎']
-
 export default {
   name: 'app',
   data() {
-    this.emoji = emojis[Math.floor(emojis.length * Math.random())]
     return {
       fullscreenLoading: true,
     }
@@ -66,15 +53,11 @@ export default {
 </script>
 
 <style>
-* {
+/* * {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
-}
+} */
 
-body {
-  margin: 0px;
-}
-
-.float-right {
-  float: right !important;
+.tabs {
+  padding: 8px 20px;
 }
 </style>

@@ -6,6 +6,7 @@ import VueAnalytics from 'vue-analytics'
 import VueSocketIO from 'vue-socket.io'
 import './registerServiceWorker'
 
+import '@/style/bulma.scss'
 import './plugins/element.js'
 import moment from 'moment'
 

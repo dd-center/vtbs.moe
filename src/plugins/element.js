@@ -65,7 +65,7 @@ import {
   // ColorPicker,
   // Transfer,
   Container,
-  Header,
+  // Header,
   Aside,
   Main,
   // Footer,
@@ -137,7 +137,7 @@ Vue.use(Card)
 // Vue.use(ColorPicker)
 // Vue.use(Transfer)
 Vue.use(Container)
-Vue.use(Header)
+// Vue.use(Header)
 Vue.use(Aside)
 Vue.use(Main)
 // Vue.use(Footer)
