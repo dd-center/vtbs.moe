@@ -43,7 +43,8 @@ export default {
   destroyed() {
     document.onscroll = null
   },
-  computed: { ...mapState(['vtbs']),
+  computed: {
+    ...mapState(['vtbs']),
     ...mapGetters(['followerRank', 'liveRank', 'riseRank']),
     rank: function() {
       if (this.$route.path.includes('live')) {
@@ -51,6 +52,9 @@ export default {
       }
       if (this.$route.path.includes('rise')) {
         return this.riseRank
+      }
+      if (this.$route.path.includes('drop')) {
+        return [...this.riseRank].reverse()
       }
       return this.followerRank
     },

@@ -20,10 +20,11 @@ export default {
       '/': ['🍉'],
       '/live': ['直播势', 'd-caret'],
       '/rise': ['急上升', 'top'],
+      '/drop': ['(急下降)'],
       '/detail': ['详细', 'discover'],
       '/dd': ['DD风云榜', 's-promotion'],
       '/macro': ['VTB宏观', 'zoom-in'],
-      '/about': ['关于', 'document']
+      '/about': ['关于', 'document'],
     }
     return {
       fullscreenLoading: true,
