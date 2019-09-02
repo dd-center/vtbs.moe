@@ -1,5 +1,5 @@
 <template>
-<div id="app" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
+<div id="app" class="has-text-black" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
   <div class="tabs">
     <ul>
       <router-link v-for="([text, icon], url) in links" :key="`menu_${url}`" :to="url" tag="li" exact-active-class="is-active"><a class="bigger">{{text}}<span v-if="icon" :class="`el-icon-${icon}`"></span></a></router-link>
