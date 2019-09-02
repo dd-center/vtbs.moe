@@ -32,11 +32,13 @@ export const ping = ws => new Promise(resolve => {
 
 export const get = (e, target) => new Promise(resolve => socket.emit(e, target, resolve))
 
-export const getDeflate = async (e, target) => {
-  let result = await get(e, target)
-  result = JSON.parse(new TextDecoder().decode(inflate(result)))
-  return result
-}
+/* beautify ignore:start */
+export const getDeflate = async (e, target) => get(e, target)
+  |> await #
+  |> inflate
+  |> new TextDecoder().decode(#)
+  |> JSON.parse
+/* beautify ignore:end */
 
 export const getDeflateTimeSeries = async (e, target) => {
   let result = await getDeflate(e, target)
