@@ -1,44 +1,30 @@
 <template>
-<el-container>
-  <el-main v-loading="!vtbs.length">
-    <el-table :data="searchList" stripe>
-      <el-table-column>
-        <template slot-scope="scope">
-          <router-link :to="`/detail/${scope.row.mid}`">
-            <el-button size="mini">详细</el-button>
-          </router-link>
-        </template>
-      </el-table-column>
-      <el-table-column prop="uname" label="名字">
-      </el-table-column>
-      <el-table-column prop="follower" label="关注" sortable>
-      </el-table-column>
-      <el-table-column prop="rise" label="日增" sortable>
-      </el-table-column>
-      <el-table-column prop="archiveView" label="播放量" sortable>
-      </el-table-column>
-      <el-table-column prop="video" label="视频数" sortable>
-      </el-table-column>
-      <el-table-column prop="guardNum" label="舰团" sortable>
-      </el-table-column>
-      <el-table-column prop="mid" label="空间id">
-        <template slot-scope="scope">
-          <a :href="`https://space.bilibili.com/${scope.row.mid}`" target="_blank" class="space">
-            <el-tag size="small" type="info">{{scope.row.mid}}</el-tag>
-          </a>
-        </template>
-      </el-table-column>
-      <el-table-column prop="roomid" label="直播间id">
-        <template slot-scope="scope">
-          <a :href="`https://live.bilibili.com/${scope.row.roomid}`" v-if="scope.row.roomid" target="_blank" class="space">
-            <el-tag size="small" type="info">{{scope.row.roomid}}</el-tag>
-          </a>
-        </template>
-      </el-table-column>
-
-    </el-table>
-  </el-main>
-</el-container>
+<div>
+  <progress class="progress is-small" max="100" v-if="!vtbs.length"></progress>
+  <div class="table-container" v-else>
+    <table class="table is-fullwidth is-striped is-hoverable">
+      <thead>
+        <tr>
+          <th></th>
+          <th v-for="(name, key) in sortable" :key="key"><a @click="sort(key)">{{name}}</a></th>
+          <th>空间id</th>
+          <th>直播间id</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="vtb in searchList" :key="vtb.mid">
+          <td>
+            <router-link :to="`detail/${vtb.mid}`">{{vtb.uname}}</router-link>
+          </td>
+          <td v-for="(_, key) in sortable" :key="`${vtb.mid}_${key}`">{{vtb[key]}}</td>
+          <td><a :href="`https://space.bilibili.com/${vtb.mid}`">{{vtb.mid}}</a></td>
+          <td v-if="vtb.roomid"><a :href="`https://live.bilibili.com/${vtb.roomid}`">{{vtb.roomid}}</a></td>
+          <td v-else>无</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 </template>
 
 <script>
@@ -47,25 +33,29 @@ import { mapState } from 'vuex'
 export default {
   props: ['search'],
   data() {
+    this.sortable = {
+      follower: '关注',
+      rise: '日增',
+      archiveView: '播放量',
+      video: '视频数',
+      guardNum: '舰团',
+    }
     return {
-      show: 64,
+      sortBy: undefined,
+      order: 1,
     }
   },
-  mounted() {
-    this.$nextTick(function() {
-      document.onscroll = () => {
-        if (document.body.clientHeight - window.scrollY - window.innerHeight < (document.body.clientHeight / this.show * 20) && this.vtbs.length) {
-          if (!this.allDisplay) {
-            this.show += 32
-          } else {
-            document.onscroll = null
-          }
-        }
+  methods: {
+    sort(key) {
+      if (this.sortBy !== key) {
+        this.sortBy = key
+        this.order = 1
+      } else if (this.order === 1) {
+        this.order = -1
+      } else {
+        this.sortBy = undefined
       }
-    })
-  },
-  destroyed() {
-    document.onscroll = null
+    },
   },
   computed: {
     ...mapState(['vtbs', 'info']),
@@ -75,7 +65,7 @@ export default {
         return ({ mid, note, uname, video, roomid, follower, guardNum, rise, archiveView })
       })
     },
-    searchList: function() {
+    searchList() {
       let searchArray = (this.search || '').toLowerCase().replace(/ /g, '').split('')
       let result = this.list
         .map(object => ({ ...object, index: 0, string: `${object.uname}${object.note.join('')}`.toLowerCase() }))
@@ -84,20 +74,16 @@ export default {
           .map(object => ({ ...object, index: object.string.indexOf(key, object.index) + 1 }))
           .filter(({ index }) => index)
       })
-      return result
-        .filter((n, index) => index < this.show)
-    },
-    allDisplay() {
-      return this.show >= this.vtbs.length
+      if (this.sortBy) {
+        return result.sort(({
+          [this.sortBy]: a,
+        }, {
+          [this.sortBy]: b,
+        }) => (b - a) * this.order)
+      } else {
+        return result
+      }
     },
   },
 }
 </script>
-
-<style scoped>
-.el-main {
-  padding: 0;
-  padding-top: 1px;
-  z-index: -1;
-}
-</style>

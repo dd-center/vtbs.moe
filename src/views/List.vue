@@ -1,6 +1,6 @@
 <template>
 <div class="center">
-  <el-input class="search" v-model="search" placeholder="模糊搜索"></el-input>
+  <input class="input search" v-model="search" type="text" placeholder="模糊搜索">
   <div class="box">
     <list :search='search'></list>
   </div>
