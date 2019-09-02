@@ -32,6 +32,19 @@
           <!-- <br><br> -->
           <a class="button is-rounded" @click="push('→_→！')">测试Local Notification</a>
           <br>
+          <hr>
+          <h4 class="title is-4">设置</h4>
+          <h5 class="title is-5">CDN网络 ({{wss.length}}可用)</h5>
+          <p>目前: <span class="has-background-light">{{currentWs}}</span></p>
+          <br>
+          <div v-for="ws in wss" :key="ws">
+            <span class="tag">{{ws === currentWs ? '当前' : '可用'}}</span>{{ws}}
+            <a class="button is-small is-rounded" @click="chooseWs(ws)" v-if="ws !== currentWs">选择</a>
+            <a class="button is-small is-rounded" @click="pingWs(ws)" v-if="!pingResult[ws]">Ping</a>
+            <p v-if="pingResult[ws]">{{pingResult[ws]}}</p>
+            <br>
+            <br>
+          </div>
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
@@ -85,13 +98,16 @@
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
-import { get } from '@/socket'
+import { get, socket, ws, ping } from '@/socket'
 import Push from 'push.js'
 
 export default {
   data() {
+    this.currentWs = `https://${socket.io.engine.hostname}`
+    this.wss = ws
     return {
       uptime: undefined,
+      pingResult: {},
     }
   },
   computed: {
@@ -103,7 +119,9 @@ export default {
       return this.status.INTERVAL
     },
     number: function() {
+      /* beautify ignore:start */
       return this.vtbs?.length
+      /* beautify ignore:end */
     },
     parrotProgress() {
       return Math.round(this.parrotNow / (this.number || 1) * 100)
@@ -140,7 +158,17 @@ export default {
   async mounted() {
     this.uptime = await get('uptime')
   },
-  methods: { push: w => Push.create(w) },
+  methods: {
+    push: w => Push.create(w),
+    chooseWs(ws) {
+      localStorage.ws = ws
+    },
+    async pingWs(ws) {
+      this.pingResult = { ...this.pingResult, [ws]: 'Ping...' }
+      let result = await ping(ws)
+      this.pingResult = { ...this.pingResult, [ws]: result }
+    },
+  },
   filters: {
     parseTime: function(time = 0) {
       let timeNow = moment(time)
