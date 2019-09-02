@@ -334,7 +334,7 @@
             <el-col :span="24">
               <el-card class="box-card" shadow="hover">
                 <div slot="header">
-                  <span style="font-size:20px;">直播间弹幕: <a href="https://bilichat.3shain.com">BILICHAT</a></span> by <a href="https://3shain.com">3Shain</a>
+                  <span style="font-size:20px;">直播间弹幕: <a href="https://bilichat.3shain.com">BILICHAT</a></span> by 3Shain
                 </div>
                 <iframe :src="`/BiliChat/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
               </el-card>
@@ -524,10 +524,12 @@ export default {
 
         this.activeSkip = recordNum
         let active = []
+        /* beautify ignore:start */
         for (; this.activeSkip && 7 * 24 * 60 * 60 * 1000 > ((active[active.length - 1]?.time || 0) - (active[0]?.time || 0));) {
           this.activeSkip = Math.max(0, this.activeSkip - 500)
           active = [...await getDeflateTimeSeries('bulkActiveRangeCompressed', { num: recordNum - active.length - this.activeSkip, skip: this.activeSkip, mid }), ...active]
         }
+        /* beautify ignore:end */
         this.active = await activeAnalyzer(active)
         this.unchange = ['dataZoom']
 
