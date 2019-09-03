@@ -6,8 +6,6 @@
 <script>
 import { mapState } from 'vuex'
 import cytoscape from 'cytoscape'
-import cola from 'cytoscape-cola'
-cytoscape.use(cola)
 
 export default {
   props: ['tieties'],
