@@ -136,7 +136,6 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
     }
 
     let all = {}
-    let some = {}
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
       let guards = (await fullGuard.get(mid) || [])
@@ -148,13 +147,10 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
           all[guard.mid] = { uname, face, mid: guard.mid, dd: [[], [], []] }
         }
         all[guard.mid].dd[level].push(mid)
-        if (all[guard.mid].dd[0].length * 100 + all[guard.mid].dd[1].length * 10 + all[guard.mid].dd[2].length > 1) {
-          some[guard.mid] = all[guard.mid]
-        }
       }
     }
     await fullGuard.put('all', all)
-    await fullGuard.put('some', some)
+    await fullGuard.put('some', Object.fromEntries(Object.entries(all).filter(([_mid, { dd }]) => dd[0].length * 100 + dd[1].length * 10 + dd[2].length > 1)))
     await fullGuard.put('time', (new Date()).getTime())
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)
