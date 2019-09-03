@@ -32,6 +32,10 @@ export default new Router({
     name: 'detail',
     component: List,
   }, {
+    path: '/tietie',
+    component: () =>
+    import(/* webpackChunkName: "tietie" */ './views/Tietie.vue'),
+  }, {
     path: '/detail/:mid',
     component: () =>
       import(/* webpackChunkName: "detail" */ './views/Detail.vue'),

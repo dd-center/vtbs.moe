@@ -119,6 +119,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
     let startTime = (new Date()).getTime()
 
     let vtbs = await vdb.get()
+    let mids = vtbs.map(({ mid }) => mid)
 
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
@@ -151,6 +152,10 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
     }
     await fullGuard.put('all', all)
     await fullGuard.put('some', Object.fromEntries(Object.entries(all).filter(([_mid, { dd }]) => dd[0].length * 100 + dd[1].length * 10 + dd[2].length > 1)))
+    await fullGuard.put('tietie', Object.fromEntries(Object.entries(all)
+      .filter(([mid]) => mids.includes(Number(mid)))
+      .map(([mid, { dd }]) => [mid, dd.map(ddg => ddg.filter(mid => mids.includes(mid)))])
+    ))
     await fullGuard.put('time', (new Date()).getTime())
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)

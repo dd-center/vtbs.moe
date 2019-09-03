@@ -87,6 +87,7 @@ fullGuard
 mid: [...guards]
 all: {[mid]: {uname, face, mid, dd:[[],[],[]]}}
 some: {[mid]: {uname, face, mid, dd:[[],[],[]]}} guard>1
+tietie: {[mid]: [[],[],[]]}
 time: time
 number: num
 

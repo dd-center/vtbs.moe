@@ -26,6 +26,7 @@ export default {
       '/detail': ['详细', 'discover'],
       '/dd': ['DD风云榜', 's-promotion'],
       '/macro': ['VTB宏观', 'zoom-in'],
+      '/tietie': ['贴贴'],
       '/about': ['关于', 'document'],
     }
     return {
