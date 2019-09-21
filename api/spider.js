@@ -111,7 +111,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
       infoArray.push(newInfo)
 
       log(`UPDATED: ${mid} - ${uname}`)
-      await wait(500 * PARALLEL + time - Date.now())
+      await wait(1000 * PARALLEL + time - Date.now())
     } else {
       let update = { time, spiderId: spiderId, duration: time - startTime }
       io.emit('spiderUpdate', update)
