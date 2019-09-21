@@ -1,5 +1,6 @@
 const biliAPI = require('bili-api')
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 const race = (...args) => Promise.race([biliAPI(...args), wait(1000 * 15)])
 
 let oneHours = 1000 * 60 * 60
@@ -22,8 +23,6 @@ const notable = ({ object, time, currentActive }) => {
   }
   return false
 }
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) => {
   const log = log => (output => {
@@ -125,14 +124,10 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
 module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
-    // Auto restart when spider are dead
     if (Date.now() - lastUpdate > INTERVAL * 2) {
-      console.log(`Spider, NOT OK`)
-      process.exit()
-    } else {
-      console.log(`Spider, OK`)
+      console.error(`Spider, NOT OK`)
     }
-  }, 1000 * 60 * 2)
+  }, 1000 * 60 * 5)
   for (;;) {
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
