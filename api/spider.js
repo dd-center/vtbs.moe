@@ -37,7 +37,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
     let vtb = pending.shift()
     let time = Date.now()
     if (vtb) {
-      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(() => undefined)
+      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(console.error)
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)
