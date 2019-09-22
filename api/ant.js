@@ -1,11 +1,4 @@
-const biliAPI = require('bili-api')
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-const race = (...args) => new Promise((resolve, reject) => {
-  setTimeout(reject, 1000 * 60 * 10)
-  biliAPI(...args)
-    .then(resolve)
-})
 
 const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
@@ -114,7 +107,7 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
+const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
   for (;;) {
     let startTime = (new Date()).getTime()
 
@@ -123,7 +116,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
 
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
-      let object = await race({ mid }, ['guards', 'guardLevel'], { wait: 1000 }).catch(() => undefined)
+      let object = await biliAPI([{ mid }, ['guards', 'guardLevel'], { wait: 1000 }], 1000 * 60 * 10).catch(console.error)
       if (!object) {
         i--
         await wait(1000)
@@ -165,7 +158,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log }) => {
   }
 }
 
-module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io }) => {
+module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, biliAPI }) => {
   const log = log => {
     console.log(log)
     io.emit('log', log)
@@ -173,5 +166,5 @@ module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io })
   vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
   vtb({ vdb, macro, info, num, INTERVAL, log, io })
   guard({ vdb, macro, info, num, INTERVAL, log, io })
-  dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log })
+  dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log, biliAPI })
 }

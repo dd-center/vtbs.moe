@@ -5,7 +5,7 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, hawk, vdb, wiki } = require('./interface')
+const { vd, vdSocket, hawk, vdb, wiki, biliAPI } = require('./interface')
 
 const { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache } = require('./database')
 
@@ -25,11 +25,11 @@ parrot.start({ io })
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro }))
 io.attach(server)
 vd.attach(server)
-spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, parrot })
+spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, parrot, biliAPI })
 snake({ vdSocket, io, info })
 hawk({ io })
 setTimeout(() => {
-  ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io })
+  ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io, biliAPI })
 }, 1000 * 60 * 4)
 io.on('connection', connect({ io, vdb, macro, site, num, info, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }))
 server.listen(8001)

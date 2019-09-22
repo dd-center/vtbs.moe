@@ -1,9 +1,5 @@
-const biliAPI = require('bili-api')
-
+const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-const race = (...args) => Promise.race([biliAPI(...args), wait(1000 * 15)])
-
-let oneHours = 1000 * 60 * 60
 
 const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
@@ -24,7 +20,7 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) => {
+const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL, biliAPI }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -37,7 +33,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
     let vtb = pending.shift()
     let time = Date.now()
     if (vtb) {
-      let object = await race(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }).catch(console.error)
+      let object = await biliAPI([vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }]).catch(console.error)
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)
@@ -121,7 +117,7 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }) 
   }
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     if (Date.now() - lastUpdate > INTERVAL * 2) {
@@ -132,11 +128,11 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot }) => {
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
-    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL }))
+    let spiders = Array(PARALLEL).fill().map((c, spiderId) => round({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL, biliAPI }))
     let infoArray = [].concat(...await Promise.all(spiders))
     io.emit('info', infoArray)
 
-    worm({ PARALLEL, vtbs: await vdb.get(), io })
+    worm({ PARALLEL, vtbs: await vdb.get(), io, biliAPI })
       .then(wormArray => io.emit('worm', wormArray))
 
     let endTime = Date.now()
