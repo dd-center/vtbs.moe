@@ -37,7 +37,6 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL, bi
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)
-        await wait(1500 + time - Date.now())
         continue
       }
       let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
@@ -107,7 +106,6 @@ const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, PARALLEL, bi
       infoArray.push(newInfo)
 
       log(`UPDATED: ${mid} - ${uname}`)
-      await wait(1000 * PARALLEL + time - Date.now())
     } else {
       let update = { time, spiderId: spiderId, duration: time - startTime }
       io.emit('spiderUpdate', update)
