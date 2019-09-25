@@ -374,6 +374,41 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
 Advanced interface, please reference the source code available on GitHub.
 
+### DD@Home
+
+Websocket connection to `https://cluster.vtbs.moe`
+
+#### Pull task:
+
+Send String: `DDhttp` for more http task.
+
+#### Task distribution:
+
+Recive: (json, http task) 
+
+```json
+{
+  "key": "SomeRandomString", // exmaple: "0.28634934784"
+  "data": {
+    "type": "http",
+    "url": "some bilibili url" // example: "https://api.bilibili.com/x/space/acc/info?mid=349991143"
+  }
+}
+```
+
+#### Complete Task:
+
+Send: (json)
+
+```json
+{
+  "key": "SomeRandomString",
+  "data": "hereIsResult" // example: "{"code":0,"message":"0","ttl":1,"data":{"mid":349991143,"name":"神楽Mea_Official","sex":"女","face":"http://i1.hdslb.com/bfs/face/4b951570bf09e0ca7fad2a0ae2b1cad3a7a9006b.jpg","sign":"你的人生前路未免太过灰暗了吧？","rank":10000,"level":6,"jointime":0,"moral":0,"silence":0,"birthday":"08-02","coins":0,"fans_badge":true,"official":{"role":1,"title":"bilibili 知名UP主","desc":""},"vip":{"type":2,"status":1,"theme_type":0},"is_followed":false,"top_photo":"http://i0.hdslb.com/bfs/space/cde2a0fe3273ae4466d135541d965e21c58a7454.png","theme":{},"sys_notice":{}}}"
+}
+```
+
+Make sure the key is same for each task.
+
 ### Bilibili DD Center org, Some internal relationship.
 
 详情: https://bilibili-dd-center.github.io
