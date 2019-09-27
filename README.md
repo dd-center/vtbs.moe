@@ -9,11 +9,11 @@
 </h3>
 
 <p align="center">
-  <a href="https://github.com/bilibili-dd-center/vtbs.moe/commits/master">
-    <img src="https://img.shields.io/github/commit-activity/w/bilibili-dd-center/vtbs.moe.svg?color=green">
+  <a href="https://github.com/dd-center/vtbs.moe/commits/master">
+    <img src="https://img.shields.io/github/commit-activity/w/dd-center/vtbs.moe.svg?color=green">
   </a>
-  <a href="https://github.com/bilibili-dd-center/vtbs.moe/graphs/contributors">
-    <img src="https://img.shields.io/github/contributors/bilibili-dd-center/vtbs.moe.svg">
+  <a href="https://github.com/dd-center/vtbs.moe/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/dd-center/vtbs.moe.svg">
   </a>
   <br>
   <a href="https://vtbs.moe/">
@@ -336,7 +336,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
 ​	Use Socket.io connect to `https://api.vtbs.moe/vds`
 
-​	Document: https://github.com/bilibili-dd-center/bilibili-vtuber-danmaku#socketio
+​	Document: https://github.com/dd-center/vtuber-danmaku#socketio
 
 * #### Subscribe (join)
 
@@ -409,11 +409,11 @@ Send: (json)
 
 Make sure the key is same for each task.
 
-### Bilibili DD Center org, Some internal relationship.
+### DD Center org, Some internal relationship.
 
-详情: https://bilibili-dd-center.github.io
+详情: https://dd-center.github.io
 
-![dependency](https://bilibili-dd-center.github.io/dependency.svg)
+![dependency](https://dd-center.github.io/dependency.svg)
 
 ## 开发
 

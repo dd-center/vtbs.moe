@@ -3,7 +3,7 @@
 	url = https://github.com/Jannchie/biliob-frontend.git
 [submodule "hawk/dictionary"]
 	path = hawk/dictionary
-	url = https://github.com/bilibili-dd-center/dictionary
+	url = https://github.com/dd-center/dictionary
 [submodule "BiliChat"]
 	path = BiliChat
-	url = https://github.com/bilibili-dd-center/BiliChat
+	url = https://github.com/dd-center/BiliChat

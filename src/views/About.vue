@@ -18,17 +18,17 @@
             宏观中视频势每 6 小时更新一次<br>
             宏观中词云每分钟更新一次<br>
             风云榜，24小时更新一次 <br>
-            名单查漏补缺: 新建 issue <a href="https://github.com/bilibili-dd-center/vdb/issues/new?template=new-bilibili-vtb-vup.md&title=VTB补" target="_blank">https://github.com/bilibili-dd-center/vdb/issues/new</a><br>
+            名单查漏补缺: 新建 issue <a href="https://github.com/dd-center/vdb/issues/new?template=new-bilibili-vtb-vup.md&title=VTB补" target="_blank">https://github.com/dd-center/vdb/issues/new</a><br>
             或者邮件: simon3000@163.com
             <br>
             急上升的数据是过去24小时粉丝数变化，并不是昨天一天的变化
           </p>
           <hr>
-          <a href="https://github.com/bilibili-dd-center/vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/bilibili-dd-center/vtbs.moe.svg?style=social"></a> <br>
-          <a href="https://github.com/bilibili-dd-center/vtbs.moe/" target="_blank">github:bilibili-dd-center/vtbs.moe</a>
+          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/vtbs.moe.svg?style=social"></a> <br>
+          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank">github:dd-center/vtbs.moe</a>
           <br>
           <br>
-          <!-- 其他有趣的项目: <a href="https://bilibili-dd-center.github.io">bilibili-dd-center.github.io</a> -->
+          <!-- 其他有趣的项目: <a href="https://dd-center.github.io">dd-center.github.io</a> -->
           <!-- <br><br> -->
           <a class="button is-rounded" @click="push('→_→！')">测试Local Notification</a>
           <br>
@@ -48,7 +48,7 @@
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
-          <a href="https://github.com/bilibili-dd-center/vtbs.moe#open-api" target="_blank">Open API Documents</a>
+          <a href="https://github.com/dd-center/vtbs.moe#open-api" target="_blank">Open API Documents</a>
           <br>
           <br>
           <h4 class="title is-4">服务器数据：</h4>
