@@ -90,18 +90,19 @@ export default {
   async mounted() {
     const list = await getFullInfo()
     const vdbTable = await getVdbTable()
-    const midUname = Object.fromEntries(list.map(({ mid, uname }) => [mid, uname]))
     let types = { group: { choices: {} } }
     this.vdbTable = vdbTable
     this.list = list
     list.forEach(({ mid, uuid }) => {
-      const { group } = vdbTable[uuid]
-      if (group && !types.group.choices[group]) {
-        if (!vdbTable[group]) {
-          console.warn('unknow group', group, mid)
-        } else {
-          const { name } = vdbTable[group]
-          types.group.choices[group] = { text: name[name.default] }
+      if (vdbTable[uuid]) {
+        const { group } = vdbTable[uuid]
+        if (group && !types.group.choices[group]) {
+          if (!vdbTable[group]) {
+            console.warn('unknow group', group, mid)
+          } else {
+            const { name } = vdbTable[group]
+            types.group.choices[group] = { text: name[name.default] }
+          }
         }
       }
     })
@@ -129,7 +130,7 @@ export default {
       let result = this.list
         .filter(({ uuid }) => {
           const vdb = this.vdbTable[uuid]
-          if (this.types.group.choices[vdb.group]) {
+          if (vdb && this.types.group.choices[vdb.group]) {
             return !this.types.group.choices[vdb.group].filter
           } else {
             return !this.types.group.other
