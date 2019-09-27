@@ -16,7 +16,7 @@ const round = async ({ pending, wormId, io, PARALLEL, biliAPI }) => {
     let vtb = pending.shift()
     let time = Date.now()
     if (vtb) {
-      let object = await biliAPI([vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank'], { wait: 300 }]).catch(console.error)
+      let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)

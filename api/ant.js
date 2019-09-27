@@ -116,7 +116,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
 
     for (let i = 0; i < vtbs.length; i++) {
       let { mid } = vtbs[i]
-      let object = await biliAPI([{ mid }, ['guards', 'guardLevel'], { wait: 1000 }], 1000 * 60 * 30).catch(console.error)
+      let object = await biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(console.error)
       if (!object) {
         i--
         await wait(1000)
