@@ -104,14 +104,10 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
     })
     console.log('user disconnected')
   })
-  let infoArray = []
-  for (let i = 0; i < vtbs.length; i++) {
-    let { mid } = vtbs[i]
-    let vtbInfo = await info.get(mid)
-    if (vtbInfo) {
-      infoArray.push(vtbInfo)
-    }
-  }
+  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+    .filter(Boolean)
+    .map(({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }))
+
   socket.emit('info', infoArray)
 
   socket.emit('worm', wormResult())
@@ -148,7 +144,7 @@ online: Number
 
 vtbs: [vtb]
 
-info: [info]
+info: cut([info])
 
 log: String
 
