@@ -1,34 +1,41 @@
 <template>
 <div>
-  <progress class="progress is-small" max="100" v-if="!vtbs.length"></progress>
-  <div class="table-container" v-else>
-    <table class="table is-fullwidth is-striped is-hoverable">
-      <thead>
-        <tr>
-          <th></th>
-          <th v-for="(name, key) in sortable" :key="key"><a @click="sort(key)">{{name}}</a></th>
-          <th>空间id</th>
-          <th>直播间id</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="vtb in searchList" :key="vtb.mid">
-          <td>
-            <router-link :to="`detail/${vtb.mid}`">{{vtb.uname}}</router-link>
-          </td>
-          <td v-for="(_, key) in sortable" :key="`${vtb.mid}_${key}`">{{vtb[key]}}</td>
-          <td><a :href="`https://space.bilibili.com/${vtb.mid}`">{{vtb.mid}}</a></td>
-          <td v-if="vtb.roomid"><a :href="`https://live.bilibili.com/${vtb.roomid}`">{{vtb.roomid}}</a></td>
-          <td v-else>无</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <progress class="progress is-small" max="100" v-if="!list.length"></progress>
+  <template v-else>
+    <div v-for="type in selected" :key="type.key" class="buttons is-centered">
+      <button class="button is-text" @click="filter({key: type.key, type: 'all'})">{{type.text}}</button>
+      <button v-for="choice in type.choices" :key="choice.key" @click="filter({key: type.key, choice: choice.key})" class="button is-success" :class="{'is-outlined': choice.filter}">{{choice.text}}</button>
+      <button @click="filter({key: type.key, type: 'other'})" class="button is-success" :class="{'is-outlined': type.other}">其他</button>
+    </div>
+    <div class="table-container box">
+      <table class="table is-fullwidth is-striped is-hoverable">
+        <thead>
+          <tr>
+            <th></th>
+            <th v-for="(name, key) in sortable" :key="key"><a @click="sort(key)">{{name}}</a></th>
+            <th>空间id</th>
+            <th>直播间id</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="vtb in searchList" :key="vtb.mid">
+            <td>
+              <router-link :to="`detail/${vtb.mid}`">{{vtb.uname}}</router-link>
+            </td>
+            <td v-for="(_, key) in sortable" :key="`${vtb.mid}_${key}`">{{vtb[key]}}</td>
+            <td><a :href="`https://space.bilibili.com/${vtb.mid}`">{{vtb.mid}}</a></td>
+            <td v-if="vtb.roomid"><a :href="`https://live.bilibili.com/${vtb.roomid}`">{{vtb.roomid}}</a></td>
+            <td v-else>无</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </template>
 </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { getFullInfo } from '@/socket.js'
 
 export default {
   props: ['search'],
@@ -41,6 +48,9 @@ export default {
       guardNum: '舰团',
     }
     return {
+      types: {},
+      list: [],
+      tables: {},
       sortBy: undefined,
       order: 1,
     }
@@ -56,19 +66,71 @@ export default {
         this.sortBy = undefined
       }
     },
+    filter({ key, type, choice }) {
+      if (choice) {
+        this.types[key].choices[choice].filter = !this.types[key].choices[choice].filter
+      } else {
+        if (type === 'other') {
+          this.types[key].other = !this.types[key].other
+        }
+        if (type === 'all') {
+          const choices = Object.keys(this.types[key].choices)
+          const now = [...choices.map(choice => this.types[key].choices[choice].filter), this.types[key].other]
+            .reduce((a, b) => a || b)
+          choices.forEach(choice => {
+            this.types[key].choices[choice].filter = !now
+          })
+          this.types[key].other = !now
+        }
+      }
+      this.types = { ...this.types }
+    },
+  },
+  async mounted() {
+    const list = await getFullInfo()
+    let types = { group: { choices: {} } }
+    const tables = Object.fromEntries(list.map(v => [v.uuid, v]))
+    this.tables = tables
+    this.list = list
+    list.forEach(({ vdb: { group }, mid }) => {
+      if (group && !types.group.choices[group]) {
+        if (!tables[group]) {
+          console.warn('unknow group', group, mid)
+        } else {
+          types.group.choices[group] = { text: tables[group].uname }
+        }
+      }
+    })
+    this.types = types
   },
   computed: {
-    ...mapState(['vtbs', 'info']),
-    list() {
-      return this.vtbs.map(({ mid, note }) => {
-        let { uname, video, roomid, follower, guardNum, rise, archiveView } = this.info[mid] || {}
-        return ({ mid, note, uname, video, roomid, follower, guardNum, rise, archiveView })
-      })
+    selected() {
+      const text = {
+        group: '社团',
+      }
+      return Object.entries(this.types)
+        .map(([key, { choices, other }]) => ({
+          key: key,
+          text: text[key] || key,
+          other,
+          choices: Object.entries(choices)
+            .map(([ck, cv]) => ({
+              key: ck,
+              ...cv,
+            })),
+        }))
     },
     searchList() {
       let searchArray = (this.search || '').toLowerCase().replace(/ /g, '').split('')
       let result = this.list
-        .map(object => ({ ...object, index: 0, string: `${object.uname}${object.note.join('')}`.toLowerCase() }))
+        .filter(({ vdb }) => {
+          if (this.types.group.choices[vdb.group]) {
+            return !this.types.group.choices[vdb.group].filter
+          } else {
+            return !this.types.group.other
+          }
+        })
+        .map(object => ({ ...object, index: 0, string: `${object.uname}`.toLowerCase() }))
       searchArray.forEach(key => {
         result = result
           .map(object => ({ ...object, index: object.string.indexOf(key, object.index) + 1 }))
@@ -87,3 +149,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.box {
+  margin: 20px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+</style>

@@ -65,3 +65,4 @@ const passArrayMinimizer = async (...target) => {
   return value.map(array => Object.fromEntries(keys.map((key, index) => [key, array[index]])))
 }
 
+export const getFullInfo = () => passArrayMinimizer('fullInfo')

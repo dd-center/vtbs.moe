@@ -1,9 +1,7 @@
 <template>
 <div class="center">
   <input class="input search" v-model="search" type="text" placeholder="模糊搜索">
-  <div class="box">
-    <list :search='search'></list>
-  </div>
+  <list :search='search'></list>
 </div>
 </template>
 
@@ -23,11 +21,6 @@ export default {
 </script>
 
 <style scoped>
-.box {
-  margin: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
-
 .search {
   margin: 20px;
   width: 80%;

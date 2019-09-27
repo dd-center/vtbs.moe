@@ -1,21 +1,33 @@
 const got = require('got')
 
+let vdb
+let vdbTable
 let vtbs
 let io
 
 const update = async () => {
-  let { body } = (await got('http://vdb.vtbs.moe/json/vtbs.moe.json', { json: true }).catch(() => ({})))
+  let { body } = (await got('https://vdb.vtbs.moe/json/list.json', { json: true }).catch(e => ({ e: console.error(e) })))
   if (body) {
     console.log('vdb update')
-    if (vtbs && vtbs.length !== body.length) {
+    vdb = body
+    vdbTable = Object.fromEntries(body.vtbs.map(v => [v.uuid, v]))
+    const moe = Object.values(Object.fromEntries(body.vtbs.flatMap(({ accounts, uuid }) => accounts
+      .filter(({ platform }) => platform === 'bilibili')
+      .map(({ id }) => {
+        return [id, {
+          mid: Number(id),
+          uuid,
+        }]
+      }))))
+    if (vtbs && vtbs.length !== moe.length) {
       if (io) {
-        io.emit('vtbs', body)
+        io.emit('vtbs', moe)
         io.emit('log', 'vdb Change')
       }
       console.log('vdb Change')
     }
-    vtbs = body
-    return body
+    vtbs = moe
+    return { moe, vdb, vdbTable }
   } else {
     console.error('vdb error')
     return update()
@@ -26,7 +38,15 @@ const get = async () => {
   if (vtbs) {
     return vtbs
   } else {
-    return update()
+    return (await update()).moe
+  }
+}
+
+const getVdb = async uuid => {
+  if (vdbTable) {
+    return vdbTable[uuid]
+  } else {
+    return (await update()).vdbTable[uuid]
   }
 }
 
@@ -40,4 +60,5 @@ module.exports = {
   update,
   get,
   bind,
+  getVdb,
 }
