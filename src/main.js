@@ -24,8 +24,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(new VueSocketIO({
-  debug: process.env.NODE_ENV === 'development',
-  // debug: false,
+  // debug: process.env.NODE_ENV === 'development',
+  debug: false,
   connection: socket,
   vuex: {
     store,
