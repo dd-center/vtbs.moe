@@ -1,6 +1,6 @@
 <template>
 <div>
-  <progress class="progress is-small" max="100" v-if="!list.length"></progress>
+  <progress class="progress is-small box" max="100" v-if="!list.length"></progress>
   <template v-else>
     <div v-for="type in selected" :key="type.key" class="buttons is-centered">
       <button class="button is-text" @click="filter({key: type.key, type: 'all'})">{{type.text}}</button>
@@ -97,7 +97,8 @@ export default {
         if (!tables[group]) {
           console.warn('unknow group', group, mid)
         } else {
-          types.group.choices[group] = { text: tables[group].uname }
+          const { uname, vdb: { name } } = tables[group]
+          types.group.choices[group] = { text: uname || name[name.default] }
         }
       }
     })
