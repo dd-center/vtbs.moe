@@ -9,8 +9,8 @@ if (!ws.includes(localStorage.ws)) {
   localStorage.ws = ws[0]
 }
 
-// export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : 'https://api.vtbs.moe')
-export const socket = io(localStorage.ws)
+export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : localStorage.ws)
+// export const socket = io(localStorage.ws)
 
 export const ping = ws => new Promise(resolve => {
   const pingSocket = io(ws, { forceNew: true })
@@ -48,3 +48,20 @@ export const getDeflateTimeSeries = async (e, target) => {
   }))))
   return result
 }
+
+const newGet = (...target) => get('new', target)
+
+/* beautify ignore:start */
+const passDeflate = async (...target) => await newGet('deflate', ...target) 
+  |> await #
+  |> inflate
+  |> new TextDecoder().decode(#)
+  |> JSON.parse
+/* beautify ignore:end */
+
+const passArrayMinimizer = async (...target) => {
+  const result = await passDeflate('arrayMinimizer', ...target)
+  const { keys, value } = result
+  return value.map(array => Object.fromEntries(keys.map((key, index) => [key, array[index]])))
+}
+

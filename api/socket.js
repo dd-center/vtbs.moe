@@ -2,7 +2,33 @@ const { deflate } = require('zlib')
 const { promisify } = require('util')
 const deflateAsync = promisify(deflate)
 
+const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
+  if (map.includes(key)) {
+    return undefined
+  }
+  const handler = wsRouter({ info, vdb })
+  const handlerTable = new Proxy({
+    fullInfo: async () => {
+      const vtbs = await vdb.get()
+      const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+        .filter(Boolean)
+      return infoArray
+    },
+    arrayMinimizer: async keys => {
+      const result = await handler(keys)
+      const ks = Object.keys(result[0])
+      const value = result.map(object => ks.map(k => object[k]))
+      return { value, keys: ks }
+    },
+    deflate: async keys => {
+      return deflateAsync(JSON.stringify(await handler(keys)))
+    },
+  }, { get: (obj, prop) => obj[prop] || (() => undefined) })
+  return handlerTable[key](rest)
+}
+
 exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
+  const newHandler = wsRouter({ info, vdb })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
@@ -10,6 +36,10 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
         const keys = Object.keys(data[0] || {})
         const value = data.map(object => keys.map(key => object[key]))
         return arcDeflate({ value, keys, timeSeries: true })
+      }
+
+      if (e === 'new') {
+        arc(await newHandler(target))
       }
 
       if (e === 'vupMacroCompressed') {
@@ -80,6 +110,7 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   })
 
   console.log('a user connected')
+  handler('new')
   handler('vupMacroCompressed')
   handler('vtbMacroCompressed')
   handler('vtbMacroWeekCompressed')
@@ -120,6 +151,18 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
 
 /*
 Socket
+
+**************************************
+**************************************
+NEW WS REQUEST FORMAT
+ENTRYPOINT: new
+ - PASS: deflate
+ - PASS: arrayMinimizer
+
+fullInfo: [{...info, vdb}]
+
+**************************************
+**************************************
 
 // Client Request
 vupMacroCompressed: -> deflate([{vupMacro}])
