@@ -8,12 +8,12 @@ const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
   }
   const handler = wsRouter({ info, vdb })
   const handlerTable = new Proxy({
+    vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
       const vtbs = await vdb.get()
       const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
         .filter(Boolean)
-        .map(async v => ({ ...v, vdb: await vdb.getVdb(v.uuid) }))
-      return Promise.all(infoArray)
+      return infoArray
     },
     arrayMinimizer: async keys => {
       const result = await handler(keys)

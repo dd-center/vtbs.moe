@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getFullInfo } from '@/socket.js'
+import { getFullInfo, getVdbTable } from '@/socket.js'
 
 export default {
   props: ['search'],
@@ -50,6 +50,7 @@ export default {
     return {
       types: {},
       list: [],
+      vdbTable: {},
       tables: {},
       sortBy: undefined,
       order: 1,
@@ -88,17 +89,19 @@ export default {
   },
   async mounted() {
     const list = await getFullInfo()
+    const vdbTable = await getVdbTable()
+    const midUname = Object.fromEntries(list.map(({ mid, uname }) => [mid, uname]))
     let types = { group: { choices: {} } }
-    const tables = Object.fromEntries(list.map(v => [v.uuid, v]))
-    this.tables = tables
+    this.vdbTable = vdbTable
     this.list = list
-    list.forEach(({ vdb: { group }, mid }) => {
+    list.forEach(({ mid, uuid }) => {
+      const { group } = vdbTable[uuid]
       if (group && !types.group.choices[group]) {
-        if (!tables[group]) {
+        if (!vdbTable[group]) {
           console.warn('unknow group', group, mid)
         } else {
-          const { uname, vdb: { name } } = tables[group]
-          types.group.choices[group] = { text: uname || name[name.default] }
+          const { name } = vdbTable[group]
+          types.group.choices[group] = { text: name[name.default] }
         }
       }
     })
@@ -124,7 +127,8 @@ export default {
     searchList() {
       let searchArray = (this.search || '').toLowerCase().replace(/ /g, '').split('')
       let result = this.list
-        .filter(({ vdb }) => {
+        .filter(({ uuid }) => {
+          const vdb = this.vdbTable[uuid]
           if (this.types.group.choices[vdb.group]) {
             return !this.types.group.choices[vdb.group].filter
           } else {

@@ -42,11 +42,11 @@ const get = async () => {
   }
 }
 
-const getVdb = async uuid => {
+const getVdbTable = async () => {
   if (vdbTable) {
-    return vdbTable[uuid]
+    return vdbTable
   } else {
-    return (await update()).vdbTable[uuid]
+    return (await update()).vdbTable
   }
 }
 
@@ -60,5 +60,5 @@ module.exports = {
   update,
   get,
   bind,
-  getVdb,
+  getVdbTable,
 }

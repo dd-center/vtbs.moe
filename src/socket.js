@@ -66,3 +66,4 @@ const passArrayMinimizer = async (...target) => {
 }
 
 export const getFullInfo = () => passArrayMinimizer('fullInfo')
+export const getVdbTable = () => passDeflate('vdbTable')
