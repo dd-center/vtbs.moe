@@ -34,7 +34,7 @@
           <br>
           <hr>
           <h4 class="title is-4">设置</h4>
-          <h5 class="title is-5">CDN网络 ({{wss.length}}可用)</h5>
+          <h5 class="title is-5">CDN网络({{wss.length}}) (刷新网页生效)</h5>
           <p>目前: <span class="has-background-light">{{currentWs}}</span></p>
           <br>
           <div v-for="ws in wss" :key="ws">
