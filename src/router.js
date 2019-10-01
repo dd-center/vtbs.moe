@@ -12,6 +12,15 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+  scrollBehavior(to, _from, savedPosition) {
+    if (to.hash) {
+      return { selector: to.hash }
+    }
+    if (savedPosition) {
+      return savedPosition
+    }
+    return { x: 0, y: 0 }
+  },
   routes: [{
     path: '/',
     alias: ['/live', '/rise', '/drop'],
@@ -21,8 +30,7 @@ export default new Router({
     path: '/macro',
     name: 'macro',
     // component: Macro
-    component: () =>
-      import(/* webpackChunkName: "macro" */ './views/Macro.vue'),
+    component: () => import(/* webpackChunkName: "macro" */ './views/Macro.vue'),
   }, {
     path: '/dd/',
     name: 'dd',
@@ -33,12 +41,10 @@ export default new Router({
     component: List,
   }, {
     path: '/tietie',
-    component: () =>
-    import(/* webpackChunkName: "tietie" */ './views/Tietie.vue'),
+    component: () => import(/* webpackChunkName: "tietie" */ './views/Tietie.vue'),
   }, {
     path: '/detail/:mid',
-    component: () =>
-      import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
+    component: () => import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
     props: true,
   }, {
     path: '/badge/:mid',
@@ -46,8 +52,7 @@ export default new Router({
     props: true,
   }, {
     path: '/bot/:n',
-    component: () =>
-      import(/* webpackChunkName: "detail" */ './views/Bot.vue'),
+    component: () => import(/* webpackChunkName: "detail" */ './views/Bot.vue'),
     props: true,
   }, {
     path: '/about',
