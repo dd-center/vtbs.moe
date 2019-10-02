@@ -6,7 +6,7 @@
       <router-link v-for="([text, icon], url) in links" :key="`menu_${url}`" :to="url" tag="li" exact-active-class="is-active"><a class="bigger">{{text}}<span v-if="icon" :class="`el-icon-${icon}`"></span></a></router-link>
     </ul>
   </div>
-  <div class="tabs"></div>
+  <div class="height"></div>
   <router-view>
   </router-view>
 </div>
@@ -78,5 +78,9 @@ export default {
 
 .tabs {
   padding: 8px 20px;
+}
+
+.height {
+  height: 48px;
 }
 </style>
