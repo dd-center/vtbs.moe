@@ -1,18 +1,14 @@
 <template>
-<el-container v-loading="!rank.length">
-  <el-main>
-    <el-row>
-      <d :dd="dd" v-for="dd in rankLimit" :key="dd.mid"></d>
-    </el-row>
-    <el-row v-if="!all && allDisplay">
-      <el-col style="text-align: center;">
-        <p>想要看完整列表? 可能会卡哦</p>
-        <el-button type="danger" @click="loadAll" :loading="loading">看!</el-button>
-        <p v-loading="!lastUpdate">上次更新: {{lastUpdate}}</p>
-      </el-col>
-    </el-row>
-  </el-main>
-</el-container>
+<div class="container padding">
+  <progress v-if="!rank.length" class="progress" max="100"></progress>
+  <d :dd="dd" v-for="dd in rankLimit" :key="dd.mid"></d>
+  <div v-if="!all && allDisplay" class="has-text-centered">
+    <hr>
+    <p>想要看完整列表? 可能会卡哦</p>
+    <button class="button is-primary is-outlined is-rounded" @click="loadAll" :disabled="loading">看!</button>
+  </div>
+  <p v-if="lastUpdate">上次更新: {{lastUpdate}}</p>
+</div>
 </template>
 
 <script>
@@ -87,11 +83,14 @@ export default {
 </script>
 
 <style scoped>
-.flip-list-move {
+/* .flip-list-move {
   transition: transform 0.5s;
 }
 
 .card {
   margin-bottom: 32px;
+} */
+.padding {
+  padding: 12px;
 }
 </style>

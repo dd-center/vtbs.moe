@@ -1,128 +1,114 @@
 <template>
-<el-col :span="8" :xl="6" :xs="12" class="dd">
-  <el-row>
-    <el-col class="center">
-      <img :src="face" class="face">
-    </el-col>
-  </el-row>
-  <el-row class="name">
-    <el-col class="center">
-      <span>
-        <el-tag class="tag" v-for="tag in tags" :type="tag.type" size="mini" :title="tag.title" :key="`${tag.name}_${dd.mid}`">{{tag.name}}</el-tag>
-        <router-link :to="`/detail/${dd.mid}`" v-if="isVTB" class="detail" title="这是一名本站收录的VTB/VUP">
-          {{uname}}
-          <el-tag type="danger" size="mini" v-if="isVTB">V</el-tag>
+<div class="columns is-gapless">
+  <div class="column is-one-third">
+    <div class="columns">
+      <div class="column">
+        <figure class="image is-128x128">
+          <img class="is-rounded face" :src="face">
+        </figure>
+      </div>
+      <div class="column">
+        <span>
+          <div class="tags">
+            <span :class="`tag is-${tag.type || 'info'}`" v-for="tag in tags" :title="tag.title" :key="`${tag.name}_${dd.mid}`">{{tag.name}}</span>
+            <span class="tag is-danger" v-if="isVTB" title="这是一名本站收录的VTB/VUP">V</span>
+          </div>
+          <router-link :to="`/detail/${dd.mid}`" v-if="isVTB" class="detail" title="这是一名本站收录的VTB/VUP">
+            {{uname}}
+          </router-link>
+          <template v-else>
+            {{uname}}
+          </template>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="columns">
+      <div class="column" v-for="dds in vtbs" :key="`${dd.mid}_${dds.level}`">
+        <router-link v-for="vtb in dds.vtbs" :to="`/detail/${vtb}`" class="detail" title="打开详细页" :key="`${dd.mid}_${vtb}`">
+          <div :class="`guard guard-${dds.level}`">{{name(vtb)}}</div>
         </router-link>
-        <template v-else>
-          {{uname}}
-        </template>
-      </span>
-    </el-col>
-  </el-row>
-  <template v-for="i in [0,1,2]">
-    <el-row v-for="vtb in vtbs[i]" class="vtb" :key="`${dd.mid}_${vtb}`">
-      <el-col :span="10" :xs="7">
-        <div :class="`guard guard-${i} right`"></div>
-      </el-col>
-      <el-col :span="14" :xs="17">
-        <router-link :to="`/detail/${vtb}`" class="detail" title="打开详细页">
-          {{name(vtb)}}
-        </router-link>
-      </el-col>
-    </el-row>
-  </template>
-</el-col>
+      </div>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
-const ddTypes = [
-  {
-    name: 'Meaqua',
-    title: 'Meaqua贴贴',
-    demand: [349991143, 375504219],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: 'MeAlice',
-    title: 'MeAlice',
-    demand: [349991143, 434565011],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏吹',
-    title: '夏色吹雪贴贴',
-    demand: [336731767, 332704117],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏紫',
-    title: '夏色诗音贴贴',
-    demand: [336731767, 389857640],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏心',
-    title: '夏心贴贴',
-    demand: [336731767, 339567211],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏空',
-    title: '夏色梅露贴贴',
-    demand: [336731767, 389856447],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏夸',
-    title: '夏色啊夸',
-    demand: [336731767, 375504219],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏色Mio',
-    title: '夏色Mio',
-    demand: [336731767, 389862071],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '信tama',
-    title: '信tama贴贴',
-    demand: [80387576, 12362451],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: '夏皆',
-    title: '夏色皆守',
-    demand: [336731767, 395814787],
-    type: 'success',
-    strict: false,
-  },  
-  {
-    name: 'Fubumio',
-    title: 'Fubumio贴贴',
-    demand: [332704117, 389862071],
-    type: 'success',
-    strict: false,
-  },
-  {
-    name: 'Aquayame',
-    title: 'Aquayame',
-    demand: [375504219, 389858027],
-    type: 'success',
-    strict: false,
-  },
-  
-
-]
+const ddTypes = [{
+  name: 'Meaqua',
+  title: 'Meaqua贴贴',
+  demand: [349991143, 375504219],
+  type: 'success',
+  strict: false,
+}, {
+  name: 'MeAlice',
+  title: 'MeAlice',
+  demand: [349991143, 434565011],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏吹',
+  title: '夏色吹雪贴贴',
+  demand: [336731767, 332704117],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏紫',
+  title: '夏色诗音贴贴',
+  demand: [336731767, 389857640],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏心',
+  title: '夏心贴贴',
+  demand: [336731767, 339567211],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏空',
+  title: '夏色梅露贴贴',
+  demand: [336731767, 389856447],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏夸',
+  title: '夏色啊夸',
+  demand: [336731767, 375504219],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏色Mio',
+  title: '夏色Mio',
+  demand: [336731767, 389862071],
+  type: 'success',
+  strict: false,
+}, {
+  name: '信tama',
+  title: '信tama贴贴',
+  demand: [80387576, 12362451],
+  type: 'success',
+  strict: false,
+}, {
+  name: '夏皆',
+  title: '夏色皆守',
+  demand: [336731767, 395814787],
+  type: 'success',
+  strict: false,
+}, {
+  name: 'Fubumio',
+  title: 'Fubumio贴贴',
+  demand: [332704117, 389862071],
+  type: 'success',
+  strict: false,
+}, {
+  name: 'Aquayame',
+  title: 'Aquayame',
+  demand: [375504219, 389858027],
+  type: 'success',
+  strict: false,
+}]
 
 export default {
   components: {},
@@ -130,14 +116,14 @@ export default {
     dd: Object,
   },
   computed: {
-    face: function() {
+    face() {
       if (this.dd.face.includes('noface')) {
         return this.dd.face
       }
-      return `${this.dd.face}@96w_96h`
+      return `${this.dd.face}@256w_256h`
     },
     tags() {
-      let vtbs = this.vtbs.flat()
+      let vtbs = this.dd.dd.flat()
       let type = ddTypes.filter(({ strict, demand }) => {
         if (strict) {
           if (vtbs.length !== demand.length) {
@@ -158,11 +144,10 @@ export default {
     uname: function() {
       return this.dd.uname
     },
-    isDD: function() {
-      return this.vtbs[0].length + this.vtbs[1].length + this.vtbs[2].length - 1
-    },
     vtbs: function() {
       return this.dd.dd
+        .map((vtbs, level) => ({ vtbs, level }))
+        .filter(({ vtbs }) => vtbs.length)
     },
     isMeaQua: function() {
       let d = [].concat(...this.vtbs)
@@ -186,47 +171,14 @@ export default {
 
 <style scoped>
 .face {
-  width: 96px;
-  height: 96px;
-  border-radius: 100px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 }
 
-.center {
-  text-align: center;
-}
-
-.name {
-  font-size: 18px;
-  margin-top: 2px;
-  margin-bottom: 8px;
-}
-
-.detail {
-  color: black;
-  text-decoration: none;
-}
-
-.detail:hover {
-  text-decoration: underline;
-}
-
-.vtb {
-  margin-bottom: 3px;
-}
-
-.right {
-  float: right;
-}
-
-.tag{
-  margin-left: 2px;
-}
-
 .guard {
-  background-size: cover;
-  width: 24px;
-  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding-left: 29.3px;
+  margin-bottom: 2px;
 }
 
 .guard-0 {
@@ -242,6 +194,6 @@ export default {
 }
 
 .dd {
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
 }
 </style>
