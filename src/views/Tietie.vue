@@ -1,6 +1,6 @@
 <template>
 <section class="hero is-fullheight">
-  <p class="gap">贴贴</p>
+  <p class="gap">贴贴 (上船)</p>
   <div id="cy" class="hero-body" v-if="!loaded">
     <progress class="progress" max="100"></progress>
   </div>
