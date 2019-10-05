@@ -192,8 +192,4 @@ export default {
 .guard-2 {
   background-image: url('../assets/2.png');
 }
-
-.dd {
-  /* margin-bottom: 16px; */
-}
 </style>
