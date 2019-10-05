@@ -1,18 +1,20 @@
 <template functional>
 <div>
-  <el-row v-for="(value, key) in props.status" :gutter="6" :key="key">
-    <el-col :span="12" class="right">
-      {{props.name[key]}}<span :class="props.icon[key]"></span>
-    </el-col>
-    <template v-if="key === 'rise'">
-      <span v-if="value > 0" class="more">+{{value | parseNumber}}</span>
-      <span v-if="value < 0" class="less">{{value | parseNumber}}</span>
-      <span v-if="value === 0">{{value | parseNumber}}</span>
-    </template>
-    <el-col :span="12" v-else>
-      {{value | parseNumber}}
-    </el-col>
-  </el-row>
+  <div class="columns is-gapless noMargin is-mobile" v-for="(value, key) in props.status" :key="key">
+    <div class="column is-4 has-text-right">
+      {{props.name[key]}}
+    </div>
+    <div class="column is-1">
+      <span :class="props.icon[key]"></span>
+    </div>
+    <div class="column is-7">
+      <template v-if="key === 'rise' && value !== 0">
+        <span v-if="value > 0" class="more">+{{value | parseNumber}}</span>
+        <span v-if="value < 0" class="less">{{value | parseNumber}}</span>
+      </template>
+      <span v-else> {{value | parseNumber}}</span>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -45,15 +47,15 @@ export default {
 </script>
 
 <style scoped>
-.right {
-  text-align: right;
-}
-
 .more {
   color: #00da3c;
 }
 
 .less {
   color: #ec0000;
+}
+
+.noMargin {
+  margin-bottom: 0 !important;
 }
 </style>

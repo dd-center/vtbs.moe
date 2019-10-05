@@ -1,15 +1,15 @@
 <template>
-<el-container>
-  <el-main>
-    <el-row type="flex" justify="space-around">
-      <el-col :xs="24" :sm="20" :md="16" :lg="13" :xl="12" v-loading="!vtbs.length">
-        <transition-group name="flip-list">
-          <card v-for="vtb in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card"></card>
-        </transition-group>
-      </el-col>
-    </el-row>
-  </el-main>
-</el-container>
+<div class="columns is-gapless gap">
+  <div class="column">
+  </div>
+  <div class="column is-full-mobile is-11-tablet is-10-desktop is-three-fifths-widescreen is-7-fullhd">
+    <progress class="progress" max="100" v-if="!vtbs.length"></progress>
+    <transition-group name="flip-list">
+      <card v-for="vtb in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card"></card>
+    </transition-group>
+  </div>
+  <div class="column"></div>
+</div>
 </template>
 
 <script>
@@ -92,5 +92,11 @@ export default {
 
 .card {
   margin-bottom: 32px;
+}
+
+.gap {
+  padding: 16px;
+  padding-left: 32px;
+  padding-right: 32px;
 }
 </style>

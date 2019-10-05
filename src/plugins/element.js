@@ -6,11 +6,11 @@ import {
   // Dropdown,
   // DropdownMenu,
   // DropdownItem,
-  Menu,
-  Submenu,
-  MenuItem,
+  // Menu,
+  // Submenu,
+  // MenuItem,
   // MenuItemGroup,
-  Input,
+  // Input,
   // InputNumber,
   // Radio,
   // RadioGroup,
@@ -30,7 +30,7 @@ import {
   // TimeSelect,
   // TimePicker,
   // Popover,
-  Tooltip,
+  // Tooltip,
   // MessageBox,
   // Breadcrumb,
   // BreadcrumbItem,
@@ -66,7 +66,7 @@ import {
   // Transfer,
   Container,
   // Header,
-  Aside,
+  // Aside,
   Main,
   // Footer,
   // Timeline,
@@ -84,11 +84,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 // Vue.use(Dropdown)
 // Vue.use(DropdownMenu)
 // Vue.use(DropdownItem)
-Vue.use(Menu)
-Vue.use(Submenu)
-Vue.use(MenuItem)
+// Vue.use(Menu)
+// Vue.use(Submenu)
+// Vue.use(MenuItem)
 // Vue.use(MenuItemGroup)
-Vue.use(Input)
+// Vue.use(Input)
 // Vue.use(InputNumber)
 // Vue.use(Radio)
 // Vue.use(RadioGroup)
@@ -108,7 +108,7 @@ Vue.use(TableColumn)
 // Vue.use(TimeSelect)
 // Vue.use(TimePicker)
 // Vue.use(Popover)
-Vue.use(Tooltip)
+// Vue.use(Tooltip)
 // Vue.use(Breadcrumb)
 // Vue.use(BreadcrumbItem)
 // Vue.use(Form)
@@ -138,7 +138,7 @@ Vue.use(Card)
 // Vue.use(Transfer)
 Vue.use(Container)
 // Vue.use(Header)
-Vue.use(Aside)
+// Vue.use(Aside)
 Vue.use(Main)
 // Vue.use(Footer)
 // Vue.use(Calendar)
