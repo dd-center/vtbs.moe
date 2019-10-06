@@ -3,7 +3,7 @@ import { inflate } from 'pako'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-export const ws = ['https://api.vtbs.moe', 'https://api.tokyo.vtbs.moe', 'https://api.vtbs.musedash.moe']
+export const ws = ['https://api.vtbs.moe', 'https://api.tokyo.vtbs.moe', 'https://vtbs.musedash.moe']
 
 if (!ws.includes(localStorage.ws)) {
   localStorage.ws = ws[0]
