@@ -1,12 +1,12 @@
 <template>
 <div id="app" class="has-text-black" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
-  <div class="top background"></div>
-  <div class="tabs top">
+  <div class="top background" v-if="!badgeView"></div>
+  <div class="tabs top" v-if="!badgeView">
     <ul>
       <router-link v-for="([text, icon], url) in links" :key="`menu_${url}`" :to="url" tag="li" exact-active-class="is-active"><a class="bigger">{{text}}<span v-if="icon" :class="`el-icon-${icon}`"></span></a></router-link>
     </ul>
   </div>
-  <div class="height"></div>
+  <div class="height" v-if="!badgeView"></div>
   <router-view>
   </router-view>
 </div>
