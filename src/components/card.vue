@@ -58,13 +58,13 @@ export default {
   },
   computed: {
     info: function() {
-      return this.$store.state.info[this.mid] || this.vtb
+      return this.$store.getters.info[this.mid] || this.vtb
     },
     face: function() {
-      if (!this.$store.state.face[this.mid]) {
+      if (!this.$store.getters.face[this.mid]) {
         return undefined
       }
-      let face = this.$store.state.face[this.mid].replace('http:', 'https:')
+      let face = this.$store.getters.face[this.mid].replace('http:', 'https:')
       if (face.includes('noface')) {
         return face
       }

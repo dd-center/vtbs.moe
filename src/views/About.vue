@@ -111,7 +111,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['logs', 'status', 'spiderUpdate', 'online', 'vtbs', 'parrotNow', 'spiderLeft']),
+    ...mapState(['logs', 'status', 'spiderUpdate', 'currentVtbs', 'online', 'parrotNow', 'spiderLeft']),
     spiders: function() {
       return this.status.PARALLEL
     },
@@ -120,7 +120,7 @@ export default {
     },
     number: function() {
       /* beautify ignore:start */
-      return this.vtbs?.length
+      return this.currentVtbs?.length
       /* beautify ignore:end */
     },
     parrotProgress() {

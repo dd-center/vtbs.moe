@@ -4,13 +4,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import cytoscape from 'cytoscape'
 
 export default {
   props: ['tieties'],
   computed: {
-    ...mapState(['face', 'info']),
+    ...mapGetters(['face', 'info']),
   },
   data() {
     return { highlightBefore: undefined }

@@ -1,5 +1,5 @@
 <template>
-<div id="app" class="has-text-black" v-loading.fullscreen.lock="fullscreenLoading" element-loading-text="连接服务器...">
+<div id="app" class="has-text-black">
   <div class="top background" v-if="!badgeView"></div>
   <div class="tabs top" v-if="!badgeView">
     <ul>
@@ -7,6 +7,9 @@
     </ul>
   </div>
   <div class="height" v-if="!badgeView"></div>
+  <transition name="hide">
+    <span class="tag is-primary is-rounded is-medium staticSticky" v-if="fullscreenLoading">正在连接服务器...</span>
+  </transition>
   <router-view>
   </router-view>
 </div>
@@ -78,6 +81,24 @@ export default {
 
 .tabs {
   padding: 8px 20px;
+}
+
+.staticSticky {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.hide-enter-active,
+.hide-leave-active {
+  transition-timing-function: ease-in;
+  transition: opacity 0.5s, right 0.5s;
+}
+
+.hide-enter,
+.hide-leave-to {
+  right: -170px;
+  opacity: 0;
 }
 
 .height {

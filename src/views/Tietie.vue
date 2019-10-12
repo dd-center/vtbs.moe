@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import { get } from '@/socket'
 
@@ -18,7 +18,7 @@ import tietie from '@/components/tietie'
 export default {
   data: () => ({ tieties: undefined }),
   computed: {
-    ...mapState(['info']),
+    ...mapGetters(['info']),
     loaded() {
       return Object.keys(this.info).length && this.tieties
     },
