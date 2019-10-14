@@ -4,7 +4,7 @@
     <div class="columns">
       <div class="column">
         <figure class="image is-128x128">
-          <img class="is-rounded face" :src="face">
+          <img class="is-rounded face" :src="face.replace('http://', 'https://')">
         </figure>
       </div>
       <div class="column">
