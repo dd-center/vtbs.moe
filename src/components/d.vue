@@ -154,12 +154,12 @@ export default {
       return d.length === 2 && d.includes(349991143) && d.includes(375504219)
     },
     isVTB: function() {
-      return Object.keys(this.$store.state.info).includes(String(this.dd.mid))
+      return Object.keys(this.$store.getters.info).includes(String(this.dd.mid))
     },
   },
   methods: {
     name: function(mid) {
-      let vtb = this.$store.state.info[mid]
+      let vtb = this.$store.getters.info[mid]
       if (vtb) {
         return vtb.uname
       }
