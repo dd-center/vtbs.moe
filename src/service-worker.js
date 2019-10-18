@@ -10,7 +10,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, {})
 
 workbox.routing.setCatchHandler(({ event }) => {
   if (event.request.destination === 'document') {
-    return caches.match('/index.html')
+    return caches.match('/')
   }
   return Response.error()
 })
