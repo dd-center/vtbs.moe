@@ -108,6 +108,12 @@ const ddTypes = [{
   demand: [375504219, 389858027],
   type: 'success',
   strict: false,
+}, {
+  name: '柠果',
+  title: '柠果',
+  demand: [415578378, 416203727],
+  type: 'success',
+  strict: false,
 }]
 
 export default {
