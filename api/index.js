@@ -5,7 +5,7 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, hawk, vdb, wiki, biliAPI, stateGetPending } = require('./interface')
+const { vd, vdSocket, hawk, vdb, wiki, biliAPI, stateGetPending, stateSocket } = require('./interface')
 
 const { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache, status } = require('./database')
 
@@ -20,6 +20,7 @@ const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
 const io = new Server({ serveClient: false })
+stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
 parrot.start({ io })
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro }))

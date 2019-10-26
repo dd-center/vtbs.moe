@@ -4,6 +4,6 @@ const vdb = require('./vdb')
 const wiki = require('./api.vtb.wiki')
 const { got } = require('./cluster')
 const biliAPI = require('./biliapi')(got)
-const { getPending: stateGetPending } = require('./state')
+const { getPending: stateGetPending, socket: stateSocket } = require('./state')
 
-module.exports = { vd, vdSocket, hawk, vdb, wiki, biliAPI, stateGetPending }
+module.exports = { vd, vdSocket, hawk, vdb, wiki, biliAPI, stateGetPending, stateSocket }

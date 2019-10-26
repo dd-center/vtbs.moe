@@ -128,9 +128,11 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   handler('guardType')
   handler('fullGuard')
   handler('uptime')
-  socket.emit('log', `ID: ${socket.id}`)
-  let vtbs = await vdb.get()
-  socket.emit('vtbs', vtbs)
+  socket.on('join', room => {
+    if (['state'].includes(room)) {
+      socket.join(room)
+    }
+  })
   socket.on('disconnect', () => {
     io.clients((error, clients) => {
       if (error) {
@@ -140,6 +142,9 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
     })
     console.log('user disconnected')
   })
+  socket.emit('log', `ID: ${socket.id}`)
+  let vtbs = await vdb.get()
+  socket.emit('vtbs', vtbs)
   const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
     .filter(Boolean)
     .map(infoFilter)
@@ -188,6 +193,8 @@ fullGuard: all/some/number/[mid] -> ?/Any
 
 uptime: -> Number
 
+join: state -> room: state
+
 // Server Push
 online: Number
 
@@ -216,5 +223,7 @@ mid => detailInfo: {mid, {data}}
 mid => detailActive: {mid, {data}}
 mid => detailLive: {mid, {data}}
 mid => detailGuard: {mid, {data}}
+
+stateLog => log
 
  */

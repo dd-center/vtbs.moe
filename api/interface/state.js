@@ -11,4 +11,4 @@ const get = ({ name, key }) => new Promise(resolve => {
 
 const getPending = () => get({ name: 'cluster', key: 'pending' })
 
-module.exports = { getPending }
+module.exports = { getPending, socket }
