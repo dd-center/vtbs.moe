@@ -97,7 +97,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log }) => async vtb => {
   return mid
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI, infoFilter }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI, infoFilter, stateGetPending }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -113,7 +113,13 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
-    const spiders = await Promise.all(pending.map(core({ io, db, INTERVAL, parrot, biliAPI, log })))
+    const spiders = await Promise.all(await pending.filter((_, i) => i < 3).reduce(async (p, vtb) => {
+      const mids = [...await p]
+      while ((await stateGetPending()) > 32) {
+        await wait(1000)
+      }
+      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb)]
+    }, []))
     const infoArray = spiders
       .map(mid => db.info.get(mid))
       .map(infoFilter)
