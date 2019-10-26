@@ -20,22 +20,15 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
-const core = async ({ pending, io, db, INTERVAL, parrot, biliAPI, log }) => {
-  let vtb = pending.shift()
-  if (!vtb) {
-    return []
-  }
-
+const core = ({ io, db, INTERVAL, parrot, biliAPI, log }) => async vtb => {
   let time = Date.now()
 
   let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
-    pending.push(vtb)
-    log(`RETRY PENDING: ${vtb.mid}`)
-    return core({ pending, io, db, INTERVAL, parrot, biliAPI, log })
+    log(`RETRY: ${vtb.mid}`)
+    return core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb)
   }
 
-  const rest = core({ pending, io, db, INTERVAL, parrot, biliAPI, log })
   let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
 
   let averageLive = 0
@@ -98,32 +91,18 @@ const core = async ({ pending, io, db, INTERVAL, parrot, biliAPI, log }) => {
   const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
-  io.emit('spiderLeft', pending.length)
   await db.info.put(mid, newInfo)
 
   log(`UPDATED: ${mid} - ${uname}`)
-  return [newInfo, ...await rest]
+  return mid
 }
 
-const round = async ({ pending, spiderId, io, db, INTERVAL, parrot, biliAPI }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI, infoFilter }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
-  })(`spider ${spiderId}: ${log}`)
+  })(`spider: ${log}`)
 
-  const startTime = Date.now()
-
-  const infoArray = await core({ pending, io, db, INTERVAL, parrot, biliAPI, log })
-
-  const time = Date.now()
-
-  let update = { time, spiderId: spiderId, duration: time - startTime }
-  io.emit('spiderUpdate', update)
-  await db.site.put({ mid: 'spider', num: spiderId, value: update })
-  return infoArray
-}
-
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI }) => {
   let lastUpdate = Date.now()
   setInterval(() => {
     if (Date.now() - lastUpdate > INTERVAL * 2) {
@@ -134,8 +113,10 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
-    let spiders = Array(PARALLEL).fill().map((_i, spiderId) => round({ pending, spiderId, io, db, INTERVAL, parrot, biliAPI }))
-    let infoArray = [].concat(...await Promise.all(spiders))
+    const spiders = await Promise.all(pending.map(core({ io, db, INTERVAL, parrot, biliAPI, log })))
+    const infoArray = spiders
+      .map(mid => db.info.get(mid))
+      .map(infoFilter)
     io.emit('info', infoArray)
 
     worm({ PARALLEL, vtbs: await vdb.get(), io, biliAPI })

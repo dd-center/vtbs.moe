@@ -13,7 +13,7 @@ const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
 const parrot = require('./parrot')({ wiki, vdb, parrotCache })
 
-const { connect } = require('./socket')
+const { connect, infoFilter } = require('./socket')
 const httpAPI = require('./http')
 
 const PARALLEL = 5
@@ -25,7 +25,7 @@ parrot.start({ io })
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro }))
 io.attach(server)
 vd.attach(server)
-spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, parrot, biliAPI })
+spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType }, io, worm, parrot, biliAPI, infoFilter })
 snake({ vdSocket, io, info })
 hawk({ io })
 setTimeout(() => {

@@ -28,6 +28,10 @@ const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
   return handlerTable[key](rest)
 }
 
+const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
+
+exports.infoFilter = infoFilter
+
 exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
   const newHandler = wsRouter({ info, vdb })
   const handler = e => socket.on(e, async (target, arc) => {
@@ -138,7 +142,7 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   })
   const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
     .filter(Boolean)
-    .map(({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }))
+    .map(infoFilter)
 
   socket.emit('info', infoArray)
 
