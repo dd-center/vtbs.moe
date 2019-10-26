@@ -40,7 +40,6 @@ const x = new Vuex.Store({
     cachedInfo: {},
     cachedTime: 0,
     status: {},
-    spiderUpdate: [],
     logs: [],
     currentFace: {},
     cachedFace: {},
@@ -51,6 +50,8 @@ const x = new Vuex.Store({
     wormArray: [],
     parrotNow: 0,
     spiderLeft: 0,
+    spiderDuration: undefined,
+    spiderTime: 0,
   },
   getters: {
     vtbs(state) {
@@ -149,12 +150,6 @@ const x = new Vuex.Store({
     SOCKET_online(state, data) {
       state.online = data
     },
-    SOCKET_spiderUpdate(state, data) {
-      let { spiderId } = data
-      let spiderUpdate = [...state.spiderUpdate]
-      spiderUpdate[spiderId] = data
-      state.spiderUpdate = spiderUpdate
-    },
     SOCKET_vupMacro(state, data) {
       if (state.vupMacro.length) {
         state.vupMacro.push(data)
@@ -189,6 +184,12 @@ const x = new Vuex.Store({
     },
     SOCKET_spiderLeft(state, data) {
       state.spiderLeft = data
+    },
+    SOCKET_spiderDuration(state, data) {
+      state.spiderDuration = data
+    },
+    SOCKET_spiderTime(state, data) {
+      state.spiderTime = data
     },
     updateMacro(state, { vup, vtb, guard }) {
       if (vup) {

@@ -113,23 +113,35 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
+    let spiderLeft = pending.length
+    io.emit('spiderLeft', spiderLeft)
+    db.status.put('spiderLeft', spiderLeft)
+
     const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
       while ((await stateGetPending()) > 32) {
         await wait(1000)
       }
-      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb)]
+      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb).then(mid => {
+        spiderLeft--
+        io.emit('spiderLeft', spiderLeft)
+        db.status.put('spiderLeft', spiderLeft)
+        return mid
+      })]
     }, []))
-    const infoArray = spiders
-      .map(mid => db.info.get(mid))
+    const infoArray = (await Promise.all(spiders.map(mid => db.info.get(mid))))
       .map(infoFilter)
     io.emit('info', infoArray)
 
     worm({ PARALLEL, vtbs: await vdb.get(), io, biliAPI })
       .then(wormArray => io.emit('worm', wormArray))
 
-    let endTime = Date.now()
+    const endTime = Date.now()
     lastUpdate = endTime
+    io.emit('spiderDuration', endTime - startTime)
+    db.status.put('spiderDuration', endTime - startTime)
+    io.emit('spiderTime', endTime)
+    db.status.put('spiderTime', endTime)
     console.log(`WAIT: ${INTERVAL - (endTime - startTime)}`)
     await wait(INTERVAL - (endTime - startTime))
   }

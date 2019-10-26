@@ -32,7 +32,7 @@ const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, f
 
 exports.infoFilter = infoFilter
 
-exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult }) => async socket => {
+exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
   const newHandler = wsRouter({ info, vdb })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
@@ -151,7 +151,8 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
   for (let i = 0; i < PARALLEL; i++) {
     socket.emit('spiderUpdate', await site.get({ mid: 'spider', num: i }))
   }
-  socket.emit('status', { PARALLEL, INTERVAL })
+  socket.emit('status', { PARALLEL, INTERVAL });
+  ['spiderLeft', 'spiderDuration', 'spiderTime'].forEach(async key => socket.emit(key, await status.get(key)))
 }
 
 /*
@@ -198,7 +199,9 @@ log: String
 
 status: {}
 
-spiderUpdate: {spiderId, time, duration}
+spiderLeft: Number
+spiderDuration: Number
+spiderTime: Number
 
 hawk: {day: [...jieba], h: [...jieba]}
 

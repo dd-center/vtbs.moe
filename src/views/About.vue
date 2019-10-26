@@ -52,7 +52,7 @@
           <br>
           <br>
           <h4 class="title is-4">服务器数据：</h4>
-          <div v-if="spiders && interval && upMoment && number">
+          <div v-if="interval && upMoment && number">
             <p>Spiders: {{spiders}}</p>
             <p v-loading="!interval">Interval: {{interval}} ms</p>
             <p v-loading="!upMoment">Uptime: {{upMoment}}</p>
@@ -65,6 +65,8 @@
             <div class="column">
               <h5 class="title is-5">Spider: <small>({{spiderLeft}}/{{number}})</small></h5>
               <progress class="progress" max="100" :value="spiderProgress" :class="{'is-success': spiderProgress === 100}"></progress>
+              <p>上次更新: {{spiderTime | parseTime}} <br>
+                目前负载: {{spiderDuration | load(interval)}}</p>
             </div>
             <div class="column">
               <h5 class="title is-5">Parrot: <small>({{parrotNow}}/{{number}})</small></h5>
@@ -72,17 +74,6 @@
             </div>
           </div>
           <br>
-          <div v-for="{time, spiderId, duration} in spiderUpdate" :key="`spider_${spiderId}`" class="columns">
-            <div class="column is-one-third">
-              <p class="is-size-5">Spiders {{spiderId}}</p>
-              <p>上次更新: {{time | parseTime}} <br>
-                目前负载: {{duration | load(interval)}}</p>
-              <br>
-            </div>
-            <div class="column">
-              <progress class="progress" max="1" :value="duration/interval" :class="{'is-success': duration/interval < 1, 'is-warning': duration/interval > 1}"></progress>
-            </div>
-          </div>
           <hr>
           <h1 class="title is-4">logs:</h1>
           <p v-for="(log, index) in [...logs].reverse()" :key="index">
@@ -111,7 +102,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['logs', 'status', 'spiderUpdate', 'currentVtbs', 'online', 'parrotNow', 'spiderLeft']),
+    ...mapState(['logs', 'status', 'currentVtbs', 'online', 'parrotNow', 'spiderLeft', 'spiderDuration', 'spiderTime']),
     spiders: function() {
       return this.status.PARALLEL
     },
