@@ -16,7 +16,7 @@ jobs:
     - name: install and build
       run: |
         git submodule update --init --recursive
-        npm ci
+        npm install
         npm run build
       env:
         CI: true
