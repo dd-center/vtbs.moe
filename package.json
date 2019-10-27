@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-pipeline-operator": "^7.5.0",
-    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-babel": "^4.0.5",
     "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-plugin-pwa": "^3.5.0",
     "@vue/cli-service": "^3.5.0",
