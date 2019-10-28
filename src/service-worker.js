@@ -3,7 +3,13 @@
 console.log('vtbs.moe 超级 ServiceWorker 参上！')
 
 workbox.routing.setDefaultHandler(
-  new workbox.strategies.StaleWhileRevalidate()
+  new workbox.strategies.StaleWhileRevalidate({
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 2333,
+      }),
+    ],
+  })
 )
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {})
