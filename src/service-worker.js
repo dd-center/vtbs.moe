@@ -8,6 +8,11 @@ workbox.routing.setDefaultHandler(
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {})
 
+workbox.routing.registerRoute(
+  /socket.io/,
+  new workbox.strategies.NetworkOnly()
+)
+
 workbox.routing.setCatchHandler(({ event }) => {
   if (event.request.destination === 'document') {
     return caches.match('/')
