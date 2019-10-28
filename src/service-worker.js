@@ -9,7 +9,7 @@ workbox.routing.setDefaultHandler(
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {})
 
 workbox.routing.registerRoute(
-  /socket.io/,
+  /https:\/\/api\.vtbs\.moe/,
   new workbox.strategies.NetworkOnly()
 )
 
