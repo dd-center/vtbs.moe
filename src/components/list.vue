@@ -4,8 +4,8 @@
   <template v-else>
     <div v-for="type in selected" :key="type.key" class="buttons is-centered">
       <button class="button is-text" @click="filter({key: type.key, type: 'all'})">{{type.text}}</button>
-      <button v-for="choice in type.choices" :key="choice.key" @click="filter({key: type.key, choice: choice.key})" class="button is-success" :class="{'is-outlined': choice.filter}">{{choice.text}}</button>
-      <button @click="filter({key: type.key, type: 'other'})" class="button is-success" :class="{'is-outlined': type.other}">其他</button>
+      <button v-for="choice in type.choices" :key="choice.key" @click="filter({key: type.key, choice: choice.key})" class="button" :class="{'is-success': !choice.filter}">{{choice.text}}</button>
+      <button @click="filter({key: type.key, type: 'other'})" class="button" :class="{'is-success': !type.other}">其他</button>
     </div>
     <div class="table-container box">
       <table class="table is-fullwidth is-striped is-hoverable">
@@ -76,12 +76,13 @@ export default {
         }
         if (type === 'all') {
           const choices = Object.keys(this.types[key].choices)
-          const now = [...choices.map(choice => this.types[key].choices[choice].filter), this.types[key].other]
-            .reduce((a, b) => a || b)
+          const someFiltered = [...choices.map(choice => this.types[key].choices[choice].filter), this.types[key].other]
+            .map(Boolean)
+            .includes(true)
           choices.forEach(choice => {
-            this.types[key].choices[choice].filter = !now
+            this.types[key].choices[choice].filter = !someFiltered
           })
-          this.types[key].other = !now
+          this.types[key].other = !someFiltered
         }
       }
       this.types = { ...this.types }
@@ -97,12 +98,8 @@ export default {
       if (vdbTable[uuid]) {
         const { group } = vdbTable[uuid]
         if (group && !types.group.choices[group]) {
-          if (!vdbTable[group]) {
-            console.warn('unknow group', group, mid)
-          } else {
-            const { name } = vdbTable[group]
-            types.group.choices[group] = { text: name[name.default] }
-          }
+          const { name } = vdbTable[group]
+          types.group.choices[group] = { text: name[name.default] }
         }
       }
     })
