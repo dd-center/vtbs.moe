@@ -108,26 +108,26 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
 }
 
 const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
-  for (;;) {
-    let startTime = (new Date()).getTime()
+  const core = mid => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(e => {
+    console.error(e)
+    log(`Guard RETRY: ${mid}`)
+    return core(mid)
+  })
+  while (true) {
+    const intervalWait = wait(INTERVAL)
 
     let vtbs = await vdb.get()
     let mids = vtbs.map(({ mid }) => mid)
 
-    for (let i = 0; i < vtbs.length; i++) {
-      let { mid } = vtbs[i]
-      let object = await biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(console.error)
-      if (!object) {
-        i--
-        await wait(1000)
-        log(`Guard RETRY: ${mid}`)
-        continue
-      }
-      let { guards, guardLevel } = object
-      await guardType.put(mid, guardLevel)
-      await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
-      log(`Guard: ${i + 1}/${vtbs.length}`)
-    }
+    await mids
+      .map(async mid => ({ mid, core: await core(mid) }))
+      .reduce(async (p, objectP, i) => {
+        await p
+        const { mid, core: { guards, guardLevel } } = await objectP
+        await guardType.put(mid, guardLevel)
+        await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
+        log(`Guard: ${i + 1}/${vtbs.length}`)
+      }, Promise.resolve(233))
 
     let all = {}
     for (let i = 0; i < vtbs.length; i++) {
@@ -153,8 +153,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)
 
-    let endTime = (new Date()).getTime()
-    await wait(INTERVAL - (endTime - startTime))
+    await intervalWait
   }
 }
 
@@ -163,8 +162,10 @@ module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, b
     console.log(log)
     io.emit('log', log)
   }
-  vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
-  vtb({ vdb, macro, info, num, INTERVAL, log, io })
-  guard({ vdb, macro, info, num, INTERVAL, log, io })
+  setInterval(() => {
+    vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
+    vtb({ vdb, macro, info, num, INTERVAL, log, io })
+    guard({ vdb, macro, info, num, INTERVAL, log, io })
+  }, 1000 * 60 * 4)
   dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log, biliAPI })
 }
