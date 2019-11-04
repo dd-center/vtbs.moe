@@ -119,7 +119,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
 
     const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
-      while ((await stateGetPending()) > 32) {
+      while ((await stateGetPending()) > 64) {
         await wait(1000)
       }
       return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb).then(mid => {
