@@ -25,7 +25,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
 
   let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
-    while (await stateGetPending() > 32) {
+    while (await stateGetPending() > 128) {
       await wait(500)
     }
     log(`RETRY: ${vtb.mid}`)
