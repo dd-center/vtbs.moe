@@ -29,7 +29,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
       await wait(500)
     }
     log(`RETRY: ${vtb.mid}`)
-    return core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb)
+    return core({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending })(vtb)
   }
 
   let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
