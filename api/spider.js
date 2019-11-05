@@ -20,11 +20,14 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
-const core = ({ io, db, INTERVAL, parrot, biliAPI, log }) => async vtb => {
+const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => async vtb => {
   let time = Date.now()
 
   let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
+    while (await stateGetPending() > 32) {
+      await wait(500)
+    }
     log(`RETRY: ${vtb.mid}`)
     return core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb)
   }
@@ -119,10 +122,10 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
 
     const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
-      while ((await stateGetPending()) > 64) {
+      while (await stateGetPending() > 64) {
         await wait(1000)
       }
-      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log })(vtb).then(mid => {
+      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending })(vtb).then(mid => {
         spiderLeft--
         io.emit('spiderLeft', spiderLeft)
         db.status.put('spiderLeft', spiderLeft)
