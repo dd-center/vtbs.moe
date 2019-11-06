@@ -25,7 +25,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
 
   let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
-    while (await stateGetPending() > 128) {
+    while (await stateGetPending() > 512) {
       await wait(500)
     }
     log(`RETRY: ${vtb.mid}`)
@@ -112,7 +112,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
       console.error(`Spider, NOT OK`)
     }
   }, 1000 * 60 * 5)
-  for (;;) {
+  while (true) {
     let startTime = Date.now()
     let pending = [...(await vdb.get())]
 
@@ -122,8 +122,8 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
 
     const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
-      while (await stateGetPending() > 64) {
-        await wait(1000)
+      while (await stateGetPending() > 256) {
+        await wait(233)
       }
       return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending })(vtb).then(mid => {
         spiderLeft--
