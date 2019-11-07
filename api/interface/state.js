@@ -14,8 +14,10 @@ const get = ({ name, key }) => new Promise(resolve => {
 const getPending = () => Promise.race([get({ name: 'cluster', key: 'pending' }), wait(1000)]).then(number => {
   if (typeof number === 'number') {
     return number
+  } else {
+    console.error('getPending timeout')
+    return Infinity
   }
-  console.error('getPending timeout')
 })
 
 module.exports = { getPending, socket }
