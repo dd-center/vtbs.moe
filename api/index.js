@@ -5,13 +5,12 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, hawk, vdb, wiki, biliAPI, stateGetPending, stateSocket } = require('./interface')
+const { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket } = require('./interface')
 
-const { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache, status } = require('./database')
+const { site, num, info, active, live, guard, macro, fullGuard, guardType, status } = require('./database')
 
 const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
-const parrot = require('./parrot')({ wiki, vdb, parrotCache })
 
 const { connect, infoFilter } = require('./socket')
 const httpAPI = require('./http')
@@ -22,11 +21,10 @@ const INTERVAL = 1000 * 60 * 5
 const io = new Server({ serveClient: false })
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
-parrot.start({ io })
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro }))
 io.attach(server)
 vd.attach(server)
-spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType, status }, io, worm, parrot, biliAPI, infoFilter, stateGetPending })
+spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType, status }, io, worm, biliAPI, infoFilter, stateGetPending })
 snake({ vdSocket, io, info })
 hawk({ io })
 ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io, biliAPI })

@@ -68,10 +68,6 @@
               <p>上次更新: {{spiderTime | parseTime}} <br>
                 目前负载: {{spiderDuration | load(interval)}}</p>
             </div>
-            <div class="column">
-              <h5 class="title is-5">Parrot: <small>({{parrotNow}}/{{number}})</small></h5>
-              <progress class="progress" max="100" :value="parrotProgress" :class="{'is-success': parrotProgress === 100}"></progress>
-            </div>
           </div>
           <br>
           <hr>
@@ -102,7 +98,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['logs', 'status', 'currentVtbs', 'online', 'parrotNow', 'spiderLeft', 'spiderDuration', 'spiderTime']),
+    ...mapState(['logs', 'status', 'currentVtbs', 'online', 'spiderLeft', 'spiderDuration', 'spiderTime']),
     spiders: function() {
       return this.status.PARALLEL
     },
@@ -113,9 +109,6 @@ export default {
       /* beautify ignore:start */
       return this.currentVtbs?.length
       /* beautify ignore:end */
-    },
-    parrotProgress() {
-      return Math.round(this.parrotNow / (this.number || 1) * 100)
     },
     spiderProgress() {
       return 100 - Math.round(this.spiderLeft / (this.number || 1) * 100)

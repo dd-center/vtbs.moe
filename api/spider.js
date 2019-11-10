@@ -20,7 +20,7 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
-const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => async vtb => {
+const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
   let time = Date.now()
 
   let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
@@ -29,31 +29,10 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
       await wait(500)
     }
     log(`RETRY: ${vtb.mid}`)
-    return core({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending })(vtb)
+    return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
 
   let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
-
-  let averageLive = 0
-  let weekLive = 0
-
-  let liveHistory = await parrot.getLiveHistory(uuid)
-
-  let liveNum = liveHistory.LiveTime / (60 * 5)
-
-  if (liveHistory.Lives.length) {
-    averageLive = liveHistory.LiveTime * 1000 * (1000 * 60 * 60 * 24 * 7) / (time - liveHistory.Lives[0].BeginTime * 1000)
-  }
-
-  liveHistory.Lives
-    .map(({ BeginTime, EndTime }) => ({ BeginTime: BeginTime * 1000, EndTime: EndTime * 1000 }))
-    .forEach(({ BeginTime, EndTime }) => {
-      if (BeginTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-        weekLive += EndTime - BeginTime
-      } else if (EndTime > (time - 1000 * 60 * 60 * 24 * 7)) {
-        weekLive += EndTime - (time - 1000 * 60 * 60 * 24 * 7)
-      }
-    })
 
   let info = await db.info.get(mid)
   if (!info) {
@@ -91,7 +70,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
 
   let guardType = await db.guardType.get(mid)
 
-  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time }
+  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
   await db.info.put(mid, newInfo)
@@ -100,7 +79,7 @@ const core = ({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending }) => as
   return mid
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI, infoFilter, stateGetPending }) => {
+module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter, stateGetPending }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -125,7 +104,7 @@ module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, parrot, biliAPI
       while (await stateGetPending() > 256) {
         await wait(233)
       }
-      return [...mids, core({ io, db, INTERVAL, parrot, biliAPI, log, stateGetPending })(vtb).then(mid => {
+      return [...mids, core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb).then(mid => {
         spiderLeft--
         io.emit('spiderLeft', spiderLeft)
         db.status.put('spiderLeft', spiderLeft)

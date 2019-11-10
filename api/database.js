@@ -71,9 +71,7 @@ let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
 let guardType = new LevelDatabase({ name: 'guardType', db })
 let macro = new ArrayDatabase({ name: 'macro', db })
 
-let parrotCache = new LevelDatabase({ name: 'parrot', db })
-
-module.exports = { site, num, info, active, live, guard, macro, fullGuard, guardType, parrotCache, status }
+module.exports = { site, num, info, active, live, guard, macro, fullGuard, guardType, status }
 
 /*
 数据库
@@ -91,7 +89,7 @@ spiderDuration: Number
 spiderTime: Number
 
 info
-mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, liveNum, lastLive, averageLive, weekLive, guardChange, guardType, areaRank, online, title, bot, time}
+mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time}
 DEPRECATED: liveNum
 
 active
@@ -122,9 +120,6 @@ vtb_vtbMacroNum: {liveStatus, online}
 guard_guardMacroNum: {guardNum}
 
 all: time: timestamp
-
-parrotCache
-id: liveHistory
 
 Increase index:
   recordNum

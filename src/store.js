@@ -48,7 +48,6 @@ const x = new Vuex.Store({
     guardMacro: [],
     hawk: { day: [], h: [] },
     wormArray: [],
-    parrotNow: 0,
     spiderLeft: 0,
     spiderDuration: undefined,
     spiderTime: 0,
@@ -178,9 +177,6 @@ const x = new Vuex.Store({
       }
       state.currentFace = { ...face }
       state.wormArray = data
-    },
-    SOCKET_parrotNow(state, data) {
-      state.parrotNow = data
     },
     SOCKET_spiderLeft(state, data) {
       state.spiderLeft = data
