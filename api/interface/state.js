@@ -5,6 +5,7 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 socket.on('connect', () => {
   socket.emit('join', 'all')
+  console.log('hello State')
 })
 
 const get = ({ name, key }) => new Promise(resolve => {
