@@ -3,9 +3,9 @@ const ioClient = require('socket.io-client')
 
 const io = new Server({ serveClient: false, path: '/vds' })
 
-let vdSocket = ioClient('http://0.0.0.0:9003')
+const vdSocket = ioClient('http://0.0.0.0:9003')
 
-vdSocket.on('danmaku', ({ message, roomid, mid }) => io.to('all').to(roomid).emit('danmaku', { message, roomid, mid }))
+vdSocket.on('danmaku', ({ message, roomid, mid, uname, timestamp }) => io.to('all').to(roomid).emit('danmaku', { message, roomid, mid, uname, timestamp }))
 
 io.on('connection', socket => {
   socket.on('join', (data, arc) => {
