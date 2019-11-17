@@ -13,6 +13,7 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
 
   app.use(async (ctx, next) => {
     let hit = cache.get(ctx.url)
+    ctx.set('Access-Control-Allow-Origin', '*')
     if (hit) {
       ctx.body = hit
     } else {
