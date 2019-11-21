@@ -77,7 +77,7 @@ export default {
       return this.info.roomid
     },
     uname: function() {
-      return this.info.uname || this.note[0]
+      return this.info.uname
     },
     note: function() {
       return this.vtb.note
