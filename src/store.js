@@ -66,16 +66,16 @@ const x = new Vuex.Store({
     riseRank: rank((state, a, b) => b.rise - a.rise),
     liveRank(state, getters) {
       return getters.vtbs
-        .map(({ mid }) => getters.info[mid])
+        .map(({ mid }) => getters.info[mid] || { mid })
         .concat(state.wormArray)
         .sort((a, b) => {
-          if (!a && !b) {
+          if (!a.uname && !b.uname) {
             return 0
           }
-          if (!a) {
+          if (!a.uname) {
             return 1
           }
-          if (!b) {
+          if (!b.uname) {
             return -1
           }
           let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
