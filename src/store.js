@@ -78,10 +78,11 @@ const x = new Vuex.Store({
           if (!b.uname) {
             return -1
           }
-          let liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
-          let guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
-          let roomDifference = (b.roomid ? 1 : 0) - (a.roomid ? 1 : 0)
-          return 100000000000 * (liveDifference + roomDifference) + 1000000 * guardDifference + b.follower - a.follower
+          const liveDifference = b.liveStatus * b.online - a.liveStatus * a.online
+          const guardDifference = (b.guardType ? 100 * b.guardType[0] + 10 * b.guardType[1] + b.guardType[2] : b.guardNum) - (a.guardType ? 100 * a.guardType[0] + 10 * a.guardType[1] + a.guardType[2] : a.guardNum)
+          const roomDifference = (b.roomid ? 1 : 0) - (a.roomid ? 1 : 0)
+          const liveStatus = (b.liveStatus ? 1 : 0) - (a.liveStatus ? 1 : 0)
+          return 100000000000 * (liveDifference + roomDifference + liveStatus) + 1000000 * guardDifference + b.follower - a.follower
         })
     },
   },
