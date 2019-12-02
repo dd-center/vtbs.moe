@@ -48,7 +48,7 @@
     "babel-eslint": "^10.0.1",
     "babel-plugin-component": "^1.1.1",
     "copy-webpack-plugin": "^5.0.3",
-    "eslint": "^5.8.0",
+    "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.0.1",
     "node-sass": "^4.9.0",
     "sass-loader": "^8.0.0",
