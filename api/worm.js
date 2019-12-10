@@ -38,7 +38,7 @@ const wormResult = () => wormArray
 
 const worm = async ({ PARALLEL, vtbs, io, biliAPI }) => {
   let mids = vtbs.map(({ mid }) => mid)
-  let pending = (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?area_id=199&sort_type=income&page=1&page_size=99', { json: true })).body.data.list
+  let pending = (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?area_id=199&sort_type=income&page=1&page_size=99').json()).data.list
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
     .filter(({ mid }) => !mids.includes(mid))
 
