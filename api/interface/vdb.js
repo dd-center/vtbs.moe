@@ -6,7 +6,7 @@ let vtbs
 let io
 
 const update = async () => {
-  let { body } = (await got('https://vdb.vtbs.moe/json/list.json', { json: true }).catch(e => ({ e: console.error(e) })))
+  const body = await got('https://vdb.vtbs.moe/json/list.json').json().catch(console.error)
   if (body) {
     console.log('vdb update')
     vdb = body
