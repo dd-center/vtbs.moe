@@ -10,7 +10,19 @@
       </h2>
       <div class="columns">
         <div class="column">
-          <p>🍉 按照关注数排列<br>
+          <h3 class="subtitle is-4">小站要开不下去啦~</h3>
+          <p>现在下载DD@Electron, 帮助vtbs.moe持续运行<br>
+            开源软件, 无广告无病毒<br>
+            分布式信息获取DD@Electron<br>
+            Windows: <a href="https://dd.center/api/latest/ddatelectron/windows" target="_blank">https://dd.center/api/latest/ddatelectron/windows</a><br>
+            macOS: <a href="https://dd.center/api/latest/ddatelectron/mac" target="_blank">https://dd.center/api/latest/ddatelectron/mac</a><br>
+            Github Release: <a href="https://github.com/dd-center/DDatElectron/releases/latest" target="_blank">https://github.com/dd-center/DDatElectron/releases/latest</a><br>
+            <br>
+            <a href="https://github.com/dd-center/ddatelectron/" target="_blank">github:dd-center/ddatelectron</a><br>
+            <a href="https://github.com/dd-center/ddatelectron/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/ddatelectron.svg?style=social"></a>
+          </p>
+          <hr>
+          <p> 🍉 按照关注数排列<br>
             直播势：直播中的按照人气排列，靠前，其他按照舰队排列<br>
             宏观经济：bilibili 虚拟世界宏观走势<br>
             数据每 5 分钟更新一次<br>
