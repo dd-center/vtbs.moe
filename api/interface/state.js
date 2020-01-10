@@ -1,18 +1,15 @@
-const io = require('socket.io-client')
-const socket = io('http://0.0.0.0:9200?name=vtbs.moe')
+const CState = require('../../state-center/api')
+const cState = new CState({ name: 'vtbs.moe' })
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-socket.on('connect', () => {
-  socket.emit('join', 'all')
-  console.log('hello State')
-})
+cState.join('all')
 
-const get = ({ name, key }) => new Promise(resolve => {
-  socket.emit('state', { name, key }, resolve)
-})
+cState.on('connect', () => console.log('hello State'))
 
-const getPending = () => Promise.race([get({ name: 'cluster', key: 'pending' }), wait(1000)]).then(number => {
+const clusterAsker = cState.ask('cluster')
+
+const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).then(number => {
   if (typeof number === 'number') {
     return number
   } else {
@@ -21,4 +18,6 @@ const getPending = () => Promise.race([get({ name: 'cluster', key: 'pending' }),
   }
 })
 
-module.exports = { getPending, socket }
+const hawkEmitter = cState.subscribe('hawk')
+
+module.exports = { getPending, socket: cState.socket, hawkEmitter }
