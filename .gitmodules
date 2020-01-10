@@ -7,3 +7,6 @@
 [submodule "BiliChat"]
 	path = BiliChat
 	url = https://github.com/dd-center/BiliChat
+[submodule "state-center"]
+	path = state-center
+	url = https://github.com/dd-center/state-center.git
