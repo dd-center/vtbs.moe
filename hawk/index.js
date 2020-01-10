@@ -1,9 +1,10 @@
 const { join } = require('path')
 
 const vdSocket = require('./vd')
+const CState = require('../state-center/api')
 
-const Server = require('socket.io')
-const io = new Server(9011, { serveClient: false })
+const cState = new CState({ name: 'hawk' })
+const analyzePublisher = cState.publish('analyze')
 
 const nodejieba = require('nodejieba')
 
@@ -60,12 +61,13 @@ vdSocket.on('danmaku', ({ message }) => {
 })
 
 setInterval(() => {
-  let analyzed = {
+  const analyzed = {
     day: nodejieba.extract(danmaku.join('\n'), 256),
     h: nodejieba.extract(danmaku1h.join('\n'), 256),
   }
-  io.emit('analyze', analyzed)
+  analyzePublisher(analyzed)
+  // io.emit('analyze', analyzed)
   console.log(`Analyze ${danmaku1h.length}, ${danmaku.length}`)
-}, 1000 * 60)
+}, 1000)
 
 console.log('Hawk is here')
