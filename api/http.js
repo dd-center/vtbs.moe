@@ -1,3 +1,6 @@
+const { Duplex } = require('stream')
+const { once } = require('events')
+
 const Koa = require('koa')
 const Router = require('koa-router')
 
@@ -7,6 +10,61 @@ const cache = new LRU({
   maxAge: 1000 * 5,
   max: 100,
 })
+
+const alloc32UIntBuffer = number => {
+  const buffer = Buffer.alloc(4)
+  buffer.writeUInt32BE(number)
+  return buffer
+}
+
+const alloc64UIntBuffer = number => {
+  const buffer = Buffer.alloc(8)
+  buffer.writeBigUInt64BE(number)
+  return buffer
+}
+
+class BufferStream extends Duplex {
+  readReady = false
+  currentChunk = undefined
+  currentCallback
+
+  constructor() {
+    super({ autoDestroy: true })
+    this.on('drain', () => this.emit('d'))
+    this.on('drainW', () => this.emit('d'))
+  }
+
+  getCurrentChunk() {
+    const chunk = this.currentChunk
+    this.currentChunk = undefined
+    this.currentCallback()
+    if (this.writableHighWaterMark > this.writableLength) {
+      this.emit('drainW')
+    }
+    return chunk
+  }
+
+  start() {
+    if (this.readReady && this.currentChunk !== undefined) {
+      this.readReady = this.push(this.getCurrentChunk())
+    }
+  }
+
+  _write(chunk, _, callback) {
+    this.currentChunk = chunk
+    this.currentCallback = callback
+    this.start()
+  }
+  _read() {
+    this.readReady = true
+    this.start()
+  }
+  _final(callback) {
+    this.currentChunk = null
+    this.currentCallback = callback
+    this.start()
+  }
+}
 
 module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
   const app = new Koa()
@@ -18,7 +76,9 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
       ctx.body = hit
     } else {
       await next()
-      cache.set(ctx.url, ctx.body)
+      if (!(ctx.body instanceof BufferStream)) {
+        cache.set(ctx.url, ctx.body)
+      }
     }
   })
 
@@ -64,6 +124,46 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
   })
 
   app.use(v2.routes())
+
+  const v3 = new Router({ prefix: '/v3' })
+
+  v3.get('/allActive', async ctx => {
+    const infos = (await Promise.all([...await vdb.get()]
+      .map(({ mid }) => mid)
+      .map(mid => info.get(mid)))).filter(Boolean)
+
+    ctx.body = infos
+      .map(({ mid, recordNum }) => [mid, recordNum])
+      .map(([mid, recordNum]) => async () => {
+        const actives = await active.bulkGet({ mid, num: recordNum })
+
+        const head = Buffer.alloc(8)
+        const datas = Buffer.concat([...actives
+          .flatMap(({ archiveView, follower, time }) => [alloc32UIntBuffer(archiveView), alloc32UIntBuffer(follower), alloc64UIntBuffer(BigInt(time))])])
+
+        const buffer = Buffer.concat([head, datas])
+        buffer.writeUInt32BE(buffer.length)
+        buffer.writeUInt32BE(mid, 4)
+
+        return buffer
+      })
+      .reduce(([stream, p], packBuilder) => [stream, p.then(async draind => {
+        if (!stream.destroyed) {
+          const packP = packBuilder()
+          if (!draind) {
+            await once(stream, 'd')
+          }
+          const pack = await packP
+          return stream.write(pack)
+        }
+      })], [new BufferStream(), Promise.resolve(true)])
+      .reduce((stream, p) => {
+        p.then(() => stream.end())
+        return stream
+      })
+  })
+
+  app.use(v3.routes())
 
   const endpoint = new Router({ prefix: '/endpoint' })
 

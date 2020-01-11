@@ -76,21 +76,21 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   ```json
   [{
-      "mid": 1576121,
-      "note": ["Paryi", "p妈"]
-    }, {
-      "mid": 372984197,
-      "note": ["Shiori", "大姐"]
-    }, {
-      "mid": 349991143,
-      "note": ["Kagura Mea", "咩咩", "田中庄司", "屑女仆", "tekoki", "手冲", "口区"]
-    }, {
-      "mid": 8119834,
-      "note": ["Hana"]
+      "mid": 197,
+      "uuid": "948ae126-061d-5245-a280-82423b5a5b7b"
+    },
+    {
+      "mid": 4052,
+      "uuid": "502bb1fb-5c01-57f7-bf63-315903559483"
+    },
+    {
+      "mid": 5730,
+      "uuid": "ffec77db-17ec-5e10-a809-68bc4d3f7a78"
     },
     ...
   ]
   ```
+  
 
   Keys:
 
@@ -328,6 +328,34 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   History of video views and follower count;
 
   Same as above, but limited to recent `512` entries.
+
+### V3 (Buffer)
+
+​	"Not so simple" Buffer API with Bulk Historical Data.
+
+* #### All Active <https://api.vtbs.moe/v3/allActive>
+
+  => Buffer:
+
+  ```
+         /-----------------------------------\
+         |   (32bit UInt) [archiveView]      |
+  data:  |   (32bit UInt) [follower]         |
+         |   (64bit UInt) [time]             |
+         \-----------------------------------/
+  
+         /------------------------------------\
+         |  (32bit UInt) [size of this pack]  |
+  pack:  |  (32bit UInt) [mid]                |
+         |  [data][data][data][data...        |
+         \------------------------------------/
+  
+  Buffer returned by API: [pack][pack][pack][pack...
+  
+  (Big Endian)
+  ```
+
+  All active data.
 
 
 ### vdSocket
