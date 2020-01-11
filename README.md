@@ -356,6 +356,38 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ```
 
   All active data.
+  
+  Node.js decode example:
+  
+  ```javascript
+  const decodeData = buffer => {
+    const data = []
+    while (buffer.length) {
+      const archiveView = buffer.readUInt32BE()
+      const follower = buffer.readUInt32BE(4)
+      const time = Number(buffer.readBigUInt64BE(8))
+      data.push({ archiveView, follower, time })
+      buffer = buffer.slice(16)
+    }
+    return data
+  }
+  
+  const decodePack = buffer => {
+    const actives = []
+    while (buffer.length) {
+      const size = buffer.readUInt32BE()
+      const mid = buffer.readUInt32BE(4)
+      const data = decodeData(buffer.slice(8, size))
+      buffer = buffer.slice(size)
+      actives.push({ mid, data })
+    }
+    return actives
+  }
+  
+  decodePack(buffer)
+  ```
+  
+  
 
 
 ### vdSocket
