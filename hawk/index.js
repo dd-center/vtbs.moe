@@ -68,6 +68,6 @@ setInterval(() => {
   analyzePublisher(analyzed)
   // io.emit('analyze', analyzed)
   console.log(`Analyze ${danmaku1h.length}, ${danmaku.length}`)
-}, 1000)
+}, 1000 * 60)
 
 console.log('Hawk is here')
