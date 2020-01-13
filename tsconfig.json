@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "composite": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "incremental": true,
+    "outDir": "dist"
+  },
+  "references": [
+    { "path": "./state-center" },
+  ],
+  "include": [
+    "hawk",
+  ]
+}
