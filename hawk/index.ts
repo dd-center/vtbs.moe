@@ -1,21 +1,19 @@
-const { join } = require('path')
-
-const vdSocket = require('./vd')
-const CState = require('../state-center/api')
+import { join } from 'path'
+import { load, extract } from 'nodejieba'
+import { CState } from 'state-center'
+import socket from './vd'
 
 const cState = new CState({ name: 'hawk' })
 const analyzePublisher = cState.publish('analyze')
 
-const nodejieba = require('nodejieba')
-
-nodejieba.load({
+load({
   userDict: join(__dirname, 'dictionary/userdict.txt'),
 })
 
-let danmaku = []
-let danmaku1h = []
+const danmaku: string[] = []
+const danmaku1h: string[] = []
 
-const filter = message => {
+const filter = (message: string) => {
   if (message.includes('点歌')) {
     return false
   }
@@ -43,7 +41,7 @@ const filter = message => {
   return true
 }
 
-const store = message => {
+const store = (message: string) => {
   if (typeof message !== 'string') {
     console.error(message)
   } else {
@@ -54,7 +52,7 @@ const store = message => {
   }
 }
 
-vdSocket.on('danmaku', ({ message }) => {
+socket.on('danmaku', ({ message }: any) => {
   if (filter(message)) {
     store(message)
   }
@@ -62,8 +60,8 @@ vdSocket.on('danmaku', ({ message }) => {
 
 setInterval(() => {
   const analyzed = {
-    day: nodejieba.extract(danmaku.join('\n'), 256),
-    h: nodejieba.extract(danmaku1h.join('\n'), 256),
+    day: extract(danmaku.join('\n'), 256),
+    h: extract(danmaku1h.join('\n'), 256),
   }
   analyzePublisher(analyzed)
   // io.emit('analyze', analyzed)
