@@ -2,9 +2,6 @@
   "name": "vtbs.moe",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "state-center"
-  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -31,6 +28,7 @@
     "register-service-worker": "^1.6.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
+    "state-center": "file:state-center",
     "subleveldown": "^4.1.4",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",

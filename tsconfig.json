@@ -9,9 +9,6 @@
     "incremental": true,
     "outDir": "dist"
   },
-  "references": [
-    { "path": "./state-center" },
-  ],
   "include": [
     "hawk",
   ]
