@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { load, extract } from 'nodejieba'
-import { CState } from 'state-center'
+import CState from 'state-center'
 import socket from './vd'
 
 const cState = new CState({ name: 'hawk' })
