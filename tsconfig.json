@@ -9,7 +9,7 @@
   "include": [
     "hawk",
     "state-center",
-    "!state-center/test/"
+    "api"
   ],
   "exclude": [
     "state-center/test"
