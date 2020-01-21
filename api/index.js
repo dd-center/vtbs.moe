@@ -18,6 +18,10 @@ const httpAPI = require('./http')
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
+if (process.env.MOCK) {
+  require('./mock')
+}
+
 const io = new Server({ serveClient: false })
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)

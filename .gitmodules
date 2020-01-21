@@ -10,3 +10,9 @@
 [submodule "state-center"]
 	path = state-center
 	url = https://github.com/dd-center/state-center.git
+[submodule "api/mock/DDatHome-nodejs"]
+	path = api/mock/DDatHome-nodejs
+	url = https://github.com/dd-center/DDatHome-nodejs.git
+[submodule "api/mock/Cluster-center"]
+	path = api/mock/Cluster-center
+	url = https://github.com/dd-center/Cluster-center.git

@@ -11,7 +11,7 @@
     "tsc": "tsc -b"
   },
   "dependencies": {
-    "bili-api": "^1.4.2",
+    "bili-api": "^1.4.3",
     "bulma": "^0.8.0",
     "core-js": "^3.4.4",
     "cytoscape": "^3.13.0",
@@ -53,7 +53,9 @@
     "@vue/cli-service": "^4.1.0",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.3",
+    "cluster-center": "file:api/mock/Cluster-center",
     "copy-webpack-plugin": "^5.1.1",
+    "ddatnodejs": "file:api/mock/DDatHome-nodejs",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.12.0",

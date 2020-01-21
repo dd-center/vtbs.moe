@@ -3,8 +3,7 @@
 #### 安装依赖:
 
 ```shell
-git submodule init
-git submodule update
+git submodule update --init --recursive
 npm install
 ```
 
@@ -28,6 +27,22 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 后端API
 
+#### 设置环境env:
+
+在本地开发时，如果只运行api，那需要设置MOCK:
+
+```shell
+export MOCK=true
+```
+
+之后打开api就会自动mock以下repo:
+
+<https://github.com/dd-center/state-center>
+
+<https://github.com/dd-center/DDatHome-nodejs>
+
+<https://github.com/dd-center/Cluster-center>
+
 #### 编译Typescript
 
 ```shell
@@ -41,7 +56,6 @@ node index
 ```
 
 * Socket 服务端口: `8001`
-* Vtuber/Vup 列表 见 [api/vtbs.js](api/vtbs.js)
 
 #### 其他
 
