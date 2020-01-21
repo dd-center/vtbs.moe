@@ -477,41 +477,7 @@ Make sure the key is same for each task.
 
 ## 开发
 
-安装依赖:
-
-```
-npm install
-```
-
-### 前端
-
-#### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-#### Compiles and minifies for production
-```
-npm run build
-```
-
-#### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-### 后端API
-
-```
-node index
-```
-
-* Socket 服务端口: `8001`
-* Vtuber/Vup 列表 见 [api/vtbs.js](api/vtbs.js)
-
-#### 其他
-
-* 检查 `vtbs.js` 列表有没有重复的指令: `npm run repeat`
-
-* 把数据库导出为 json 文件: `node script/db2json`
+[development.md](development.md)
 
 ## 贡献
 
