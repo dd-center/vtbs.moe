@@ -8,10 +8,9 @@
   },
   "include": [
     "hawk",
-    "state-center",
     "api"
   ],
-  "exclude": [
-    "state-center/test"
+  "references": [
+    { "path": "state-center" }
   ]
 }
