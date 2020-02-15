@@ -1,10 +1,10 @@
 const favicons = require('favicons')
-const fs = require('fs')
+const { writeFile } = require('fs').promises
 
 favicons('favicon.png', {
-  appName: 'vtb.simon3k.moe',
+  appName: 'vtbs.moe',
   icons: {
-    appleStartup: { background: '#e3d6b9' },
+    appleStartup: { background: '#fff' },
     coast: false,
     yandex: false,
   },
@@ -13,13 +13,11 @@ favicons('favicon.png', {
     console.log(error.message)
     return
   }
-  for (let i = 0; i < response.images.length; i++) {
-    let name = response.images[i].name
-    let contents = response.images[i].contents
-    if (name === 'favicon.ico') {
-      fs.writeFileSync(`public/${name}`, contents)
-    } else {
-      fs.writeFileSync(`public/img/icons/${name}`, contents)
-    }
-  }
+  response.images
+    .map(({ name, contents }) => ({ name, contents }))
+    .forEach(async ({ name, contents }) => {
+      const path = name === 'favicon.ico' ? `public/${name}` : `public/img/icons/${name}`
+      await writeFile(path, contents)
+      console.log(path)
+    })
 })
