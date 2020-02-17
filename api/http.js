@@ -66,7 +66,7 @@ class BufferStream extends Duplex {
   }
 }
 
-module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
+module.exports = ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {
@@ -121,6 +121,12 @@ module.exports = ({ vdb, info, fullGuard, active, live, num, macro }) => {
     const { recordNum } = await info.get(mid)
     const skip = recordNum - 512
     ctx.body = await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) })
+  })
+
+  v2.get('/bulkGuard/:mid', async ctx => {
+    const mid = ctx.params.mid
+    const { guardChange } = await info.get(mid)
+    ctx.body = await guard.bulkGet({ mid, num: guardChange })
   })
 
   app.use(v2.routes())

@@ -328,6 +328,12 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   History of video views and follower count;
 
   Same as above, but limited to recent `512` entries.
+  
+* #### Guard <https://api.vtbs.moe/v2/bulkGuard/:mid>
+
+  => Array, `[...{guardNum, areaRank, time}]`
+
+  History of guard changes.
 
 ### V3 (Buffer)
 
