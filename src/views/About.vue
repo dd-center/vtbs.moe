@@ -10,7 +10,7 @@
       </h2>
       <div class="columns">
         <div class="column">
-          <h3 class="subtitle is-4">小站要开不下去啦~</h3>
+          <h3 class="subtitle is-4"><s>小站要开不下去啦~</s> 分布式DD！</h3>
           <p>现在下载DD@Electron, 帮助vtbs.moe持续运行<br>
             开源软件, 无广告无病毒<br>
             分布式信息获取DD@Electron<br>
@@ -127,12 +127,12 @@ export default {
     },
     upMoment() {
       if (this.uptime) {
-        let duration = moment.duration(this.uptime, 's')
-        let result = []
-        let d = Math.floor(duration.asDays())
-        let h = duration.hours()
-        let m = duration.minutes()
-        let s = duration.seconds()
+        const duration = moment.duration(this.uptime, 's')
+        const result = []
+        const d = Math.floor(duration.asDays())
+        const h = duration.hours()
+        const m = duration.minutes()
+        const s = duration.seconds()
         if (d) {
           result.push(`${d} 天`)
         }
@@ -161,13 +161,13 @@ export default {
     },
     async pingWs(ws) {
       this.pingResult = { ...this.pingResult, [ws]: 'Ping...' }
-      let result = await ping(ws)
+      const result = await ping(ws)
       this.pingResult = { ...this.pingResult, [ws]: result }
     },
   },
   filters: {
     parseTime: function(time = 0) {
-      let timeNow = moment(time)
+      const timeNow = moment(time)
       return `${timeNow.hours()}:${timeNow.minute()}`
     },
     load: function(duration, interval) {
