@@ -1,7 +1,8 @@
-const CState = require('../../state-center/api')
+import CState from '../../state-center/api'
+
 const cState = new CState({ name: 'vtbs.moe' })
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 cState.join('all')
 
@@ -20,4 +21,4 @@ const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).the
 
 const hawkEmitter = cState.subscribe('hawk')
 
-module.exports = { getPending, socket: cState.socket, hawkEmitter }
+module.exports = { getPending, socket: cState.socket, hawkEmitter, cState }
