@@ -10,7 +10,11 @@
     "hawk",
     "api"
   ],
+  "exclude": [
+    "api/mock"
+  ],
   "references": [
-    { "path": "state-center" }
+    { "path": "state-center" },
+    { "path": "api/mock/Cluster-center" }
   ]
 }
