@@ -41,6 +41,13 @@ const worm = async ({ PARALLEL, vtbs, io, biliAPI }) => {
   let pending = (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?area_id=199&sort_type=income&page=1&page_size=99').json()).data.list
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
     .filter(({ mid }) => !mids.includes(mid))
+    .filter((_, index) => {
+      if (process.env.MOCK) {
+        return index < 5
+      } else {
+        return true
+      }
+    })
 
   let worms = Array(PARALLEL).fill().map((_c, wormId) => round({ pending, wormId, io, PARALLEL, biliAPI }))
   wormArray = [].concat(...await Promise.all(worms))

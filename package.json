@@ -8,7 +8,8 @@
     "test": "npm run tsc && npm run build",
     "lint": "vue-cli-service lint",
     "favicon": "node favicon",
-    "tsc": "tsc -b"
+    "tsc": "tsc -b",
+    "dev": "tsc -w"
   },
   "dependencies": {
     "bili-api": "^1.4.3",
