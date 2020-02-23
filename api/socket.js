@@ -32,6 +32,12 @@ const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, f
 
 exports.infoFilter = infoFilter
 
+exports.linkDanmaku = ({ io, cState }) => {
+  cState.subscribe('cluster').on('danmaku', (nickname, danmaku) => {
+    io.emit('danmaku', { nickname, danmaku })
+  })
+}
+
 exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
   const newHandler = wsRouter({ info, vdb })
   const handler = e => socket.on(e, async (target, arc) => {
@@ -49,26 +55,26 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
 
       if (e === 'vupMacroCompressed') {
         socket.join('vupMacro', async () => {
-          let macroNum = await num.get('vupMacroNum')
+          const macroNum = await num.get('vupMacroNum')
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
         })
       }
       if (e === 'vtbMacroCompressed') {
         socket.join('vtbMacro', async () => {
-          let macroNum = await num.get('vtbMacroNum')
+          const macroNum = await num.get('vtbMacroNum')
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
         })
       }
       if (e === 'vtbMacroWeekCompressed') {
         socket.join('vtbMacro', async () => {
-          let macroNum = await num.get('vtbMacroNum')
-          let skip = macroNum - 24 * 60 * 7 / 5
+          const macroNum = await num.get('vtbMacroNum')
+          const skip = macroNum - 24 * 60 * 7 / 5
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
         })
       }
       if (e === 'guardMacroCompressed') {
         socket.join('guardMacro', async () => {
-          let macroNum = await num.get('guardMacroNum')
+          const macroNum = await num.get('guardMacroNum')
           arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'guard', num: macroNum }))
         })
       }
@@ -78,13 +84,13 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
         })
       }
       if (e === 'bulkActiveCompressed') {
-        let { recordNum, mid } = target
-        let result = await active.bulkGet({ mid, num: recordNum })
+        const { recordNum, mid } = target
+        const result = await active.bulkGet({ mid, num: recordNum })
         arcTimeSeriesDeflate(result)
       }
       if (e === 'bulkActiveSomeCompressed') {
-        let { recordNum, mid } = target
-        let skip = recordNum - 512
+        const { recordNum, mid } = target
+        const skip = recordNum - 512
         arcTimeSeriesDeflate(await active.bulkGet({ mid, num: Math.min(512, recordNum), skip: Math.max(0, skip) }))
       }
       if (e === 'bulkActiveRangeCompressed') {
@@ -92,7 +98,7 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
         arcTimeSeriesDeflate(await active.bulkGet({ mid, num, skip }))
       }
       if (e === 'bulkGuardCompressed') {
-        let { guardChange, mid } = target
+        const { guardChange, mid } = target
         arcTimeSeriesDeflate(await guard.bulkGet({ mid, num: guardChange }))
       }
       if (e === 'guardType') {
@@ -143,7 +149,7 @@ exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, 
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
-  let vtbs = await vdb.get()
+  const vtbs = await vdb.get()
   socket.emit('vtbs', vtbs)
   const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
     .filter(Boolean)
@@ -197,6 +203,8 @@ join: state -> room: state
 
 // Server Push
 online: Number
+
+danmaku: {nickname, danmaku}
 
 vtbs: [vtb]
 

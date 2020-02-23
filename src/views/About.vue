@@ -45,8 +45,14 @@
           <a class="button is-rounded" @click="push('→_→！')">测试Local Notification</a>
           <br>
           <hr>
-          <h4 class="title is-4">设置</h4>
-          <h5 class="title is-5">CDN网络({{wss.length}}) (刷新网页生效)</h5>
+          <h4 class="title is-4">设置 (刷新网页生效)</h4>
+          <h5 class="title is-5">弹幕</h5>
+          <label class="checkbox">
+            <input type="checkbox" v-model="hideDanmaku">
+            隐藏网页弹幕
+          </label>
+          <hr>
+          <h5 class="title is-5">CDN网络({{wss.length}})</h5>
           <p>目前: <span class="has-background-light">{{currentWs}}</span></p>
           <br>
           <div v-for="ws in wss" :key="ws">
@@ -107,6 +113,7 @@ export default {
     return {
       uptime: undefined,
       pingResult: {},
+      hideDanmaku: !!localStorage.disableDanmaku,
     }
   },
   computed: {
@@ -153,6 +160,15 @@ export default {
   },
   async mounted() {
     this.uptime = await get('uptime')
+  },
+  watch: {
+    hideDanmaku() {
+      if (this.hideDanmaku) {
+        localStorage.disableDanmaku = 'true'
+      } else {
+        localStorage.removeItem('disableDanmaku')
+      }
+    },
   },
   methods: {
     push: w => Push.create(w),

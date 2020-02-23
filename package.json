@@ -16,6 +16,7 @@
     "bulma": "^0.8.0",
     "core-js": "^3.4.4",
     "cytoscape": "^3.13.0",
+    "danmaku": "^2.0.0",
     "echarts": "^4.6.0",
     "element-ui": "^2.13.0",
     "got": "^10.2.2",

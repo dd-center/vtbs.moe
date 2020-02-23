@@ -12,11 +12,15 @@
   </transition>
   <router-view>
   </router-view>
+  <div id="danmakuStage" class="danmakuStage"></div>
 </div>
 </template>
 
 <script>
 import 'element-ui/lib/theme-chalk/display.css'
+import Danmaku from 'danmaku/dist/esm/danmaku.dom.js'
+
+let showDanmaku = () => {}
 
 export default {
   name: 'app',
@@ -36,7 +40,29 @@ export default {
       fullscreenLoading: true,
     }
   },
+  mounted() {
+    if (!localStorage.disableDanmaku) {
+      const danmakuContainer = new Danmaku({ container: document.getElementById('danmakuStage') })
+      showDanmaku = danmaku => danmakuContainer.emit({ text: danmaku })
+      let resizeTime = Date.now()
+
+      window.addEventListener('resize', () => {
+        resizeTime = Date.now()
+        setTimeout(() => {
+          const now = Date.now()
+          if (now - resizeTime > 1000) {
+            resizeTime = now
+            danmakuContainer.resize()
+            console.log(233)
+          }
+        }, 1200)
+      })
+    }
+  },
   sockets: {
+    danmaku({ nickname, danmaku }) {
+      showDanmaku(danmaku)
+    },
     connect: function() {
       this.fullscreenLoading = !this.$socket.connected
       setTimeout(() => {
@@ -103,5 +129,13 @@ export default {
 
 .height {
   height: 48px;
+}
+
+.danmakuStage {
+  height: calc(100vh - 49px);
+  width: 100vw;
+  position: fixed;
+  top: 49px;
+  pointer-events: none;
 }
 </style>

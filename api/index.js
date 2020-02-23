@@ -5,14 +5,14 @@ const ant = require('./ant')
 const http = require('http')
 const Server = require('socket.io')
 
-const { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket } = require('./interface')
+const { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket, cState } = require('./interface')
 
 const { site, num, info, active, live, guard, macro, fullGuard, guardType, status } = require('./database')
 
 const snake = require('./snake')
 const { worm, wormResult } = require('./worm')
 
-const { connect, infoFilter } = require('./socket')
+const { connect, infoFilter, linkDanmaku } = require('./socket')
 const httpAPI = require('./http')
 
 const PARALLEL = 16
@@ -23,6 +23,7 @@ if (process.env.MOCK) {
 }
 
 const io = new Server({ serveClient: false })
+linkDanmaku({ cState, io })
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro, guard }))
