@@ -1,21 +1,27 @@
-const level = require('level')
-const sub = require('subleveldown')
-const LRU = require('lru-cache')
+import levelup, { LevelUp } from 'levelup'
+import leveldown from 'leveldown'
+import encode from 'encoding-down'
+import sub from 'subleveldown'
+
+import LRU from 'lru-cache'
 
 const cache = new LRU({
   max: 100000,
 })
 
 class LevelDatabase {
-  constructor({ name, db }) {
+  name: string
+  db: LevelUp
+
+  constructor({ name, db }: { name: string, db: LevelUp }) {
     this.name = name
     this.db = db
   }
-  put(key, value) {
+  put(key: any, value: any) {
     cache.set(`${this.name}_${key}`, value)
     return this.db.put(`${this.name}_${key}`, value)
   }
-  async get(key) {
+  async get(key: any) {
     let value = cache.get(`${this.name}_${key}`)
     if (!value) {
       value = await this.db.get(`${this.name}_${key}`).catch(() => undefined)
@@ -26,22 +32,24 @@ class LevelDatabase {
 }
 
 class SubLevelDatabase {
-  constructor({ name, db }) {
+  db: LevelUp
+
+  constructor({ name, db }: { name: string, db: LevelUp }) {
     this.db = sub(db, name, { valueEncoding: 'json' })
   }
-  put(key, value) {
+  put(key: any, value: any) {
     return this.db.put(key, value)
   }
-  get(key) {
+  get(key: any) {
     return this.db.get(key).catch(() => undefined)
   }
 }
 
 class ArrayDatabase extends LevelDatabase {
-  constructor({ name, db }) {
+  constructor({ name, db }: { name: string, db: LevelUp }) {
     super({ name, db })
   }
-  put({ mid = 0, num = 0, value }) {
+  put({ mid = 0, num = 0, value }: { num: number, mid: number, value: any }) {
     return super.put(`${mid}_${num}`, value)
   }
   get({ mid = 0, num = 0 }) {
@@ -56,7 +64,7 @@ class ArrayDatabase extends LevelDatabase {
   }
 }
 
-let db = level(`./db`, { valueEncoding: 'json' })
+let db = levelup(encode(leveldown('./db'), { valueEncoding: 'json' }))
 let site = new ArrayDatabase({ name: 'site', db })
 let num = new LevelDatabase({ name: 'num', db })
 
@@ -71,7 +79,7 @@ let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
 let guardType = new LevelDatabase({ name: 'guardType', db })
 let macro = new ArrayDatabase({ name: 'macro', db })
 
-module.exports = { site, num, info, active, live, guard, macro, fullGuard, guardType, status }
+export = { site, num, info, active, live, guard, macro, fullGuard, guardType, status }
 
 /*
 数据库
