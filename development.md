@@ -27,27 +27,29 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 后端API
 
-#### 设置环境env:
+#### 编译Typescript (Watch)
 
-在本地开发时，如果只运行api，那需要设置MOCK:
-
-```shell
-export MOCK=true
+```sh
+npm run dev
 ```
-
-之后打开api就会自动mock以下repo:
-
-<https://github.com/dd-center/state-center>
-
-<https://github.com/dd-center/DDatHome-nodejs>
-
-<https://github.com/dd-center/Cluster-center>
 
 #### 编译Typescript
 
 ```shell
 npm run tsc
 ```
+
+#### 运行 (MOCK)
+
+```sh
+node api/mock
+```
+
+会自动mock以下repo:
+
+* <https://github.com/dd-center/state-center>
+* <https://github.com/dd-center/DDatHome-nodejs>
+* <https://github.com/dd-center/Cluster-center>
 
 #### 运行
 
