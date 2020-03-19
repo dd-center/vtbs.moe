@@ -1,5 +1,5 @@
-const { deflate } = require('zlib')
-const { promisify } = require('util')
+import { deflate } from 'zlib'
+import { promisify } from 'util'
 const deflateAsync = promisify(deflate)
 
 const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
@@ -28,17 +28,15 @@ const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
   return handlerTable[key](rest)
 }
 
-const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
+export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
 
-exports.infoFilter = infoFilter
-
-exports.linkDanmaku = ({ io, cState }) => {
+export const linkDanmaku = ({ io, cState }) => {
   cState.subscribe('cluster').on('danmaku', (nickname, danmaku) => {
     io.emit('danmaku', { nickname, danmaku })
   })
 }
 
-exports.connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+export const connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
   const newHandler = wsRouter({ info, vdb })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {

@@ -157,7 +157,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
   }
 }
 
-module.exports = ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, biliAPI }) => {
+export default ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, biliAPI }) => {
   const log = log => {
     console.log(log)
     io.emit('log', log)

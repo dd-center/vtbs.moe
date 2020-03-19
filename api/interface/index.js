@@ -1,8 +1,5 @@
-const { getPending: stateGetPending, socket: stateSocket, hawkEmitter, cState } = require('./state')
-const { vd, vdSocket } = require('./vd')
-const hawk = require('./hawk')(hawkEmitter)
-const vdb = require('./vdb')
-const { got } = require('./cluster')
-const biliAPI = require('./biliapi')(got)
-
-module.exports = { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket, cState }
+export { getPending as stateGetPending, socket as stateSocket, cState } from './state.js'
+export { vd, vdSocket } from './vd.js'
+export * as vdb from './vdb.js'
+export { hawk } from './hawk.js'
+export { race as biliAPI } from './biliapi.js'

@@ -1,4 +1,4 @@
-module.exports = ({ vdSocket, io, info }) => {
+export default ({ vdSocket, io, info }) => {
   let updatePending = new Set()
   vdSocket.on('LIVE', async ({ mid, roomid }) => {
     let currentInfo = await info.get(mid)

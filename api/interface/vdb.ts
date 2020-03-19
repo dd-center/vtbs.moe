@@ -44,7 +44,7 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
     }
   })
 
-const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
+export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
   const body: VDB | void = await got('https://vdb.vtbs.moe/json/list.json').json<VDB>().catch(console.error)
   if (body) {
     console.log('vdb update')
@@ -66,7 +66,7 @@ const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof 
   }
 }
 
-const get = async () => {
+export const get = async () => {
   if (vtbs) {
     return vtbs
   } else {
@@ -74,7 +74,7 @@ const get = async () => {
   }
 }
 
-const getVdbTable = async () => {
+export const getVdbTable = async () => {
   if (vdbTable) {
     return vdbTable
   } else {
@@ -84,13 +84,6 @@ const getVdbTable = async () => {
 
 setInterval(update, 1000 * 60)
 
-const bind = (server: Server) => {
+export const bind = (server: Server) => {
   io = server
-}
-
-module.exports = {
-  update,
-  get,
-  bind,
-  getVdbTable,
 }

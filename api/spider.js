@@ -79,7 +79,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
   return mid
 }
 
-module.exports = async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter, stateGetPending }) => {
+export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter, stateGetPending }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)

@@ -1,7 +1,14 @@
 import { join } from 'path'
-import { load, extract } from 'nodejieba'
+import nodejieba from 'nodejieba'
 import CState from 'state-center'
-import socket from './vd'
+import socket from './vd.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+const { load, extract } = nodejieba
 
 const cState = new CState({ name: 'hawk' })
 const analyzePublisher = cState.publish('analyze')

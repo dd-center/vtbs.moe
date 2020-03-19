@@ -1,19 +1,19 @@
-const spider = require('./spider')
+import spider from './spider.js'
 
-const ant = require('./ant')
+import ant from './ant.js'
 
-const http = require('http')
-const Server = require('socket.io')
+import http from 'http'
+import Server from 'socket.io'
 
-const { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket, cState } = require('./interface')
+import { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket, cState } from './interface/index.js'
 
-const { site, num, info, active, live, guard, macro, fullGuard, guardType, status } = require('./database')
+import { site, num, info, active, live, guard, macro, fullGuard, guardType, status } from './database.js'
 
-const snake = require('./snake')
-const { worm, wormResult } = require('./worm')
+import snake from './snake.js'
+import { worm, wormResult } from './worm.js'
 
-const { connect, infoFilter, linkDanmaku } = require('./socket')
-const httpAPI = require('./http')
+import { connect, infoFilter, linkDanmaku } from './socket.js'
+import httpAPI from './http.js'
 
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5

@@ -9,6 +9,4 @@ const asyncEmit = (name: string, target: any) => new Promise(resolve => {
 })
 
 
-const got = ({ url }: { url: string }) => asyncEmit('http', url)
-
-export = { got }
+export default ({ url }: { url: string }) => asyncEmit('http', url)

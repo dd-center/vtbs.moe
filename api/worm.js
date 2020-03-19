@@ -1,4 +1,4 @@
-const got = require('got')
+import got from 'got'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -34,9 +34,9 @@ const round = async ({ pending, wormId, io, PARALLEL, biliAPI }) => {
   }
 }
 
-const wormResult = () => wormArray
+export const wormResult = () => wormArray
 
-const worm = async ({ PARALLEL, vtbs, io, biliAPI }) => {
+export const worm = async ({ PARALLEL, vtbs, io, biliAPI }) => {
   let mids = vtbs.map(({ mid }) => mid)
   let pending = (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?area_id=199&sort_type=income&page=1&page_size=99').json()).data.list
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
@@ -53,5 +53,3 @@ const worm = async ({ PARALLEL, vtbs, io, biliAPI }) => {
   wormArray = [].concat(...await Promise.all(worms))
   return wormArray
 }
-
-module.exports = { worm, wormResult }

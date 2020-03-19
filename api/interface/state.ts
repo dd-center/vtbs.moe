@@ -1,6 +1,6 @@
-import CState from '../../state-center/api'
+import CState from '../../state-center/api.js'
 
-const cState = new CState({ name: 'vtbs.moe' })
+export const cState = new CState({ name: 'vtbs.moe' })
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -10,7 +10,7 @@ cState.on('connect', () => console.log('hello State'))
 
 const clusterAsker = cState.ask('cluster')
 
-const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).then(number => {
+export const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).then(number => {
   if (typeof number === 'number') {
     return number
   } else {
@@ -19,6 +19,6 @@ const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).the
   }
 })
 
-const hawkEmitter = cState.subscribe('hawk')
+export const hawkEmitter = cState.subscribe('hawk')
 
-module.exports = { getPending, socket: cState.socket, hawkEmitter, cState }
+export const socket = cState.socket

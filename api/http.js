@@ -1,10 +1,10 @@
-const { Duplex } = require('stream')
-const { once } = require('events')
+import { Duplex } from 'stream'
+import { once } from 'events'
 
-const Koa = require('koa')
-const Router = require('koa-router')
+import Koa from 'koa'
+import Router from 'koa-router'
 
-const LRU = require('lru-cache')
+import LRU from 'lru-cache'
 
 const cache = new LRU({
   maxAge: 1000 * 5,
@@ -66,7 +66,7 @@ class BufferStream extends Duplex {
   }
 }
 
-module.exports = ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
+export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {

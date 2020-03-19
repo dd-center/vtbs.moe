@@ -1,9 +1,9 @@
-const Server = require('socket.io')
-const ioClient = require('socket.io-client')
+import Server from 'socket.io'
+import ioClient from 'socket.io-client'
 
 const io = new Server({ serveClient: false, path: '/vds' })
 
-const vdSocket = ioClient('http://0.0.0.0:9003')
+export const vdSocket = ioClient('http://0.0.0.0:9003')
 
 vdSocket.on('danmaku', ({ message, roomid, mid, uname, timestamp }) => io.to('all').to(roomid).emit('danmaku', { message, roomid, mid, uname, timestamp }))
 
@@ -24,4 +24,4 @@ io.on('connection', socket => {
   })
 })
 
-module.exports = { vd: io, vdSocket }
+export const vd = io

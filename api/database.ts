@@ -65,21 +65,19 @@ class ArrayDatabase extends LevelDatabase {
 }
 
 let db = levelup(encode(leveldown('./db'), { valueEncoding: 'json' }))
-let site = new ArrayDatabase({ name: 'site', db })
-let num = new LevelDatabase({ name: 'num', db })
+export const site = new ArrayDatabase({ name: 'site', db })
+export const num = new LevelDatabase({ name: 'num', db })
 
-const status = new SubLevelDatabase({ name: 'status', db })
+export const status = new SubLevelDatabase({ name: 'status', db })
 
-let info = new LevelDatabase({ name: 'info', db })
-let active = new ArrayDatabase({ name: 'active', db })
-let live = new ArrayDatabase({ name: 'live', db }) // DEPRECATED
-let guard = new ArrayDatabase({ name: 'guard', db })
+export const info = new LevelDatabase({ name: 'info', db })
+export const active = new ArrayDatabase({ name: 'active', db })
+export const live = new ArrayDatabase({ name: 'live', db }) // DEPRECATED
+export const guard = new ArrayDatabase({ name: 'guard', db })
 
-let fullGuard = new LevelDatabase({ name: 'fullGuard', db })
-let guardType = new LevelDatabase({ name: 'guardType', db })
-let macro = new ArrayDatabase({ name: 'macro', db })
-
-export = { site, num, info, active, live, guard, macro, fullGuard, guardType, status }
+export const fullGuard = new LevelDatabase({ name: 'fullGuard', db })
+export const guardType = new LevelDatabase({ name: 'guardType', db })
+export const macro = new ArrayDatabase({ name: 'macro', db })
 
 /*
 数据库
