@@ -11,13 +11,13 @@ const cache = new LRU({
   max: 100,
 })
 
-const alloc32UIntBuffer = number => {
+const alloc32UIntBuffer = (number: number) => {
   const buffer = Buffer.alloc(4)
   buffer.writeUInt32BE(number)
   return buffer
 }
 
-const alloc64UIntBuffer = number => {
+const alloc64UIntBuffer = (number: bigint) => {
   const buffer = Buffer.alloc(8)
   buffer.writeBigUInt64BE(number)
   return buffer
@@ -25,8 +25,8 @@ const alloc64UIntBuffer = number => {
 
 class BufferStream extends Duplex {
   readReady = false
-  currentChunk = undefined
-  currentCallback
+  currentChunk: Buffer = undefined
+  currentCallback: Function
 
   constructor() {
     super({ autoDestroy: true })
@@ -50,7 +50,7 @@ class BufferStream extends Duplex {
     }
   }
 
-  _write(chunk, _, callback) {
+  _write(chunk: Buffer, _: string, callback: Function) {
     this.currentChunk = chunk
     this.currentCallback = callback
     this.start()
@@ -59,14 +59,14 @@ class BufferStream extends Duplex {
     this.readReady = true
     this.start()
   }
-  _final(callback) {
+  _final(callback: Function) {
     this.currentChunk = null
     this.currentCallback = callback
     this.start()
   }
 }
 
-export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
+export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {
@@ -89,7 +89,7 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
   })
 
   v1.get('/info', async ctx => {
-    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }) => info.get(mid)))).filter(info => info)
+    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(info => info)
   })
 
   v1.get('/detail/:mid', async ctx => {
@@ -145,7 +145,7 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
 
         const head = Buffer.alloc(8)
         const datas = Buffer.concat([...actives
-          .flatMap(({ archiveView, follower, time }) => [alloc32UIntBuffer(archiveView), alloc32UIntBuffer(follower), alloc64UIntBuffer(BigInt(time))])])
+          .flatMap(({ archiveView, follower, time }: { archiveView: number, follower: number, time: number }) => [alloc32UIntBuffer(archiveView), alloc32UIntBuffer(follower), alloc64UIntBuffer(BigInt(time))])])
 
         const buffer = Buffer.concat([head, datas])
         buffer.writeUInt32BE(buffer.length)
@@ -153,7 +153,7 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
 
         return buffer
       })
-      .reduce(([stream, p], packBuilder) => [stream, p.then(async draind => {
+      .reduce<[BufferStream, Promise<boolean>]>(([stream, p], packBuilder) => [stream, p.then(async draind => {
         if (!stream.destroyed) {
           const packP = packBuilder()
           if (!draind) {
@@ -163,7 +163,7 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }) => {
           return stream.write(pack)
         }
       })], [new BufferStream(), Promise.resolve(true)])
-      .reduce((stream, p) => {
+      .reduce((stream: BufferStream, p: Promise<boolean>) => {
         p.then(() => stream.end())
         return stream
       })
