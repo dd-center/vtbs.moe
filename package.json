@@ -23,7 +23,7 @@
     "encoding-down": "^6.3.0",
     "got": "^10.2.2",
     "koa": "^2.11.0",
-    "koa-router": "^7.4.0",
+    "koa-router": "^8.0.8",
     "ky": "^0.16.1",
     "level": "^6.0.0",
     "leveldown": "^5.5.1",
