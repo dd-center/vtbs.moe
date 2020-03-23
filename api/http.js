@@ -2,7 +2,7 @@ import { Duplex } from 'stream'
 import { once } from 'events'
 
 import Koa from 'koa'
-import Router from 'koa-router'
+import Router from '@koa/router'
 
 import LRU from 'lru-cache'
 
