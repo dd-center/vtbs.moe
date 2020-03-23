@@ -51,10 +51,6 @@ export default new Router({
     component: Badge,
     props: true,
   }, {
-    path: '/bot/:n',
-    component: () => import(/* webpackChunkName: "detail" */ './views/Bot.vue'),
-    props: true,
-  }, {
     path: '/about',
     name: 'about',
     // route level code-splitting
