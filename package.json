@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint",
     "favicon": "node favicon",
     "tsc": "tsc -b",
-    "dev": "tsc -w"
+    "dev": "tsc -b -w"
   },
   "dependencies": {
     "bili-api": "^1.4.3",
