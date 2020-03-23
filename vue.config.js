@@ -1,7 +1,7 @@
-const webpack = require('webpack')
-const CopyPlugin = require('copy-webpack-plugin')
+import webpack from 'webpack'
+import CopyPlugin from 'copy-webpack-plugin'
 
-module.exports = {
+export default {
   lintOnSave: false,
   pwa: {
     iconPaths: {
