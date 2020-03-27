@@ -67,3 +67,5 @@ const passArrayMinimizer = async (...target) => {
 
 export const getFullInfo = () => passArrayMinimizer('fullInfo')
 export const getVdbTable = () => passDeflate('vdbTable')
+export const getMacroK = () => passArrayMinimizer('guardMacroK', false)
+export const getMacroWeekK = () => passArrayMinimizer('guardMacroK', true)

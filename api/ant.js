@@ -1,23 +1,25 @@
+import { guardMacroK } from './unit/index.js'
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
   for (;;) {
-    let startTime = (new Date()).getTime()
+    const startTime = (new Date()).getTime()
 
     let macroNum = (await num.get('vupMacroNum') || 0)
     macroNum++
 
-    let sum = {
+    const sum = {
       video: 0,
       archiveView: 0,
       time: startTime,
     }
 
-    let vtbs = await vdb.get()
+    const vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
-      let { video = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
+      const { video = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
       sum.video += video
       sum.archiveView += archiveView
     }
@@ -26,36 +28,36 @@ const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
     await num.put('vupMacroNum', macroNum)
     io.to('vupMacro').emit('vupMacro', sum)
     log('VUP Macroeconomics Update')
-    let endTime = (new Date()).getTime()
+    const endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
   }
 }
 
 const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   for (;;) {
-    let startTime = (new Date()).getTime()
+    const startTime = (new Date()).getTime()
 
     let macroNum = (await num.get('vtbMacroNum') || 0)
     macroNum++
 
-    let sum = {
+    const sum = {
       liveStatus: 0,
       online: 0,
       time: startTime,
     }
 
-    let vtbs = await vdb.get()
+    const vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
-      let { liveStatus = 0, online = 0 } = (await info.get(vtbs[i].mid) || {})
+      const { liveStatus = 0, online = 0 } = (await info.get(vtbs[i].mid) || {})
       sum.liveStatus += liveStatus
       sum.online += online
     }
 
     if (!sum.liveStatus) {
-      let currentVTBMacro = (await macro.get({ mid: 'vtb', num: macroNum - 1 })) || {}
+      const currentVTBMacro = (await macro.get({ mid: 'vtb', num: macroNum - 1 })) || {}
       if (currentVTBMacro.liveStatus === 0) {
-        let beforeVTBMacro = (await macro.get({ mid: 'vtb', num: macroNum - 2 })) || {}
+        const beforeVTBMacro = (await macro.get({ mid: 'vtb', num: macroNum - 2 })) || {}
         if (beforeVTBMacro.liveStatus === 0) {
           macroNum--
         }
@@ -66,33 +68,34 @@ const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
     await num.put('vtbMacroNum', macroNum)
     io.to('vtbMacro').emit('vtbMacro', sum)
     log('VTB Macroeconomics Update')
-    let endTime = (new Date()).getTime()
+    const endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
   }
 }
 
 const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   for (;;) {
-    let startTime = (new Date()).getTime()
+    const startTime = (new Date()).getTime()
+    const pause = wait(INTERVAL)
 
     let macroNum = (await num.get('guardMacroNum') || 0)
     macroNum++
 
-    let sum = {
+    const sum = {
       guardNum: 0,
       time: startTime,
     }
 
-    let vtbs = await vdb.get()
+    const vtbs = await vdb.get()
 
     for (let i = 0; i < vtbs.length; i++) {
-      let { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
+      const { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
       sum.guardNum += guardNum
     }
 
-    let currentGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 1 })) || {}
+    const currentGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 1 })) || {}
     if (currentGuardMacro.guardNum === sum.guardNum) {
-      let beforeGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 2 })) || {}
+      const beforeGuardMacro = (await macro.get({ mid: 'guard', num: macroNum - 2 })) || {}
       if (beforeGuardMacro.guardNum === sum.guardNum) {
         macroNum--
       }
@@ -100,10 +103,10 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
 
     await macro.put({ mid: 'guard', num: macroNum, value: sum })
     await num.put('guardMacroNum', macroNum)
+    await guardMacroK(macroNum)
     io.to('guardMacro').emit('guardMacro', sum)
     log('Guard Macroeconomics Update')
-    let endTime = (new Date()).getTime()
-    await wait(INTERVAL - (endTime - startTime))
+    await pause
   }
 }
 
@@ -116,8 +119,8 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
   while (true) {
     const intervalWait = wait(INTERVAL)
 
-    let vtbs = await vdb.get()
-    let mids = vtbs.map(({ mid }) => mid)
+    const vtbs = await vdb.get()
+    const mids = vtbs.map(({ mid }) => mid)
 
     await mids
       .map(async mid => ({ mid, core: await core(mid) }))
@@ -129,15 +132,15 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
         log(`Guard: ${i + 1}/${vtbs.length}`)
       }, Promise.resolve(233))
 
-    let all = {}
+    const all = {}
     for (let i = 0; i < vtbs.length; i++) {
-      let { mid } = vtbs[i]
-      let guards = (await fullGuard.get(mid) || [])
+      const { mid } = vtbs[i]
+      const guards = (await fullGuard.get(mid) || [])
       for (let j = 0; j < guards.length; j++) {
-        let guard = guards[j]
-        let { level } = guard
+        const guard = guards[j]
+        const { level } = guard
         if (!all[guard.mid]) {
-          let { uname, face } = guard
+          const { uname, face } = guard
           all[guard.mid] = { uname, face, mid: guard.mid, dd: [[], [], []] }
         }
         all[guard.mid].dd[level].push(mid)
@@ -147,7 +150,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     await fullGuard.put('some', Object.fromEntries(Object.entries(all).filter(([_mid, { dd }]) => dd[0].length * 100 + dd[1].length * 10 + dd[2].length > 1)))
     await fullGuard.put('tietie', Object.fromEntries(Object.entries(all)
       .filter(([mid]) => mids.includes(Number(mid)))
-      .map(([mid, { dd }]) => [mid, dd.map(ddg => ddg.filter(mid => mids.includes(mid)))])
+      .map(([mid, { dd }]) => [mid, dd.map(ddg => ddg.filter(mid => mids.includes(mid)))]),
     ))
     await fullGuard.put('time', (new Date()).getTime())
     await fullGuard.put('number', Object.keys(all).length)

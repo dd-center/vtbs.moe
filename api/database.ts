@@ -49,10 +49,10 @@ class ArrayDatabase extends LevelDatabase {
   constructor({ name, db }: { name: string, db: LevelUp }) {
     super({ name, db })
   }
-  put({ mid = 0, num = 0, value }: { num: number, mid: number, value: any }) {
+  put({ mid = 0, num = 0, value }: { num: number, mid: any, value: any }) {
     return super.put(`${mid}_${num}`, value)
   }
-  get({ mid = 0, num = 0 }) {
+  get({ mid = 0, num = 0 }: { num: number, mid: any}) {
     return super.get(`${mid}_${num}`)
   }
   bulkGet({ mid = 0, num = 1, skip = 0 }) {
@@ -88,6 +88,9 @@ num
 vupMacroNum: Number
 vtbMacroNum: Number
 guardMacroNum: Number
+guardMacroKNum: Number
+guardMacroKLocationNum: Number
+guardMacroWeekKNum: Number
 
 status
 spiderLeft: Number
@@ -120,10 +123,10 @@ mid: [n,n,n]
 
 macro
 vup_vupMacroNum: {video, archiveView}
-
 vtb_vtbMacroNum: {liveStatus, online}
-
 guard_guardMacroNum: {guardNum}
+guardMacroK_guardMacroKNum: {time: String, open, close, lowest, highest}
+guardMacroWeekK_guardMacroWeekKNum: {time: String, weekNum, open, close, lowest, highest}
 
 all: time: timestamp
 

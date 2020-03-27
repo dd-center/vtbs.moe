@@ -1,12 +1,15 @@
 import { deflate } from 'zlib'
 import { promisify } from 'util'
+
+import { macro, num } from './database.js'
+
 const deflateAsync = promisify(deflate)
 
-const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
+const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
     return undefined
   }
-  const handler = wsRouter({ info, vdb })
+  const handler = wsRouter({ socket, info, vdb })
   const handlerTable = new Proxy({
     vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
@@ -14,6 +17,12 @@ const wsRouter = ({ info, vdb }) => ([key, ...rest], map = []) => {
       const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
         .filter(Boolean)
       return infoArray
+    },
+    async guardMacroK([week = false]) {
+      const kNum = await num.get(week ? 'guardMacroWeekKNum' : 'guardMacroKNum')
+      const result = await macro.bulkGet({ mid: week ? 'guardMacroWeekK' : 'guardMacroK', num: kNum })
+      socket.join(week ? 'guardMacroWeekK' : 'guardMacroK')
+      return result
     },
     arrayMinimizer: async keys => {
       const result = await handler(keys)
@@ -36,8 +45,8 @@ export const linkDanmaku = ({ io, cState }) => {
   })
 }
 
-export const connect = ({ io, site, macro, num, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
-  const newHandler = wsRouter({ info, vdb })
+export const connect = ({ io, site, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+  const newHandler = wsRouter({ info, vdb, socket })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
@@ -175,6 +184,7 @@ ENTRYPOINT: new
  - PASS: arrayMinimizer
 
 fullInfo: [{...info, vdb}]
+guardMacroK(week): [...guardMacroK]
 
 **************************************
 **************************************
@@ -224,6 +234,9 @@ worm: [...wormArray]
 vupMacro => vupMacro: {macro}
 vtbMacro => vtbMacro: {macro}
 guardMacro => guardMacro: {macro}
+
+guardMacroK => guardMacroK: {macro}
+guardMacroWeekK => guardMacroWeekK: {macro}
 
 mid => detailInfo: {mid, {data}}
 mid => detailActive: {mid, {data}}

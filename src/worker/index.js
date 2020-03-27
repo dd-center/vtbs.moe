@@ -20,4 +20,3 @@ const send = (name, data) => new Promise(resolve => {
 })
 
 export const activeAnalyzer = active => send('activeAnalyzer', active)
-export const guardMacroK = guardMacro => send('guardMacroK', guardMacro)
