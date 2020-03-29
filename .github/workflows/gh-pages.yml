@@ -24,6 +24,9 @@ jobs:
     - name: build
       run: npm run build
 
+    - name: build - 404.html
+      run: cp dist/index.html dist/404.html
+
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
