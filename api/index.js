@@ -27,5 +27,5 @@ spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType, st
 snake({ vdSocket, io, info })
 hawk({ io })
 ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io, biliAPI })
-io.on('connection', connect({ io, vdb, site, info, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }))
+io.on('connection', connect({ vdb, site, info, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }))
 server.listen(8001)

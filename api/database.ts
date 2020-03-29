@@ -52,10 +52,10 @@ class ArrayDatabase extends LevelDatabase {
   put({ mid = 0, num = 0, value }: { num: number, mid: any, value: any }) {
     return super.put(`${mid}_${num}`, value)
   }
-  get({ mid = 0, num = 0 }: { num: number, mid: any}) {
+  get({ mid = 0, num = 0 }: { num: number, mid: any }) {
     return super.get(`${mid}_${num}`)
   }
-  bulkGet({ mid = 0, num = 1, skip = 0 }) {
+  bulkGet({ mid = 0, num = 1, skip = 0 }: { mid: any, num?: number, skip?: number }) {
     let bulk = Array(num)
     for (let i = 0; i < bulk.length; i++) {
       bulk[i] = this.get({ mid, num: i + 1 + skip })

@@ -12,6 +12,10 @@ if (!ws.includes(localStorage.ws)) {
 export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : localStorage.ws)
 // export const socket = io(localStorage.ws)
 
+socket.on('connect', () => {
+  socket.emit('hash', COMMIT_HASH)
+})
+
 export const ping = ws => new Promise(resolve => {
   const pingSocket = io(ws, { forceNew: true })
   pingSocket.on('connect', async () => {
@@ -52,7 +56,7 @@ export const getDeflateTimeSeries = async (e, target) => {
 const newGet = (...target) => get('new', target)
 
 /* beautify ignore:start */
-const passDeflate = async (...target) => await newGet('deflate', ...target) 
+export const passDeflate = async (...target) => await newGet('deflate', ...target) 
   |> await #
   |> inflate
   |> new TextDecoder().decode(#)

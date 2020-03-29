@@ -30,7 +30,9 @@ export default new Router({
     path: '/macro',
     name: 'macro',
     // component: Macro
+    /* beautify ignore:start */
     component: () => import(/* webpackChunkName: "macro" */ './views/Macro.vue'),
+    /* beautify ignore:end */
   }, {
     path: '/dd/',
     name: 'dd',
@@ -41,10 +43,14 @@ export default new Router({
     component: List,
   }, {
     path: '/tietie',
+    /* beautify ignore:start */
     component: () => import(/* webpackChunkName: "tietie" */ './views/Tietie.vue'),
+    /* beautify ignore:end */
   }, {
     path: '/detail/:mid',
+    /* beautify ignore:start */
     component: () => import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
+    /* beautify ignore:end */
     props: true,
   }, {
     path: '/badge/:mid',
@@ -53,9 +59,11 @@ export default new Router({
   }, {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: About,
+  }, {
+    path: '/dev',
+    /* beautify ignore:start */
+    component: () => import(/* webpackChunkName: "dev" */ './views/Dev.vue'),
+    /* beautify ignore:end */
   }],
 })

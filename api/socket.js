@@ -2,8 +2,11 @@ import { deflate } from 'zlib'
 import { promisify } from 'util'
 
 import { macro, num } from './database.js'
+import { io } from './interface/io.js'
 
 const deflateAsync = promisify(deflate)
+
+const metaMap = new WeakMap()
 
 const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
@@ -24,6 +27,19 @@ const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
       socket.join(week ? 'guardMacroWeekK' : 'guardMacroK')
       return result
     },
+    devHashRank: () => Object
+      .entries(Object
+        .values(io.of('/').connected)
+        .map(s => metaMap.get(s))
+        .map(({ hash = 'undefined' }) => hash)
+        .reduce((hashs, hash) => {
+          if (!hashs[hash]) {
+            hashs[hash] = 0
+          }
+          hashs[hash]++
+          return hashs
+        }, {}))
+      .sort(([_, a], [_hash, b]) => b - a),
     arrayMinimizer: async keys => {
       const result = await handler(keys)
       const ks = Object.keys(result[0])
@@ -45,7 +61,7 @@ export const linkDanmaku = ({ io, cState }) => {
   })
 }
 
-export const connect = ({ io, site, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
   const newHandler = wsRouter({ info, vdb, socket })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
@@ -120,6 +136,12 @@ export const connect = ({ io, site, info, active, guard, vdb, fullGuard, guardTy
     }
   })
 
+  metaMap.set(socket, {})
+
+  socket.on('hash', hash => {
+    metaMap.set(socket, { ...metaMap.get(socket), hash })
+  })
+
   io.clients((error, clients) => {
     if (error) {
       console.error(error)
@@ -179,12 +201,16 @@ Socket
 **************************************
 **************************************
 NEW WS REQUEST FORMAT
+
 ENTRYPOINT: new
  - PASS: deflate
  - PASS: arrayMinimizer
 
 fullInfo: [{...info, vdb}]
 guardMacroK(week): [...guardMacroK]
+
+/// dev
+devHashRank: [...[hash, number]]
 
 **************************************
 **************************************

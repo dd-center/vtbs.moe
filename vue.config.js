@@ -1,5 +1,7 @@
 import webpack from 'webpack'
 import CopyPlugin from 'copy-webpack-plugin'
+import GitRevisionPlugin from 'git-revision-webpack-plugin'
+const gitRevisionPlugin = new GitRevisionPlugin()
 
 export default {
   lintOnSave: false,
@@ -41,6 +43,7 @@ export default {
       new CopyPlugin([
         { from: 'BiliChat/docs', to: 'BiliChat' },
       ]),
+      new webpack.DefinePlugin({ COMMIT_HASH: JSON.stringify(gitRevisionPlugin.commithash()) }),
     ],
   },
 }
