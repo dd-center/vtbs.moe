@@ -10,7 +10,18 @@
       </h2>
       <div class="columns">
         <div class="column">
-          <h3 class="subtitle is-4"><s>小站要开不下去啦~</s> 分布式DD！</h3>
+          <h4 class="title is-4"><b><u><i>(新)</i></u></b> submit.vtbs.moe</h4>
+          <h4 class="subtitle is-4">名单查漏补缺!</h4>
+          <p>
+            提交新的虚拟主播，修改已有的虚拟主播:<br>
+            <a href="https://submit.vtbs.moe" target="_blank">https://submit.vtbs.moe</a><br>
+            <br>
+            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank">github:dd-center/submit.vtbs.moe</a><br>
+            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/submit.vtbs.moe.svg?style=social"></a>
+          </p>
+          <hr>
+          <h4 class="title is-4">DD@Electron</h4>
+          <h4 class="subtitle is-4">分布式DD!</h4>
           <p>现在下载DD@Electron, 帮助vtbs.moe持续运行<br>
             开源软件, 无广告无病毒<br>
             分布式信息获取DD@Electron<br>
@@ -30,7 +41,7 @@
             宏观中视频势每 6 小时更新一次<br>
             宏观中词云每分钟更新一次<br>
             风云榜，24小时更新一次 <br>
-            名单查漏补缺: 新建 issue <a href="https://github.com/dd-center/vdb/issues/new?template=new-bilibili-vtb-vup.md&title=VTB补" target="_blank">https://github.com/dd-center/vdb/issues/new</a><br>
+            名单查漏补缺: <a href="https://submit.vtbs.moe" target="_blank">https://submit.vtbs.moe</a><br>
             或者邮件: simon3000@163.com
             <br>
             急上升的数据是过去24小时粉丝数变化，并不是昨天一天的变化
