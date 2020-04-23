@@ -8,6 +8,9 @@ const notable = ({ object, time, currentActive }) => {
   if (time - currentActive.time > 6 * oneHours) {
     return true
   }
+  if (currentActive.archiveView !== 0 && object.archiveView === 0) {
+    return false
+  }
   if (Math.abs(object.follower - currentActive.follower) > 35) {
     return true
   }
@@ -21,9 +24,9 @@ const notable = ({ object, time, currentActive }) => {
 }
 
 const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
-  let time = Date.now()
+  const time = Date.now()
 
-  let object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
+  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
     while (await stateGetPending() > 512) {
       await wait(500)
@@ -32,7 +35,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
     return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
 
-  let { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
 
   let info = await db.info.get(mid)
   if (!info) {
@@ -40,7 +43,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
   }
   let { recordNum = 0, guardChange = 0, online = 0 } = info
 
-  let currentActive = await db.active.get({ mid, num: recordNum })
+  const currentActive = await db.active.get({ mid, num: recordNum })
   if (notable({ object, time, currentActive })) {
     recordNum++
     io.to(mid).emit('detailActive', { mid, data: { archiveView, follower, time } })
@@ -59,16 +62,16 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
     await db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
   }
 
-  let dayNum = 1000 * 60 * 60 * 24 / INTERVAL
-  let dayBackSkip = Math.max(recordNum - dayNum, 0)
-  let totalRecordNum = Math.min(dayNum, recordNum)
-  let actives = await db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
-  let todayActives = actives.filter(active => active.time > time - 1000 * 60 * 60 * 24)
-  let timeDifference = time - todayActives[0].time
-  let followerChange = follower - todayActives[0].follower
-  let rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
+  const dayNum = 1000 * 60 * 60 * 24 / INTERVAL
+  const dayBackSkip = Math.max(recordNum - dayNum, 0)
+  const totalRecordNum = Math.min(dayNum, recordNum)
+  const actives = await db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
+  const todayActives = actives.filter(active => active.time > time - 1000 * 60 * 60 * 24)
+  const timeDifference = time - todayActives[0].time
+  const followerChange = follower - todayActives[0].follower
+  const rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
 
-  let guardType = await db.guardType.get(mid)
+  const guardType = await db.guardType.get(mid)
 
   const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time }
 
@@ -88,12 +91,12 @@ export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilt
   let lastUpdate = Date.now()
   setInterval(() => {
     if (Date.now() - lastUpdate > INTERVAL * 2) {
-      console.error(`Spider, NOT OK`)
+      console.error('Spider, NOT OK')
     }
   }, 1000 * 60 * 5)
   while (true) {
-    let startTime = Date.now()
-    let pending = [...(await vdb.get())]
+    const startTime = Date.now()
+    const pending = [...(await vdb.get())]
 
     let spiderLeft = pending.length
     io.emit('spiderLeft', spiderLeft)
