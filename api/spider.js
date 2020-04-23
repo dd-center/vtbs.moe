@@ -5,7 +5,7 @@ const notable = ({ object, time, currentActive }) => {
   if (!currentActive) {
     return true
   }
-  if (time - currentActive.time > 6 * oneHours) {
+  if (time - currentActive.time > 32 * oneHours) {
     return true
   }
   if (currentActive.archiveView !== 0 && object.archiveView === 0) {
