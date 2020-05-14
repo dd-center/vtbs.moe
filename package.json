@@ -36,7 +36,7 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "state-center": "file:state-center",
-    "subleveldown": "^4.1.4",
+    "subleveldown": "^5.0.0",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",
     "vue-analytics": "^5.22.1",
