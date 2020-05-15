@@ -336,7 +336,7 @@
                 <div slot="header">
                   <span style="font-size:20px;">直播间弹幕: <a href="https://bilichat.3shain.com">BILICHAT</a></span> by 3Shain
                 </div>
-                <iframe :src="`/BiliChat/?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
+                <iframe :src="`/BiliChat/index.html?pure=true&room=${roomid}`" width="100%" height="400px" frameborder="0"></iframe>
               </el-card>
             </el-col>
           </el-row>
