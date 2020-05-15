@@ -281,6 +281,20 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   1560050332931
   ```
 
+* #### List of living rooms <https://api.vtbs.moe/v1/living>
+
+  => Array, `[...roomid]`, `number[]`
+
+  Roomids of living rooms
+
+  **Examble:** <https://api.vtbs.moe/v1/living>
+
+  ```json
+  [746929,21665984,3012597,179883,6760154,7038458
+  // , ...
+  ]
+  ```
+
 ### V2 (JSON)
 
 ​	Simple JSON API with Bulk Historical Data.

@@ -36,7 +36,10 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
       uuid,
     }
   }))
-  .filter((_, index) => {
+  .filter(({ mid }, index) => {
+    if (mid === 286179206) {
+      return true
+    }
     if (process.env.MOCK) {
       return index < 5
     } else {

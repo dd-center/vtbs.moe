@@ -106,6 +106,16 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
     }
   })
 
+  v1.get('/living', async ctx => {
+    const vdbList = await vdb.get()
+    const infos = await Promise.all(vdbList.map(({ mid }: { mid: number }) => info.get(mid)))
+    const livingRooms = infos
+      .filter(Boolean)
+      .filter(({ liveStatus }: { liveStatus: number }) => liveStatus === 1)
+      .map(({ roomid }: { roomid: number }) => roomid)
+    ctx.body = livingRooms
+  })
+
   app.use(v1.routes())
 
   const v2 = new Router({ prefix: '/v2' })
