@@ -31,16 +31,16 @@ class LevelDatabase {
   }
 }
 
-class SubLevelDatabase {
+class SubLevelDatabase<K = any, V = any> {
   db: LevelUp
 
   constructor({ name, db }: { name: string, db: LevelUp }) {
-    this.db = sub(db, name, { valueEncoding: 'json' })
+    this.db = sub<K, V>(db, name, { valueEncoding: 'json' })
   }
-  put(key: any, value: any) {
+  put(key: K, value: V) {
     return this.db.put(key, value)
   }
-  get(key: any) {
+  get(key: K): Promise<V | undefined > {
     return this.db.get(key).catch(() => undefined)
   }
 }
@@ -69,6 +69,7 @@ export const site = new ArrayDatabase({ name: 'site', db })
 export const num = new LevelDatabase({ name: 'num', db })
 
 export const status = new SubLevelDatabase({ name: 'status', db })
+export const roomidMap = new SubLevelDatabase<number, number>({ name: 'roomidMap', db })
 
 export const info = new LevelDatabase({ name: 'info', db })
 export const active = new ArrayDatabase({ name: 'active', db })
@@ -97,8 +98,11 @@ spiderLeft: Number
 spiderDuration: Number
 spiderTime: Number
 
+roomidMap
+roomid: mid
+
 info
-mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time}
+mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time, liveStartTime}
 DEPRECATED: liveNum
 
 active

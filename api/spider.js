@@ -1,3 +1,5 @@
+import { roomidMap } from './database.js'
+
 const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -26,7 +28,7 @@ const notable = ({ object, time, currentActive }) => {
 const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
   const time = Date.now()
 
-  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
+  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank', 'liveStartTime']).catch(console.error)
   if (!object) {
     while (await stateGetPending() > 512) {
       await wait(500)
@@ -35,7 +37,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
     return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {
@@ -73,10 +75,13 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
 
   const guardType = await db.guardType.get(mid)
 
-  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time }
+  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time, liveStartTime }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
   await db.info.put(mid, newInfo)
+  if (roomid) {
+    await roomidMap.put(roomid, mid)
+  }
 
   log(`UPDATED: ${mid} - ${uname}`)
   return mid

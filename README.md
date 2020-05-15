@@ -295,6 +295,26 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
+* #### Room info <https://api.vtbs.moe/v1/room/:roomid>
+
+  => Object, `{}`
+
+  room info
+
+  **Examble:** <https://api.vtbs.moe/v1/room/8899503>
+
+  ```json
+  {
+    "uid":286179206,
+    "roomId":"8899503",
+    "title":"【时乃空生日会】我，20岁啦！！！",
+    "popularity":272839,
+    "live_time":1589536953000
+  }
+  ```
+
+
+
 ### V2 (JSON)
 
 ​	Simple JSON API with Bulk Historical Data.

@@ -6,6 +6,8 @@ import Router from '@koa/router'
 
 import LRU from 'lru-cache'
 
+import { roomidMap } from './database.js'
+
 const cache = new LRU({
   maxAge: 1000 * 5,
   max: 100,
@@ -114,6 +116,15 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
       .filter(({ liveStatus }: { liveStatus: number }) => liveStatus === 1)
       .map(({ roomid }: { roomid: number }) => roomid)
     ctx.body = livingRooms
+  })
+
+  v1.get('/room/:roomid', async ctx => {
+    const { roomid } = ctx.params
+    const mid = await roomidMap.get(roomid)
+    if (mid) {
+      const { title, online, liveStartTime } = await info.get(mid)
+      ctx.body = { uid: mid, roomId: roomid, title, popularity: online, live_time: liveStartTime }
+    }
   })
 
   app.use(v1.routes())
