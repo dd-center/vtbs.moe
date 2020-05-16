@@ -81,6 +81,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
   const totalRecordNum = Math.min(dayNum, recordNum)
   const actives = await db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
   const todayActives = actives.filter(active => active.time > time - 1000 * 60 * 60 * 24)
+  todayActives.push({ time: time - 1, follower })
   const timeDifference = time - todayActives[0].time
   const followerChange = follower - todayActives[0].follower
   const rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
