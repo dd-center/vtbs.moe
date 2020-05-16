@@ -27,15 +27,18 @@ const notable = ({ object, time, currentActive }) => {
 
 const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
   const time = Date.now()
+  console.log('core start', vtb.mid)
 
   const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
   if (!object) {
     while (await stateGetPending() > 512) {
+      console.log('core wait retry', vtb.mid)
       await wait(500)
     }
     log(`RETRY: ${vtb.mid}`)
     return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
+  console.log('core start process', vtb.mid)
 
   const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
 
