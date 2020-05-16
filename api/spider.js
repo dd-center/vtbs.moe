@@ -32,16 +32,20 @@ const coreFetch = async ({ vtb, biliAPI }) => {
   return { ...object, liveStartTime }
 }
 
-const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
+const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) => async vtb => {
   const time = Date.now()
 
   const object = await coreFetch({ vtb, biliAPI }).catch(console.error)
   if (!object) {
-    while (await stateGetPending() > 512) {
-      await wait(500)
+    if (retry > 5) {
+      log(`SKIP RETRY: ${vtb.mid}`)
+    } else {
+      while (await stateGetPending() > 512) {
+        await wait(500)
+      }
+      log(`RETRY: ${vtb.mid}`)
+      return core({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry + 1)(vtb)
     }
-    log(`RETRY: ${vtb.mid}`)
-    return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
 
   const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
