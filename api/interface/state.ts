@@ -12,6 +12,7 @@ const clusterAsker = cState.ask('cluster')
 
 export const getPending = () => Promise.race([clusterAsker('pending'), wait(1000)]).then(number => {
   if (typeof number === 'number') {
+    console.log('pending', number)
     return number
   } else {
     console.error('getPending timeout')
