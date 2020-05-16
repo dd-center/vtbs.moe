@@ -25,10 +25,17 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
+const coreFetch = async ({ vtb, biliAPI }) => {
+  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
+  const { roomid } = object
+  const { liveStartTime } = roomid ? await biliAPI({ roomid }, ['liveStartTime']) : { liveStartTime: 0 }
+  return { ...object, liveStartTime }
+}
+
 const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb => {
   const time = Date.now()
 
-  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
+  const object = await coreFetch({ vtb, biliAPI }).catch(console.error)
   if (!object) {
     while (await stateGetPending() > 512) {
       await wait(500)
@@ -37,9 +44,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }) => async vtb 
     return core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb)
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid } = object
-
-  const { liveStartTime } = roomid ? await biliAPI({ roomid }, ['liveStartTime']) : { liveStartTime: 0 }
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {
