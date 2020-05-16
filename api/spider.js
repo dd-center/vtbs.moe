@@ -39,6 +39,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
   if (!object) {
     if (retry > 5) {
       log(`SKIP RETRY: ${vtb.mid}`)
+      return vtb.mid
     } else {
       while (await stateGetPending() > 512) {
         await wait(500)
