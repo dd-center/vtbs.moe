@@ -6,6 +6,8 @@ let vdbTable: ReturnType<typeof vtb2Table>
 let vtbs: ReturnType<typeof vtb2moe>
 let io: Server
 
+const wait = ms => new Promise(resolve => setTimeout(wait, ms))
+
 type VDB = {
   meta: {
     UUID_NAMESPACE: string
@@ -62,6 +64,7 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
     return { moe, vdb, vdbTable }
   } else {
     console.error('vdb error')
+    await wait(1000)
     return update()
   }
 }
