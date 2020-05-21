@@ -6,7 +6,7 @@ let vdbTable: ReturnType<typeof vtb2Table>
 let vtbs: ReturnType<typeof vtb2moe>
 let io: Server
 
-const wait = ms => new Promise(resolve => setTimeout(wait, ms))
+const wait = (ms: number) => new Promise(resolve => setTimeout(wait, ms))
 
 type VDB = {
   meta: {
