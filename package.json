@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test": "npm run tsc && npm run build",
+    "build": "npm run tsc && npm run build:vue",
+    "build:vue": "vue-cli-service build",
+    "test": "npm run build",
     "lint": "vue-cli-service lint",
     "favicon": "node favicon",
     "tsc": "tsc -b",
