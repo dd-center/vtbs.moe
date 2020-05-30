@@ -369,6 +369,27 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   
   
 
+## Meta
+
+Metadata
+
+* ### ping
+
+  <https://api.vtbs.moe/meta/ping>
+
+  `pong`
+
+* ### cdn
+
+  <https://api.vtbs.moe/meta/cdn>
+
+  `["https://api.vtbs.moe","https://api.tokyo.vtbs.moe","https://vtbs.musedash.moe"]`
+
+* ### timestamp
+
+  <https://api.vtbs.moe/meta/timestamp>
+
+  `1590850640669`
 
 ## vdSocket
 

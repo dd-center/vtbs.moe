@@ -8,6 +8,8 @@ import LRU from 'lru-cache'
 
 import { roomidMap } from './database.js'
 
+import cdn from '../cdn.js'
+
 const cache = new LRU({
   maxAge: 1000 * 5,
   max: 100,
@@ -72,14 +74,16 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
   const app = new Koa()
 
   app.use(async (ctx, next) => {
-    let hit = cache.get(ctx.url)
+    const hit = cache.get(ctx.url)
     ctx.set('Access-Control-Allow-Origin', '*')
     if (hit) {
       ctx.body = hit
     } else {
       await next()
       if (!(ctx.body instanceof BufferStream)) {
-        cache.set(ctx.url, ctx.body)
+        if (ctx.path !== '/meta/timestamp') {
+          cache.set(ctx.url, ctx.body)
+        }
       }
     }
   })
@@ -191,6 +195,22 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
   })
 
   app.use(v3.routes())
+
+  const meta = new Router({ prefix: '/meta' })
+
+  meta.get('/ping', ctx => {
+    ctx.body = 'pong'
+  })
+
+  meta.get('/timestamp', ctx => {
+    ctx.body = Date.now()
+  })
+
+  meta.get('/cdn', ctx => {
+    ctx.body = cdn
+  })
+
+  app.use(meta.routes())
 
   const endpoint = new Router({ prefix: '/endpoint' })
 

@@ -8,7 +8,8 @@
   },
   "include": [
     "hawk",
-    "api"
+    "api",
+    "cdn.ts"
   ],
   "exclude": [
     "api/mock"
