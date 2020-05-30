@@ -4,6 +4,8 @@ import ws from '../cdn'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
+export { default as ws } from '../cdn'
+
 if (!ws.includes(localStorage.ws)) {
   localStorage.ws = ws[0]
 }
