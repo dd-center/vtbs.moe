@@ -10,13 +10,7 @@ const notable = ({ object, time, currentActive }) => {
   if (time - currentActive.time > 32 * oneHours) {
     return true
   }
-  if (currentActive.archiveView !== 0 && object.archiveView === 0) {
-    return false
-  }
   if (Math.abs(object.follower - currentActive.follower) > 35) {
-    return true
-  }
-  if (Math.abs(currentActive.archiveView - object.archiveView) * 1000 > currentActive.archiveView) {
     return true
   }
   if (Math.abs(currentActive.follower - object.follower) * 1000 > currentActive.follower) {
@@ -26,7 +20,7 @@ const notable = ({ object, time, currentActive }) => {
 }
 
 const coreFetch = async ({ vtb, biliAPI }) => {
-  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'archiveView', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
+  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
   const { roomid } = object
   const { liveStartTime } = roomid ? await biliAPI({ roomid }, ['liveStartTime']) : { liveStartTime: 0 }
   return { ...object, liveStartTime }
@@ -49,7 +43,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
     }
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {

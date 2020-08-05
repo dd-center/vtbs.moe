@@ -56,17 +56,6 @@
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                播放
-              </div>
-              <div class="center">
-                <span class="el-icon-caret-right big"></span>
-                <h3>{{archiveView | parseNumber}}</h3>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" :xs="12" :xl="4">
-            <el-card class="box-card" shadow="hover">
-              <div slot="header">
                 视频
               </div>
               <div class="center">
@@ -837,7 +826,6 @@ export default {
         { name: '直播间', room: String(this.roomid || '无') },
         { name: '签名', value: this.sign },
         { name: '视频数', value: this.video },
-        { name: '总播放', value: this.archiveView },
         { name: '直播标题', value: this.title },
         { name: '舰团', value: this.guardNum },
         {

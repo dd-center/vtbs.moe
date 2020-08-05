@@ -95,7 +95,7 @@ export default {
       return this.info.worm
     },
     status: function() {
-      let object = {
+      const object = {
         follower: this.info.follower,
       }
       if (!this.worm) {
@@ -105,8 +105,6 @@ export default {
         if (this.info.guardNum) {
           object.guardNum = this.info.guardNum
         }
-      } else {
-        object.archiveView = this.info.archiveView
       }
       if (this.liveStatus) {
         object.online = this.info.online
