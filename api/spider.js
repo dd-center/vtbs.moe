@@ -20,7 +20,7 @@ const notable = ({ object, time, currentActive }) => {
 }
 
 const coreFetch = async ({ vtb, biliAPI }) => {
-  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
+  const object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
   const { roomid } = object
   const { liveStartTime } = roomid ? await biliAPI({ roomid }, ['liveStartTime']) : { liveStartTime: 0 }
   return { ...object, liveStartTime }
@@ -43,7 +43,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
     }
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
+  const { mid, uname, video = 0, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {

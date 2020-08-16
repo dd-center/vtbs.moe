@@ -16,14 +16,14 @@ const round = async ({ pending, wormId, io, PARALLEL, biliAPI }) => {
     const vtb = pending.shift()
     const time = Date.now()
     if (vtb) {
-      const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
+      const object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
       if (!object) {
         pending.push(vtb)
         log(`RETRY PENDING: ${vtb.mid}`)
         await wait(1500 + time - Date.now())
         continue
       }
-      const { mid, uname, video, roomid, sign, notice, face, topPhoto, archiveView = 0, follower, liveStatus, guardNum, areaRank, online, title } = object
+      const { mid, uname, video = 0, roomid, sign, notice, face, topPhoto, archiveView = 0, follower, liveStatus, guardNum, areaRank, online, title } = object
       infoArray.push({ mid, uname, video, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, guardNum, areaRank, online, title, time, worm: true })
 
       log(`UPDATED: ${mid} - ${uname}`)
