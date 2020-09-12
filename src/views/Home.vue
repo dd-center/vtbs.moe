@@ -1,6 +1,8 @@
 <template>
-<div class="columns is-gapless gap">
-  <div class="column">
+<div class="column is-gapless gap">
+  <input class="input search is-rounded vtb-search" v-model="search" type="text" placeholder="查找主播~">
+  <div class="columns">
+    <div class="column">
   </div>
   <div class="column is-full-mobile is-11-tablet is-10-desktop is-three-fifths-widescreen is-7-fullhd">
     <p v-if="cacheAge">数据缓存于: <span class="tag is-rounded is-info smallMargin">{{cacheAge}}</span></p>
@@ -10,6 +12,7 @@
     </transition-group>
   </div>
   <div class="column"></div>
+  </div>
 </div>
 </template>
 
@@ -23,6 +26,7 @@ export default {
   data() {
     return {
       show: 32,
+      search: ''
     }
   },
   components: {
@@ -67,8 +71,19 @@ export default {
       }
       return this.followerRank
     },
+    preRank: function(){
+      // 临时变量, 存储将要展示的主播列表
+      let temRank = this.rank;
+      if(this.search){
+        temRank = temRank.filter(i=>{
+          if(this.$store.getters.info[i.mid]?.uname?.includes(this.search))
+            return true;
+        })
+      }
+      return temRank
+    },
     rankLimit: function() {
-      return this.rank
+      return this.preRank
         .filter((info, index) => index < this.show)
     },
     allDisplay() {
@@ -79,6 +94,18 @@ export default {
 </script>
 
 <style scoped>
+
+.vtb-search{
+  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05);
+  outline: none;
+  border: none;
+  width: 260px;
+  position: fixed;
+}
+.vtb-search:focus{
+  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05);
+}
+
 .smallMargin {
   margin-bottom: 6px;
 }

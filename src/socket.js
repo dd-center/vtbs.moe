@@ -57,7 +57,7 @@ export const getDeflateTimeSeries = async (e, target) => {
 const newGet = (...target) => get('new', target)
 
 /* beautify ignore:start */
-export const passDeflate = async (...target) => await newGet('deflate', ...target) 
+export const passDeflate = async (...target) => await newGet('deflate', ...target)
   |> await #
   |> inflate
   |> new TextDecoder().decode(#)
