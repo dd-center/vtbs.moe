@@ -3,15 +3,6 @@
 #### 前置要求
 
 - node 版本最新, 推荐 `14.10.1`
-- 设置二进制镜像文件
-```shell
-export sass_binary_site=https://npm.taobao.org/mirrors/node-sass
-export npm_config_sharp_libvips_binary_host=https://npm.taobao.org/mirrors/sharp-libvips/v8.9.1
-```
-- git 设置代理, npm 设置淘宝源
-```shell
-git config --global http.proxy http://127.0.0.1:7890
-```
 
 #### 安装依赖:
 
