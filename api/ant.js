@@ -1,4 +1,5 @@
 import { guardMacroK } from './unit/index.js'
+import { waitStatePending } from './interface/index.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -111,9 +112,10 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
 }
 
 const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
-  const core = mid => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(e => {
+  const core = mid => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(async e => {
     console.error(e)
     log(`Guard RETRY: ${mid}`)
+    await waitStatePending(512)
     return core(mid)
   })
   while (true) {
@@ -123,10 +125,16 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     const mids = vtbs.map(({ mid }) => mid)
 
     await mids
-      .map(async mid => ({ mid, core: await core(mid) }))
-      .reduce(async (p, objectP, i) => {
+      .reduce(([last = { p: Promise.resolve() }, ...objectP], mid) => {
+        const p = last.p.then(() => waitStatePending(384))
+        return [{ mid, core: p.then(() => core(mid)), p }, last.core && last, ...objectP]
+      }, [])
+      .filter(Boolean)
+      .reverse()
+      .reduce(async (p, object, i) => {
         await p
-        const { mid, core: { guards, guardLevel } } = await objectP
+        const { mid, core } = object
+        const { guards, guardLevel } = await core
         await guardType.put(mid, guardLevel)
         await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
         log(`Guard: ${i + 1}/${vtbs.length}`)
