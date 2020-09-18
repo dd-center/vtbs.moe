@@ -1,4 +1,5 @@
 import { roomidMap } from './database.js'
+import { waitStatePending } from './interface/index.js'
 
 const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -26,7 +27,7 @@ const coreFetch = async ({ vtb, biliAPI }) => {
   return { ...object, liveStartTime }
 }
 
-const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) => async vtb => {
+const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   const time = Date.now()
 
   const object = await coreFetch({ vtb, biliAPI }).catch(console.error)
@@ -35,11 +36,9 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
       log(`SKIP RETRY: ${vtb.mid}`)
       return vtb.mid
     } else {
-      while (await stateGetPending() > 512) {
-        await wait(500)
-      }
+      await waitStatePending(512)
       log(`RETRY: ${vtb.mid}`)
-      return core({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry + 1)(vtb)
+      return core({ io, db, INTERVAL, biliAPI, log }, retry + 1)(vtb)
     }
   }
 
@@ -94,7 +93,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log, stateGetPending }, retry = 0) =>
   return mid
 }
 
-export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter, stateGetPending }) => {
+export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -116,10 +115,8 @@ export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilt
 
     const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
-      while (await stateGetPending() > 256) {
-        await wait(233)
-      }
-      return [...mids, core({ io, db, INTERVAL, biliAPI, log, stateGetPending })(vtb).then(mid => {
+      await waitStatePending()
+      return [...mids, core({ io, db, INTERVAL, biliAPI, log })(vtb).then(mid => {
         spiderLeft--
         io.emit('spiderLeft', spiderLeft)
         db.status.put('spiderLeft', spiderLeft)

@@ -4,7 +4,7 @@ import ant from './ant.js'
 
 import http from 'http'
 
-import { vd, vdSocket, hawk, vdb, biliAPI, stateGetPending, stateSocket, cState, io } from './interface/index.js'
+import { vd, vdSocket, hawk, vdb, biliAPI, stateSocket, cState, io } from './interface/index.js'
 
 import { site, num, info, active, live, guard, macro, fullGuard, guardType, status } from './database.js'
 
@@ -23,7 +23,7 @@ vdb.bind(io)
 const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro, guard }))
 io.attach(server)
 vd.attach(server)
-spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType, status }, io, worm, biliAPI, infoFilter, stateGetPending })
+spider({ PARALLEL, INTERVAL, vdb, db: { site, info, active, guard, guardType, status }, io, worm, biliAPI, infoFilter })
 snake({ vdSocket, io, info })
 hawk({ io })
 ant({ vdb, macro, num, info, fullGuard, guardType, INTERVAL, io, biliAPI })
