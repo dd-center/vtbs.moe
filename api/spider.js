@@ -93,7 +93,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   return mid
 }
 
-export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
+export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -127,7 +127,7 @@ export default async ({ PARALLEL, INTERVAL, vdb, db, io, worm, biliAPI, infoFilt
       .map(infoFilter)
     io.emit('info', infoArray)
 
-    worm({ PARALLEL, vtbs: await vdb.get(), io, biliAPI })
+    worm({ vtbs: await vdb.get(), io, biliAPI })
       .then(wormArray => io.emit('worm', wormArray))
 
     const endTime = Date.now()
