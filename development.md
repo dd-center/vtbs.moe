@@ -1,5 +1,9 @@
 # 开发 vtbs.moe
 
+#### 前置要求
+
+- node 版本最新, 推荐 `14.10.1`
+
 #### 安装依赖:
 
 ```shell
@@ -54,7 +58,7 @@ node api/mock
 #### 运行
 
 ```sh
-node index
+node index.cjs
 ```
 
 * Socket 服务端口: `8001`

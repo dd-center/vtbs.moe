@@ -4,6 +4,9 @@ import GitRevisionPlugin from 'git-revision-webpack-plugin'
 const gitRevisionPlugin = new GitRevisionPlugin()
 
 export default {
+  css: {
+    sourceMap: true
+  },
   lintOnSave: false,
   pwa: {
     iconPaths: {
@@ -24,6 +27,7 @@ export default {
     config.module.rule('js').exclude.add(/\.worker\.js$/)
   },
   configureWebpack: {
+    devtool: 'source-map',
     module: {
       rules: [
         {
