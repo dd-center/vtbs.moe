@@ -395,7 +395,7 @@ Metadata
 
 	Live danmaku integrated WebSocket.
 	
-	Use Socket.io connect to `https://api.vtbs.moe/vds`
+	Use Socket.io connect to `https://api.vtbs.moe/vds` // const socket = io('https://api.vtbs.moe', { path: '/vds' })
 	
 	Document: https://github.com/dd-center/vtuber-danmaku#socketio
 
