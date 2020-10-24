@@ -10,7 +10,18 @@
       </h2>
       <div class="columns">
         <div class="column">
-          <h4 class="title is-4"><b><u><i>(新)</i></u></b> submit.vtbs.moe</h4>
+          <h4 class="title is-4"><b><u><i>(新)</i></u></b> DD@Browser</h4>
+          <h4 class="subtitle is-4">在浏览器DD!!</h4>
+          <p>现在 <a href="https://greasyfork.org/scripts/403819-dd-browser/code/DD@Browser.user.js" target="_blank" rel="noopener noreferrer">安装</a> DD@Browser, 帮助vtbs.moe持续运行<br>
+            分布式信息获取浏览器插件DD@Browser<br>
+            <br>
+            GreasyFork: <a href="https://greasyfork.org/zh-CN/scripts/403819-dd-browser" target="_blank" rel="noopener noreferrer">https://greasyfork.org/zh-CN/scripts/403819-dd-browser</a><br>
+            <br>
+            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank">github:dd-center/DDatBrowser</a><br>
+            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/DDatBrowser.svg?style=social"></a>
+          </p>
+          <hr>
+          <h4 class="title is-4">submit.vtbs.moe</h4>
           <h4 class="subtitle is-4">名单查漏补缺!</h4>
           <p>
             提交新的虚拟主播，修改已有的虚拟主播:<br>
