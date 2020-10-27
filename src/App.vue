@@ -111,7 +111,7 @@ export default {
 
 .staticSticky {
   position: fixed;
-  bottom: 10px;
+  bottom: 60px;
   right: 10px;
 }
 
