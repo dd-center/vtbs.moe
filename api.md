@@ -84,6 +84,35 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
+* #### Short info <https://api.vtbs.moe/v1/short>
+
+  => Array, `[...{mid, uname, roomid}]`
+  
+  Return short records
+
+  **Example:** <https://api.vtbs.moe/v1/short>
+
+  ```json
+  [
+    {
+      "mid": 392101937,
+      "uname": "-水梨若official-",
+      "roomid": 21745906
+    },
+    {
+      "mid": 15656417,
+      "uname": "贰三3三",
+      "roomid": 2802408
+    },
+    {
+      "mid": 145913,
+      "uname": "3000biubiubiu",
+      "roomid": 21574518
+    },
+    ...
+  ]
+  ```
+
 * #### Detail <https://api.vtbs.moe/v1/detail/:mid>
 
   => Object, `{mid, uname, …}`

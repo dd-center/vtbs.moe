@@ -98,6 +98,12 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(info => info)
   })
 
+  v1.get('/short', async ctx => {
+    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
+      .filter(info => info)
+      .map(({ mid, uname, roomid }) => ({ mid, uname, roomid }))
+  })
+
   v1.get('/detail/:mid', async ctx => {
     let result = await info.get(ctx.params.mid)
     if (result) {
