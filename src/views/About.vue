@@ -17,18 +17,18 @@
             <br>
             GreasyFork: <a href="https://greasyfork.org/zh-CN/scripts/403819-dd-browser" target="_blank" rel="noopener noreferrer">https://greasyfork.org/zh-CN/scripts/403819-dd-browser</a><br>
             <br>
-            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank">github:dd-center/DDatBrowser</a><br>
-            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/DDatBrowser.svg?style=social"></a>
+            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank" rel="noopener noreferrer">github:dd-center/DDatBrowser</a><br>
+            <a href="https://github.com/dd-center/DDatBrowser/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/DDatBrowser.svg?style=social"></a>
           </p>
           <hr>
           <h4 class="title is-4">submit.vtbs.moe</h4>
           <h4 class="subtitle is-4">名单查漏补缺!</h4>
           <p>
             提交新的虚拟主播，修改已有的虚拟主播:<br>
-            <a href="https://submit.vtbs.moe" target="_blank">https://submit.vtbs.moe</a><br>
+            <a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
             <br>
-            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank">github:dd-center/submit.vtbs.moe</a><br>
-            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/submit.vtbs.moe.svg?style=social"></a>
+            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer">github:dd-center/submit.vtbs.moe</a><br>
+            <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/submit.vtbs.moe.svg?style=social"></a>
           </p>
           <hr>
           <h4 class="title is-4">DD@Electron</h4>
@@ -36,12 +36,12 @@
           <p>现在下载DD@Electron, 帮助vtbs.moe持续运行<br>
             开源软件, 无广告无病毒<br>
             分布式信息获取DD@Electron<br>
-            Windows: <a href="https://dd.center/api/latest/ddatelectron/windows" target="_blank">https://dd.center/api/latest/ddatelectron/windows</a><br>
-            macOS: <a href="https://dd.center/api/latest/ddatelectron/mac" target="_blank">https://dd.center/api/latest/ddatelectron/mac</a><br>
-            Github Release: <a href="https://github.com/dd-center/DDatElectron/releases/latest" target="_blank">https://github.com/dd-center/DDatElectron/releases/latest</a><br>
+            Windows: <a href="https://dd.center/api/latest/ddatelectron/windows" target="_blank" rel="noopener noreferrer">https://dd.center/api/latest/ddatelectron/windows</a><br>
+            macOS: <a href="https://dd.center/api/latest/ddatelectron/mac" target="_blank" rel="noopener noreferrer">https://dd.center/api/latest/ddatelectron/mac</a><br>
+            Github Release: <a href="https://github.com/dd-center/DDatElectron/releases/latest" target="_blank" rel="noopener noreferrer">https://github.com/dd-center/DDatElectron/releases/latest</a><br>
             <br>
-            <a href="https://github.com/dd-center/ddatelectron/" target="_blank">github:dd-center/ddatelectron</a><br>
-            <a href="https://github.com/dd-center/ddatelectron/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/ddatelectron.svg?style=social"></a>
+            <a href="https://github.com/dd-center/ddatelectron/" target="_blank" rel="noopener noreferrer">github:dd-center/ddatelectron</a><br>
+            <a href="https://github.com/dd-center/ddatelectron/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/ddatelectron.svg?style=social"></a>
           </p>
           <hr>
           <p> 🍉 按照关注数排列<br>
@@ -52,14 +52,14 @@
             宏观中视频势每 6 小时更新一次<br>
             宏观中词云每分钟更新一次<br>
             风云榜，24小时更新一次 <br>
-            名单查漏补缺: <a href="https://submit.vtbs.moe" target="_blank">https://submit.vtbs.moe</a><br>
+            名单查漏补缺: <a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
             或者邮件: simon3000@163.com
             <br>
             急上升的数据是过去24小时粉丝数变化，并不是昨天一天的变化
           </p>
           <hr>
-          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/vtbs.moe.svg?style=social"></a> <br>
-          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank">github:dd-center/vtbs.moe</a>
+          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/vtbs.moe.svg?style=social"></a> <br>
+          <a href="https://github.com/dd-center/vtbs.moe/" target="_blank" rel="noopener noreferrer">github:dd-center/vtbs.moe</a>
           <br>
           <br>
           <!-- 其他有趣的项目: <a href="https://dd-center.github.io">dd-center.github.io</a> -->
@@ -88,7 +88,7 @@
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
-          <a href="https://github.com/dd-center/vtbs.moe#open-api" target="_blank">Open API Documents</a>
+          <a href="https://github.com/dd-center/vtbs.moe#open-api" target="_blank" rel="noopener noreferrer">Open API Documents</a>
           <br>
           <br>
           <h4 class="title is-4">服务器数据：</h4>
