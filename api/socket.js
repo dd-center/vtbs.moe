@@ -142,6 +142,10 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
     metaMap.set(socket, { ...metaMap.get(socket), hash })
   })
 
+  socket.on('cdn', cdn => {
+    metaMap.set(socket, { ...metaMap.get(socket), cdn })
+  })
+
   io.clients((error, clients) => {
     if (error) {
       console.error(error)

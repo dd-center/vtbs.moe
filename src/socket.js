@@ -15,6 +15,7 @@ export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localh
 
 socket.on('connect', () => {
   socket.emit('hash', COMMIT_HASH)
+  socket.emit('cdn', localStorage.ws)
 })
 
 export const ping = ws => new Promise(resolve => {
