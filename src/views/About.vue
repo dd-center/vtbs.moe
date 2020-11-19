@@ -125,7 +125,7 @@
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
-import { get, socket, ws, ping } from '@/socket'
+import { get, socket, ws, ping, saveWsCDN } from '@/socket'
 import Push from 'push.js'
 
 export default {
@@ -195,7 +195,7 @@ export default {
   methods: {
     push: w => Push.create(w),
     chooseWs(ws) {
-      localStorage.ws = ws
+      saveWsCDN(ws)
     },
     async pingWs(ws) {
       this.pingResult = { ...this.pingResult, [ws]: 'Ping...' }

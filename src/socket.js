@@ -3,6 +3,7 @@ import { inflate } from 'pako'
 import ws from '../cdn'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+const getAverage = a => Math.round(a.reduce((a, b) => a + b) / a.length)
 
 export { default as ws } from '../cdn'
 
@@ -18,23 +19,53 @@ socket.on('connect', () => {
   socket.emit('cdn', localStorage.ws)
 })
 
-export const ping = ws => new Promise(resolve => {
+export const saveWsCDN = cdn => {
+  localStorage.selectedCDN = 'true'
+  localStorage.ws = cdn
+}
+
+const rawPing = ws => new Promise(resolve => {
   const pingSocket = io(ws, { forceNew: true })
+  let done = false
+  setTimeout(() => {
+    if (!done) {
+      resolve([Infinity])
+    }
+  }, 1000 * 60)
   pingSocket.on('connect', async () => {
-    let pings = []
+    const pings = []
     await wait(500)
     await new Promise(resolve => pingSocket.emit('uptime', undefined, resolve))
     for (let i = 0; i < 5; i++) {
       await wait(500)
-      let time = Date.now()
+      const time = Date.now()
       await new Promise(resolve => pingSocket.emit('uptime', undefined, resolve))
       pings.push(Date.now() - time)
     }
-    let average = Math.round(pings.reduce((a, b) => a + b) / pings.length)
-    resolve([...pings, `Avg. ${average}`].join(', '))
+    resolve(pings)
+    done = true
     pingSocket.close()
   })
 })
+
+const autoCDN = async () => {
+  const result = await Promise.all(ws.map(rawPing))
+  const average = result.map(getAverage)
+  average[0] *= 1.5
+  return ws[average.reduce(([ping, index], newPing, newIndex) => ping < newPing ? [ping, index] : [newPing, newIndex], [Infinity])[1]]
+}
+
+if (localStorage.selectedCDN !== 'true') {
+  autoCDN().then(cdn => {
+    localStorage.ws = cdn
+  })
+}
+
+export const ping = async ws => {
+  const result = await rawPing(ws)
+  const average = getAverage(result)
+  return [...result, `Avg. ${average}`].join(', ')
+}
 
 export const get = (e, target) => new Promise(resolve => socket.emit(e, target, resolve))
 
