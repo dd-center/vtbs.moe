@@ -73,8 +73,16 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   const dayBackSkip = Math.max(recordNum - dayNum, 0)
   const totalRecordNum = Math.min(dayNum, recordNum)
   const actives = await db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
-  const todayActives = actives.filter(active => active.time > time - 1000 * 60 * 60 * 24)
+  const oldTime = time - 1000 * 60 * 60 * 24
+  const todayActives = actives.filter(active => active.time > oldTime)
   todayActives.push({ time: time - 1, follower })
+  const oldActives = actives.filter(active => active.time <= oldTime)
+  if (oldActives.length) {
+    const { time: olderTime, follower: olderFollower } = [...oldActives].reverse()[0]
+    const { time: newTime, follower: newFollower } = [...todayActives].reverse()[0]
+    const averageFollower = (newFollower - olderFollower) * ((oldTime - olderTime) / (newTime - olderTime)) + olderFollower
+    todayActives.unshift({ time: oldTime, follower: averageFollower })
+  }
   const timeDifference = time - todayActives[0].time
   const followerChange = follower - todayActives[0].follower
   const rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
