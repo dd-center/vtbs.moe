@@ -160,6 +160,12 @@ export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) 
     ctx.body = await guard.bulkGet({ mid, num: guardChange })
   })
 
+  // TODO: WRITE DOC!
+  v2.get('/bulkOnline', async ctx => {
+    const macroNum = await num.get('vtbMacroNum')
+    ctx.body = await macro.bulkGet({ mid: 'vtb', num: macroNum })
+  })
+
   app.use(v2.routes())
 
   const v3 = new Router({ prefix: '/v3' })
