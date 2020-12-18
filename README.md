@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="./assets/dd-left.png" width=24>
   vtbs.moe
-  <img src="./assets/dd-right.png" width=24>
+  <img src="./assets/dd-right.png" 。width=24>
 </h1>
 
 <h3 align="center">
