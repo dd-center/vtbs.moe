@@ -1,9 +1,9 @@
-import webpack from 'webpack'
-import CopyPlugin from 'copy-webpack-plugin'
-import GitRevisionPlugin from 'git-revision-webpack-plugin'
+const webpack = require('webpack')
+const CopyPlugin = require('copy-webpack-plugin')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const gitRevisionPlugin = new GitRevisionPlugin()
 
-export default {
+module.exports = {
   css: {
     sourceMap: true
   },

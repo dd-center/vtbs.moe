@@ -19,6 +19,3 @@
 [submodule "api/mock/bilibili-vtuber-live-danmaku-relay"]
 	path = api/mock/bilibili-vtuber-live-danmaku-relay
 	url = https://github.com/dd-center/bilibili-vtuber-live-danmaku-relay.git
-[submodule "vue-cli"]
-	path = vue-cli
-	url = https://github.com/dd-center/vue-cli.git
