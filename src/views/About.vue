@@ -112,7 +112,7 @@
           <br>
           <hr>
           <h1 class="title is-4">logs:</h1>
-          <p v-for="(log, index) in [...logs].reverse()" :key="index">
+          <p v-for="(log) in [...logs].reverse()" :key="log.key">
             {{log.data}}
           </p>
         </div>
