@@ -55,7 +55,7 @@ const autoCDN = async () => {
   return ws[average.reduce(([ping, index], newPing, newIndex) => ping < newPing ? [ping, index] : [newPing, newIndex], [Infinity])[1]]
 }
 
-if (localStorage.selectedCDN !== 'true') {
+if ((localStorage.selectedCDN !== 'true' && Math.random() > 0.9)) {
   autoCDN().then(cdn => {
     localStorage.ws = cdn
   })
