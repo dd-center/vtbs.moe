@@ -165,12 +165,12 @@
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                BiliOB 观察者 <small>by Jannchie见齐</small>
+                BiliOB233 <small>by <s>Jannchie见齐</s> 匿名人</small>
               </div>
               <div class="center">
-                <a :href="`https://www.biliob.com/author/${mid}`" target="_blank">
+                <a :href="`https://www.biliob233.com/author/${mid}`" target="_blank">
                   <img src="@/assets/biliob-frontend/public/img/icons/android-chrome-192x192.png" alt="BiliOB" width="72">
-                  {{`https://www.biliob.com/author/${mid}`}}
+                  {{`https://www.biliob233.com/author/${mid}`}}
                 </a>
               </div>
             </el-card>
