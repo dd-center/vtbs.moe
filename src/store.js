@@ -140,7 +140,7 @@ const x = new Vuex.Store({
     },
     SOCKET_log(state, data) {
       state.logs.push({ time: (new Date()).toLocaleString(), data, key: `${Date.now()}${Math.random()}` })
-      if (state.logs.length > 10) {
+      if (state.logs.length > 1024) {
         state.logs.shift()
       }
     },
