@@ -99,6 +99,14 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
   })
 
+  // TODO: Doc
+  v1.get('/fullInfo', async ctx => {
+    const vdbTable = await vdb.getVdbTable();
+    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
+      .filter(Boolean)
+      .map(({ uuid, ...rest }) => ({ ...rest, uuid, vdb: vdbTable[uuid] }))
+  })
+
   v1.get('/short', async ctx => {
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
       .filter(Boolean)
