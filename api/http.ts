@@ -96,12 +96,12 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
   })
 
   v1.get('/info', async ctx => {
-    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(info => info)
+    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
   })
 
   v1.get('/short', async ctx => {
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
-      .filter(info => info)
+      .filter(Boolean)
       .map(({ mid, uname, roomid }) => ({ mid, uname, roomid }))
   })
 
