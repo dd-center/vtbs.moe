@@ -7,6 +7,7 @@ import Router from '@koa/router'
 import LRU from 'lru-cache'
 
 import { roomidMap } from './database.js'
+import * as vdb from './interface/vdb.js'
 
 import cdn from '../cdn.js'
 
@@ -70,7 +71,7 @@ class BufferStream extends Duplex {
   }
 }
 
-export default ({ vdb, info, fullGuard, active, live, num, macro, guard }: any) => {
+export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {

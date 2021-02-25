@@ -20,7 +20,7 @@ const INTERVAL = 1000 * 60 * 5
 linkDanmaku({ cState, io })
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
-const server = http.createServer(httpAPI({ vdb, info, fullGuard, active, live, num, macro, guard }))
+const server = http.createServer(httpAPI({ info, fullGuard, active, live, num, macro, guard }))
 io.attach(server)
 vd.attach(server)
 spider({ INTERVAL, vdb, db: { site, info, active, guard, guardType, status }, io, worm, biliAPI, infoFilter })
