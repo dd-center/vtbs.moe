@@ -6,5 +6,5 @@ import '../index.js'
 
 process.env.MOCK = true
 process.env.URL = 'ws://127.0.0.1:9013'
-
+process.env.INTERVAL = '10000'
 import('./DDatHome-nodejs/index.js')
