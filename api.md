@@ -310,7 +310,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   room info
 
-  **Examble:** <https://api.vtbs.moe/v1/room/8899503>
+  **Example:** <https://api.vtbs.moe/v1/room/8899503>
 
   ```json
   {
@@ -321,8 +321,30 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     "live_time":1589536953000
   }
   ```
+  
 
+* #### Hawk <https://api.vtbs.moe/v1/hawk>
 
+  => `{day: [...{word, weight}], h: [...{word, weight}]}`
+
+  Danmaku keyword from current Stream
+
+  Day: today (last 24h)
+
+  h: last hour
+
+  **Example <https://api.vtbs.moe/v1/hawk>**
+
+  ```json
+  {
+    "day": [
+      { "word": "哈哈哈", "weight": 416573.43336737226 }, { "word": "？？？", "weight": 326972.0575651979 }, ...],
+    "h": [
+      { "word": "哈哈哈", "weight": 81216.98377892945 }, { "word": "哭哭", "weight": 77225.85928327849 }, ...]
+  }
+  ```
+
+  
 
 ## V2 (JSON)
 
