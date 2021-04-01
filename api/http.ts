@@ -8,12 +8,19 @@ import LRU from 'lru-cache'
 
 import { roomidMap } from './database.js'
 import * as vdb from './interface/vdb.js'
+import { hawkEmitter } from './interface/state.js'
 
 import cdn from '../cdn.js'
 
 const cache = new LRU({
   maxAge: 1000 * 5,
   max: 100,
+})
+
+let hawkAnalyzed: Object = { day: [], h: [] }
+
+hawkEmitter.on('analyze', data => {
+  hawkAnalyzed = data
 })
 
 const alloc32UIntBuffer = (number: number) => {
@@ -143,6 +150,10 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
       const { title, online, liveStartTime } = await info.get(mid)
       ctx.body = { uid: mid, roomId: roomid, title, popularity: online, live_time: liveStartTime }
     }
+  })
+
+  v1.get('/hawk', ctx => {
+    ctx.body = hawkAnalyzed
   })
 
   app.use(v1.routes())
