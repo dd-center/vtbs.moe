@@ -99,7 +99,6 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
   })
 
-  // TODO: Doc
   v1.get('/fullInfo', async ctx => {
     const vdbTable = await vdb.getVdbTable();
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
@@ -169,7 +168,6 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
     ctx.body = await guard.bulkGet({ mid, num: guardChange })
   })
 
-  // TODO: WRITE DOC!
   v2.get('/bulkOnline', async ctx => {
     const macroNum = await num.get('vtbMacroNum')
     ctx.body = await macro.bulkGet({ mid: 'vtb', num: macroNum })

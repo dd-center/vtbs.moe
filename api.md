@@ -113,6 +113,46 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
+* #### Full info <https://api.vtbs.moe/v1/fullInfo>
+
+  => Array, `[...{mid, uname, vdb, ...}]`
+
+  Info with vdb data
+
+  **Example**: <https://api.vtbs.moe/v1/fullInfo>
+
+  ```json
+  [
+    {
+      "mid": 5450477,
+      "uname": "-可乐KORA-",
+      "video": 4,
+      "roomid": 7194103,
+      "sign": "Egolive所属还未出道的四期生，虚拟考拉的可乐！是一只家里蹲！！\nTwitter:KORA_egolive",
+      "notice": "",
+      "face": "http://i2.hdslb.com/bfs/face/c412945daeaf056b081a5ba8ec7a9a8de9a38101.jpg",
+      "rise": 0,
+      "topPhoto": "http://i0.hdslb.com/bfs/space/aa4f6ea29d15397eb3791b0e27c31de391e94093.png",
+      "archiveView": 0,
+      "follower": 486,
+      "liveStatus": 0,
+      "recordNum": 382,
+      "guardNum": 5,
+      "lastLive": { "online": 4236, "time": 1617175669737 },
+      "guardChange": 29,
+      "guardType": [0, 0, 5],
+      "areaRank": 1000,
+      "online": 0,
+      "title": "【杂谈】来和家里蹲聊天吧oO",
+      "time": 1617282221988,
+      "liveStartTime": 0,
+      "uuid": "9b44e2a9-3334-5792-b57d-1bf0939afe49",
+      "vdb": { "uuid": "9b44e2a9-3334-5792-b57d-1bf0939afe49", "type": "vtuber", "bot": false, "accounts": [{ "id": "5450477", "type": "official", "platform": "bilibili" }], "name": { "extra": [], "cn": "-可乐KORA-", "default": "cn" }, "group": "ee2d6579-f7b2-59e4-be05-ca88f4bdff7d" }
+    },
+    ...
+  ]
+  ```
+
 * #### Detail <https://api.vtbs.moe/v1/detail/:mid>
 
   => Object, `{mid, uname, …}`
@@ -337,6 +377,29 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...{guardNum, areaRank, time}]`
 
   History of guard changes.
+  
+* #### Online <https://api.vtbs.moe/v2/bulkOnline>
+
+  => Array, [...{liveStatus, online, time}]
+
+  History of sum from all liver
+
+  * liveStatus: How many streaming now
+  * online: sum of online (人气)
+  * time: timestamp
+
+  **Example**: <https://api.vtbs.moe/v2/bulkOnline>
+
+  ```json
+  [
+    ...
+    { "liveStatus": 457, "online": 8783729, "time": 1617282137538 },
+    { "liveStatus": 472, "online": 9024976, "time": 1617282437539 },
+    { "liveStatus": 484, "online": 9287726, "time": 1617282737540 }
+  ]
+  ```
+
+  
 
 ## V3 (Buffer)
 
