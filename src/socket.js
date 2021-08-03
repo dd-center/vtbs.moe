@@ -11,8 +11,8 @@ if (!ws.includes(localStorage.ws)) {
   localStorage.ws = ws[0]
 }
 
-export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : localStorage.ws)
-// export const socket = io(localStorage.ws)
+// export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : localStorage.ws)
+export const socket = io(localStorage.ws)
 
 socket.on('connect', () => {
   socket.emit('hash', COMMIT_HASH)
