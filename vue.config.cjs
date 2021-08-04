@@ -21,7 +21,7 @@ module.exports = {
     appleMobileWebAppCapable: 'yes',
     workboxPluginMode: 'InjectManifest',
     workboxOptions: {
-      swSrc: 'src/service-worker.js',
+      swSrc: './src/service-worker.js',
     },
   },
   chainWebpack: config => {
