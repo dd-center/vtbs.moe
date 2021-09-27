@@ -13,10 +13,10 @@ jobs:
       with:
         submodules: 'recursive'
 
-    - name: Use Node.js 13
-      uses: actions/setup-node@v1
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2.4.0
       with:
-        node-version: 13
+        node-version: 14.10.1
 
     - name: install
       run: npm install
@@ -32,7 +32,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
-        cname: master.vtbs.moe
         force_orphan: true
         user_name: 'nanashi'
         user_email: 'example@example.com'
