@@ -118,6 +118,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     await waitStatePending(512)
     return core(mid)
   })
+  await wait(1000 * 60 * 60 * 12)
   while (true) {
     const intervalWait = wait(INTERVAL)
 
