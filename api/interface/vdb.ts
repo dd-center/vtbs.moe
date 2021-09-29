@@ -49,6 +49,22 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
   const body: VDB | void = await got('https://vdb.vtbs.moe/json/list.json').json<VDB>().catch(console.error)
   if (body) {
+    body.vtbs.push({
+      uuid: '9c1b7e15-a13a-51f3-88be-bd923b746474',
+      type: 'vtuber',
+      bot: false,
+      accounts: [
+        {
+          id: "401742377",
+          type: "official",
+          platform: "bilibili"
+        }
+      ],
+      name: {
+        en: "hide",
+        default: "en"
+      }
+    })
     console.log('vdb update')
     vdb = body
     vdbTable = vtb2Table(body)
