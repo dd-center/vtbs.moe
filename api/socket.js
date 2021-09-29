@@ -17,7 +17,7 @@ const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
     vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
       const vtbs = await vdb.get()
-      const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+      const infoArray = (await Promise.all(vtbs.filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474').map(({ mid }) => mid).map(mid => info.get(mid))))
         .filter(Boolean)
       return infoArray
     },
