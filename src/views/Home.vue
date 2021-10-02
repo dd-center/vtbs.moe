@@ -21,7 +21,7 @@ import { mapState, mapGetters } from 'vuex'
 import card from '@/components/card'
 import moment from 'moment'
 
-const SHOW = 24
+const SHOW = 16
 
 const threshold = Array(2000).fill(0).map((_, i) => 1 / 2000 * i)
 
