@@ -59,8 +59,8 @@ const store = (message: string) => {
   }
 }
 
-socket.on('danmaku', ({ message }: any) => {
-  if (filter(message)) {
+socket.on('danmaku', ({ message, roomid }: any) => {
+  if (roomid !== 21987615 && filter(message)) {
     store(message)
   }
 })
