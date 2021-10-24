@@ -58,6 +58,16 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
           id: "401742377",
           type: "official",
           platform: "bilibili"
+        },
+        {
+          id: "161775300",
+          type: "official",
+          platform: "bilibili"
+        },
+        {
+          id: "27534330",
+          type: "official",
+          platform: "bilibili"
         }
       ],
       name: {
