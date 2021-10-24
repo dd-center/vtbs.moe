@@ -93,6 +93,8 @@ export const get = async () => {
   }
 }
 
+export const getPure = async () => (await get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+
 export const getVdbTable = async () => {
   if (vdbTable) {
     return vdbTable

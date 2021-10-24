@@ -134,7 +134,7 @@ export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
   })
 
   v1.get('/living', async ctx => {
-    const vdbList = await vdb.get()
+    const vdbList = await vdb.getPure()
     const infos = await Promise.all(vdbList.map(({ mid }: { mid: number }) => info.get(mid)))
     const livingRooms = infos
       .filter(Boolean)

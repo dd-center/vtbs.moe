@@ -17,7 +17,7 @@ const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
       time: startTime,
     }
 
-    const vtbs = (await vdb.get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+    const vtbs = await vdb.getPure()
 
     for (let i = 0; i < vtbs.length; i++) {
       const { video = 0, archiveView = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -47,7 +47,7 @@ const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
       time: startTime,
     }
 
-    const vtbs = (await vdb.get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+    const vtbs = await vdb.getPure()
 
     for (let i = 0; i < vtbs.length; i++) {
       const { liveStatus = 0, online = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -87,7 +87,7 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
       time: startTime,
     }
 
-    const vtbs = (await vdb.get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+    const vtbs = await vdb.getPure()
 
     for (let i = 0; i < vtbs.length; i++) {
       const { guardNum = 0 } = (await info.get(vtbs[i].mid) || {})
@@ -122,7 +122,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
   while (true) {
     const intervalWait = wait(INTERVAL)
 
-    const vtbs = (await vdb.get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+    const vtbs = (await vdb.getPure())
     const mids = vtbs.map(({ mid }) => mid)
 
     await mids
