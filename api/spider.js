@@ -35,10 +35,11 @@ const CACHE_KEYS = ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'face',
 const coreFetch = async ({ vtb, biliAPI }) => {
   const { mid } = vtb
   const basic = { ...getDayCache(mid), ...vtb }
+  const updateDayCache = !dayCache.has(mid)
 
   const object = await biliAPI(basic, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'face', 'topPhoto', 'guardNum'])
 
-  if (!dayCache.has(mid)) {
+  if (updateDayCache) {
     setDayCache(mid, Object.fromEntries(CACHE_KEYS.map(k => [k, object[k]])))
   }
 
