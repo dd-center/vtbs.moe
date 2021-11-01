@@ -42,7 +42,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
     }
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, areaRank, bot, uuid, liveStartTime } = object
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {
@@ -89,7 +89,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
 
   const guardType = await db.guardType.get(mid)
 
-  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, areaRank, online, title, bot, time, liveStartTime }
+  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
   await db.info.put(mid, newInfo)

@@ -13,7 +13,7 @@ const round = async ({ vtb, io, biliAPI }, retry = 0) => {
   })(`worm: ${log}`)
 
   const time = Date.now()
-  const object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto', 'areaRank']).catch(console.error)
+  const object = await biliAPI(vtb, ['mid', 'uname', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'online', 'title', 'face', 'topPhoto']).catch(console.error)
   if (!object) {
     if (retry > 5) {
       log(`SKIP W. RETRY: ${vtb.mid}`)
@@ -25,8 +25,8 @@ const round = async ({ vtb, io, biliAPI }, retry = 0) => {
     }
   }
 
-  const { mid, uname, video = 0, roomid, sign, notice, face, topPhoto, archiveView = 0, follower, liveStatus, guardNum, areaRank, online, title } = object
-  const info = { mid, uname, video, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, guardNum, areaRank, online, title, time, worm: true }
+  const { mid, uname, video = 0, roomid, sign, notice, face, topPhoto, archiveView = 0, follower, liveStatus, guardNum, online, title } = object
+  const info = { mid, uname, video, roomid, sign, notice, face, topPhoto, archiveView, follower, liveStatus, guardNum, online, title, time, worm: true }
   log(`UPDATED: ${mid} - ${uname}`)
 
   return info

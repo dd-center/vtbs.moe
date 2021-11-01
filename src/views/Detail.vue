@@ -803,9 +803,6 @@ export default {
     recordNum() {
       return this.info.recordNum
     },
-    areaRank: function() {
-      return this.info.areaRank
-    },
     online: function() {
       return this.info.online
     },
@@ -836,7 +833,6 @@ export default {
         },
         { name: '公告', value: this.notice },
         { name: '直播时长', value: `${Math.round(this.liveNum / 12)} 时` },
-        { name: '直播总排名', value: this.areaRank },
         { name: '人气', value: this.online },
         { name: '上次更新', value: moment(this.time).fromNow() },
       ]
