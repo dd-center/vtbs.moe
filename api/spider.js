@@ -20,11 +20,32 @@ const notable = ({ object, time, currentActive }) => {
   return false
 }
 
+const dayCache = new Map()
+const getDayCache = mid => dayCache.get(mid) || {}
+const setDayCache = (mid, object) => {
+  dayCache.set(mid, object)
+  setTimeout(() => {
+    if (dayCache.get(mid) === object) {
+      dayCache.delete(mid)
+    }
+  }, 1000 * 60 * 60 * (20 + Math.random() * 4))
+}
+const CACHE_KEYS = ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'face', 'topPhoto']
+
 const coreFetch = async ({ vtb, biliAPI }) => {
-  const object = await biliAPI(vtb, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'guardNum', 'liveStatus', 'title', 'face', 'topPhoto', 'areaRank'])
+  const { mid } = vtb
+  const basic = { ...getDayCache(mid), ...vtb }
+
+  const object = await biliAPI(basic, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'face', 'topPhoto', 'guardNum'])
+
+  if (!dayCache.has(mid)) {
+    setDayCache(mid, Object.fromEntries(CACHE_KEYS.map(k => [k, object[k]])))
+  }
+
   const { roomid } = object
-  const { liveStartTime } = roomid ? await biliAPI({ roomid }, ['liveStartTime']) : { liveStartTime: 0 }
-  return { ...object, liveStartTime }
+  const { liveStartTime, title } = roomid ? await biliAPI({ roomid, mid }, ['liveStartTime', 'title']) : { liveStartTime: 0, title: '' }
+
+  return { ...object, liveStartTime, title }
 }
 
 const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
@@ -42,7 +63,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
     }
   }
 
-  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, liveStatus, title, face, topPhoto, bot, uuid, liveStartTime } = object
+  const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, title, face, topPhoto, bot, uuid, liveStartTime } = object
 
   let info = await db.info.get(mid)
   if (!info) {
@@ -59,6 +80,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
 
   let { lastLive = {} } = info
 
+  const liveStatus = !!online
   if (liveStatus) {
     lastLive = { online, time }
   }
