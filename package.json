@@ -9,8 +9,8 @@
     "build:vue": "vue-cli-service build",
     "test": "npm run build",
     "lint": "vue-cli-service lint",
-    "tsc": "tsc -b",
-    "dev": "tsc -b -w"
+    "tsc": "npx tsc -b",
+    "dev": "npx tsc -b -w"
   },
   "dependencies": {
     "@koa/router": "^8.0.8",
