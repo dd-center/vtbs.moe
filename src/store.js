@@ -18,7 +18,7 @@ const liveNotification = ({ mid, uname, title }, msg = '开播了') => {
 
 Vue.use(Vuex)
 
-const rank = target => (state, getters) => [...getters.vtbs].sort((a, b) => {
+const rank = target => (state, getters) => [...getters.validVtbs].sort((a, b) => {
   if (!getters.info[a.mid] && !getters.info[b.mid]) {
     return 0
   }
@@ -55,6 +55,9 @@ const x = new Vuex.Store({
   getters: {
     vtbs(state) {
       return state.currentVtbs.length ? state.currentVtbs : state.cachedVtbs
+    },
+    validVtbs(_, getters) {
+      return getters.vtbs.filter(vtb => getters.info[vtb.mid])
     },
     info(state) {
       return Object.keys(state.currentInfo).length ? state.currentInfo : state.cachedInfo
