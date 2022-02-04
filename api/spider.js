@@ -155,6 +155,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
       })]
     }, []))
     const infoArray = (await Promise.all(spiders.map(mid => db.info.get(mid))))
+      .filter(Boolean)
       .map(infoFilter)
     io.emit('info', infoArray)
 
