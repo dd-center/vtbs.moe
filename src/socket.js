@@ -8,7 +8,7 @@ const getAverage = a => Math.round(a.reduce((a, b) => a + b) / a.length)
 export { default as ws } from '../cdn'
 
 if (!ws.includes(localStorage.ws)) {
-  localStorage.ws = ws[0]
+  localStorage.ws = ws[Math.floor(Math.random() * ws.length)]
 }
 
 // export const socket = io(process.env.NODE_ENV === 'development' ? 'http://localhost:8001' : localStorage.ws)
