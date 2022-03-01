@@ -11,13 +11,12 @@ import { site, num, info, active, live, guard, macro, fullGuard, guardType, stat
 import snake from './snake.js'
 import { worm, wormResult } from './worm.js'
 
-import { connect, infoFilter, linkDanmaku } from './socket.js'
+import { connect, infoFilter } from './socket.js'
 import httpAPI from './http.js'
 
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
-linkDanmaku({ cState, io })
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
 const server = http.createServer(httpAPI({ info, fullGuard, active, live, num, macro, guard }))
