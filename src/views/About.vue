@@ -90,7 +90,7 @@
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
-          <a href="https://github.com/dd-center/vtbs.moe#open-api" target="_blank" rel="noopener noreferrer">Open API Documents</a>
+          <a href="https://github.com/dd-center/vtbs.moe/blob/master/api.md" target="_blank">Open API Documents</a>
           <br>
           <br>
           <h4 class="title is-4">服务器数据：</h4>
