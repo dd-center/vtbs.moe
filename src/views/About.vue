@@ -85,6 +85,8 @@
             <br>
             <br>
           </div>
+          <hr>
+           <p>友情链接 <a href="https://xuehusang.cn/ " target="_blank">雪狐冰屋</a></p>
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
