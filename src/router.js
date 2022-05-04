@@ -23,7 +23,7 @@ export default new Router({
   },
   routes: [{
     path: '/',
-    alias: ['/live', '/rise', '/drop'],
+    alias: ['/live', '/rise', '/drop', '/guard'],
     name: 'home',
     component: Home,
   }, {

@@ -30,6 +30,7 @@ export default {
       '/live': ['直播势', 'd-caret'],
       '/rise': ['急上升', 'top'],
       '/drop': ['(急下降)'],
+      '/guard': ['舰长榜'],
       '/detail': ['详细', 'discover'],
       '/dd': ['DD风云榜', 's-promotion'],
       '/macro': ['VTB宏观', 'zoom-in'],
