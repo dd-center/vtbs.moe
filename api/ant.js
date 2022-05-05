@@ -112,11 +112,16 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
 }
 
 const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
-  const core = mid => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(async e => {
+  const core = (mid, tries = 0) => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(async e => {
     console.error(e)
-    log(`Guard RETRY: ${mid}`)
-    await waitStatePending(512)
-    return core(mid)
+    if (tries < 2) {
+      log(`Guard RETRY: ${mid}`)
+      await waitStatePending(384)
+      return core(mid, tries + 1)
+    } else {
+      log(`Guard FAIL: ${mid}`)
+      return { guardLevel: undefined }
+    }
   })
   await wait(1000 * 60 * 60 * 12)
   while (true) {
@@ -126,9 +131,8 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     const mids = vtbs.map(({ mid }) => mid)
 
     await mids
-      .reduce(([last = { p: Promise.resolve() }, ...objectP], mid) => {
-        const p = last.p.then(() => waitStatePending(384))
-        return [{ mid, core: p.then(() => core(mid)), p }, last.core && last, ...objectP]
+      .reduce(([last = { core: Promise.resolve() }, ...rest], mid) => {
+        return [{ mid, core: last.core.then(() => waitStatePending(384)).then(() => core(mid)) }, last.mid && last, ...rest]
       }, [])
       .filter(Boolean)
       .reverse()
@@ -136,9 +140,11 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
         await p
         const { mid, core } = object
         const { guards, guardLevel } = await core
-        await guardType.put(mid, guardLevel)
-        await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
-        log(`Guard: ${i + 1}/${vtbs.length}`)
+        if (guardLevel) {
+          await guardType.put(mid, guardLevel)
+          await fullGuard.put(mid, guards.map(o => ({ mid: o.uid, uname: o.username, face: o.face, level: o.guard_level - 1 })))
+          log(`Guard: ${i + 1}/${vtbs.length}`)
+        }
       }, Promise.resolve(233))
 
     const all = {}
