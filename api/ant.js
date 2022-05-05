@@ -131,7 +131,9 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
 
     await mids
       .reduce(([last = { core: Promise.resolve() }, ...rest], mid) => {
-        return [{ mid, core: last.core.then(() => waitStatePending(384)).then(() => core(mid)) }, last.mid && last, ...rest]
+        const p = last.core.then(() => waitStatePending(384))
+        const coreP = last.core.then(() => core(mid))
+        return [{ mid, core: p.then(coreP) }, last.mid && last, ...rest]
       }, [])
       .filter(Boolean)
       .reverse()
