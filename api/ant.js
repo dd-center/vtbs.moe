@@ -123,7 +123,6 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
       return { guardLevel: undefined }
     }
   })
-  await wait(1000 * 60 * 60 * 12)
   while (true) {
     const intervalWait = wait(INTERVAL)
 
