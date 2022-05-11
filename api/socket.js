@@ -26,7 +26,8 @@ const emitInfoArray = async () => {
   infoArrayPending.clear()
   pending.filter(socket => socket.connected)
     .forEach(socket => socket.emit('info', infoArray))
-  await wait(1000)
+  console.log('emitInfoArray')
+  await wait(1000 * 10)
 }
 
 const sendInfoArray = socket => {

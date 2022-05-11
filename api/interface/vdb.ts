@@ -95,6 +95,8 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
   }
 }
 
+await update()
+
 export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => ReturnType<typeof vtb2moe>) => {
   if (vtbs) {
     if (filterfn !== undefined) {
