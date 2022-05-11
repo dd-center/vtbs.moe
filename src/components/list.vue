@@ -15,10 +15,11 @@
             <th v-for="(name, key) in sortable" :key="key"><a @click="sort(key)">{{name}}</a></th>
             <th>空间id</th>
             <th>直播间id</th>
+            <th><a @click="sort('time')">上次更新</a></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="vtb in searchList" :key="vtb.mid">
+          <tr v-for="vtb in sortList" :key="vtb.mid">
             <td>
               <router-link :to="`detail/${vtb.mid}`">{{vtb.uname}}</router-link>
             </td>
@@ -26,6 +27,7 @@
             <td><a :href="`https://space.bilibili.com/${vtb.mid}`">{{vtb.mid}}</a></td>
             <td v-if="vtb.roomid"><a :href="`https://live.bilibili.com/${vtb.roomid}`">{{vtb.roomid}}</a></td>
             <td v-else>无</td>
+            <td>{{vtb.timeString}}</td>
           </tr>
         </tbody>
       </table>
@@ -123,8 +125,8 @@ export default {
         }))
     },
     searchList() {
-      let searchArray = (this.search || '').toLowerCase().replace(/ /g, '').split('')
-      let result = this.list
+      const searchArray = (this.search || '').toLowerCase().split(' ').filter(Boolean)
+      return this.list
         .filter(({ uuid }) => {
           const vdb = this.vdbTable[uuid]
           if (vdb && this.types.group.choices[vdb.group]) {
@@ -133,12 +135,11 @@ export default {
             return !this.types.group.other
           }
         })
-        .map(object => ({ ...object, index: 0, string: `${object.uname}`.toLowerCase() }))
-      searchArray.forEach(key => {
-        result = result
-          .map(object => ({ ...object, index: object.string.indexOf(key, object.index) + 1 }))
-          .filter(({ index }) => index)
-      })
+        .map(({ uname, mid, roomid, time, ...object }) => ({ ...object, mid, time, roomid, uname, timeString: new Date(time).toLocaleString(), string: `${uname}${mid}${roomid}`.toLowerCase() }))
+        .filter(({ string }) => searchArray.every(search => string.includes(search)))
+    },
+    sortList() {
+      let result = this.searchList
       if (this.sortBy) {
         return result.sort(({
           [this.sortBy]: a,

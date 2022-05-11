@@ -1,6 +1,6 @@
 <template>
 <div class="center">
-  <input class="input search" v-model="search" type="text" placeholder="模糊搜索">
+  <input class="input search" v-model="search" type="text" placeholder="搜索">
   <list :search='search'></list>
 </div>
 </template>
