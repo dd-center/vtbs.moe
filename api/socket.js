@@ -32,7 +32,7 @@ const emitInfoArray = async () => {
       socket.emit('info', infoArray)
     })
   console.log('emitInfoArray')
-  await wait(1000 * 20)
+  await wait(1000 * 10)
 }
 
 const sendInfoArray = socket => {
