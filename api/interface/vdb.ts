@@ -79,14 +79,14 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
     vdb = body
     vdbTable = vtb2Table(body)
     const moe = vtb2moe(body)
+    vtbs = moe
     if (vtbs && vtbs.length !== moe.length) {
       if (io) {
-        io.emit('vtbs', moe)
+        io.emit('vtbs', await getPure())
         io.emit('log', 'vdb Change')
       }
       console.log('vdb Change')
     }
-    vtbs = moe
     return { moe, vdb, vdbTable }
   } else {
     console.error('vdb error')
