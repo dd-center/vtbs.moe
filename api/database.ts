@@ -3,12 +3,6 @@ import leveldown from 'leveldown'
 import encode from 'encoding-down'
 import sub from 'subleveldown'
 
-import LRU from 'lru-cache'
-
-const cache = new LRU({
-  max: 100000,
-})
-
 class LevelDatabase {
   name: string
   db: LevelUp
@@ -18,16 +12,10 @@ class LevelDatabase {
     this.db = db
   }
   put(key: any, value: any) {
-    cache.set(`${this.name}_${key}`, value)
     return this.db.put(`${this.name}_${key}`, value)
   }
-  async get(key: any) {
-    let value = cache.get(`${this.name}_${key}`)
-    if (!value) {
-      value = await this.db.get(`${this.name}_${key}`).catch(() => undefined)
-      cache.set(`${this.name}_${key}`, value)
-    }
-    return value
+  get(key: any) {
+    return this.db.get(`${this.name}_${key}`).catch(() => undefined)
   }
 }
 
