@@ -58,6 +58,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
       log(`SKIP RETRY: ${vtb.mid}`)
       return vtb.mid
     } else {
+      await wait(2000)
       await waitStatePending(512)
       log(`RETRY: ${vtb.mid}`)
       return core({ io, db, INTERVAL, biliAPI, log }, retry + 1)(vtb)
