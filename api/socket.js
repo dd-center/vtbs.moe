@@ -1,18 +1,44 @@
 import { deflate } from 'zlib'
 import { promisify } from 'util'
 
-import { macro, num } from './database.js'
+import { macro, num, info } from './database.js'
 import { io } from './interface/io.js'
+import { vdb } from './interface/index.js'
+
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const deflateAsync = promisify(deflate)
 
 const metaMap = new WeakMap()
 
-const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
+const infoArrayPending = new Set()
+let infoArrayLock = Promise.resolve()
+
+const emitInfoArray = async () => {
+  if (!infoArrayPending.size) {
+    return
+  }
+  const vtbs = await vdb.getPure()
+  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+    .filter(Boolean)
+    .map(infoFilter)
+  const pending = [...infoArrayPending]
+  infoArrayPending.clear()
+  pending.filter(socket => socket.connected)
+    .forEach(socket => socket.emit('info', infoArray))
+  await wait(1000)
+}
+
+const sendInfoArray = socket => {
+  infoArrayPending.add(socket)
+  infoArrayLock = infoArrayLock.then(emitInfoArray).catch(console.error)
+}
+
+const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
     return undefined
   }
-  const handler = wsRouter({ socket, info, vdb })
+  const handler = wsRouter({ socket })
   const handlerTable = new Proxy({
     vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
@@ -60,8 +86,8 @@ export const linkDanmaku = ({ io, cState }) => {
   })
 }
 
-export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
-  const newHandler = wsRouter({ info, vdb, socket })
+export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+  const newHandler = wsRouter({ socket })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
@@ -181,13 +207,9 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
-  const vtbs = await vdb.get()
-  socket.emit('vtbs', vtbs.filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474'))
-  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
-    .filter(Boolean)
-    .map(infoFilter)
-
-  socket.emit('info', infoArray)
+  const vtbs = await vdb.getPure()
+  socket.emit('vtbs', vtbs)
+  sendInfoArray(socket)
 
   socket.emit('worm', wormResult())
 
