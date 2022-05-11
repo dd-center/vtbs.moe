@@ -28,7 +28,7 @@ class SubLevelDatabase<K = any, V = any> {
   put(key: K, value: V) {
     return this.db.put(key, value)
   }
-  get(key: K): Promise<V | undefined > {
+  get(key: K): Promise<V | undefined> {
     return this.db.get(key).catch(() => undefined)
   }
 }
