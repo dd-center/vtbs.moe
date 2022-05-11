@@ -102,7 +102,7 @@ roomidMap
 roomid: mid
 
 info
-mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, guardRise, online, title, bot, time, liveStartTime}
+mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime}
 DEPRECATED: liveNum
 
 active

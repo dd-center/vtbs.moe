@@ -2,7 +2,6 @@ import { roomidMap } from './database.js'
 import { waitStatePending } from './interface/index.js'
 
 const oneHours = 1000 * 60 * 60
-const oneDay = oneHours * 24
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const notable = ({ object, time, currentActive }) => {
@@ -71,7 +70,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   if (!info) {
     info = {}
   }
-  let { recordNum = 0, guardChange = 0, online = 0, guardRise = 0 } = info
+  let { recordNum = 0, guardChange = 0, online = 0 } = info
 
   const currentActive = await db.active.get({ mid, num: recordNum })
   if (notable({ object, time, currentActive })) {
@@ -91,17 +90,6 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
     guardChange++
     io.to(mid).emit('detailGuard', { mid, data: { guardNum, time } })
     await db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
-
-    let lastGuardNum = info.guardNum
-    let lastGuardChange = guardChange - 1
-    let lastTime = time
-    while (lastGuardChange >= 1 && time - lastTime < oneDay) {
-      const { guardNum, time } = await db.guard.get({ mid, num: lastGuardChange })
-      lastGuardNum = guardNum
-      lastTime = time
-      lastGuardChange--
-    }
-    guardRise = guardNum - lastGuardNum
   }
 
   const dayNum = 1000 * 60 * 60 * 24 / INTERVAL
@@ -124,7 +112,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
 
   const guardType = await db.guardType.get(mid)
 
-  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, guardRise, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime }
+  const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
   await db.info.put(mid, newInfo)
