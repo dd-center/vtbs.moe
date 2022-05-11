@@ -182,5 +182,4 @@ export default ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, bil
   vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
   vtb({ vdb, macro, info, num, INTERVAL, log, io })
   guard({ vdb, macro, info, num, INTERVAL, log, io })
-  dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log, biliAPI })
 }
