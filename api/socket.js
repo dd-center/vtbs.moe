@@ -1,18 +1,38 @@
 import { deflate } from 'zlib'
 import { promisify } from 'util'
 
-import { macro, num } from './database.js'
+import { macro, num, info } from './database.js'
 import { io } from './interface/io.js'
+import { vdb } from './interface/index.js'
 
 const deflateAsync = promisify(deflate)
 
+export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
+
 const metaMap = new WeakMap()
 
-const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
+const infoArrayMap = new Map()
+export const updateInfoArrayMap = (mid, newInfo) => infoArrayMap.set(mid, infoFilter(newInfo))
+export const deleteOldInfoArray = async () => {
+  const mids = (await vdb.getPure()).map(({ mid }) => mid)
+  const keys = [...infoArrayMap.keys()]
+  keys.filter(mid => !mids.includes(mid)).forEach(mid => infoArrayMap.delete(mid))
+}
+export const infoArray = () => [...infoArrayMap.values()]
+const fillInfoArray = async () => {
+  const mids = (await vdb.getPure()).map(({ mid }) => mid)
+  const arrayPromise = await Promise.all(mids.map(mid => info.get(mid)))
+  arrayPromise.filter(Boolean)
+    .forEach(({ mid, ...newInfo }) => infoArrayMap.set(mid, { mid, ...newInfo }))
+}
+await fillInfoArray()
+console.log('fillInfoArray')
+
+const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
     return undefined
   }
-  const handler = wsRouter({ socket, info, vdb })
+  const handler = wsRouter({ socket })
   const handlerTable = new Proxy({
     vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
@@ -52,16 +72,14 @@ const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
   return handlerTable[key](rest)
 }
 
-export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
-
 export const linkDanmaku = ({ io, cState }) => {
   cState.subscribe('cluster').on('danmaku', (nickname, danmaku) => {
     io.emit('danmaku', { nickname, danmaku })
   })
 }
 
-export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
-  const newHandler = wsRouter({ info, vdb, socket })
+export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+  const newHandler = wsRouter({ socket })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {
       const arcDeflate = async data => arc(await deflateAsync(JSON.stringify(data)))
@@ -181,13 +199,9 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
-  const vtbs = await vdb.get()
-  socket.emit('vtbs', vtbs.filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474'))
-  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
-    .filter(Boolean)
-    .map(infoFilter)
-
-  socket.emit('info', infoArray)
+  const vtbs = await vdb.getPure()
+  socket.emit('vtbs', vtbs)
+  socket.emit('info', infoArray())
 
   socket.emit('worm', wormResult())
 

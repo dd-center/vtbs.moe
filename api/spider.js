@@ -1,6 +1,8 @@
 import { roomidMap } from './database.js'
 import { waitStatePending } from './interface/index.js'
 
+import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
+
 const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -37,16 +39,16 @@ const coreFetch = async ({ vtb, biliAPI }) => {
   const basic = { ...getDayCache(mid), ...vtb }
   const updateDayCache = !dayCache.has(mid)
 
-  const object = await biliAPI(basic, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'face', 'topPhoto', 'guardNum'])
+  const object = await biliAPI(basic, ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'follower', 'face', 'topPhoto'])
 
   if (updateDayCache) {
     setDayCache(mid, Object.fromEntries(CACHE_KEYS.map(k => [k, object[k]])))
   }
 
   const { roomid } = object
-  const { liveStartTime, title } = roomid ? await biliAPI({ roomid, mid }, ['liveStartTime', 'title']) : { liveStartTime: 0, title: '' }
+  const { liveStartTime, title, guardNum } = roomid ? await biliAPI({ roomid, mid }, ['liveStartTime', 'title', 'guardNum']) : { liveStartTime: 0, title: '', guardNum: 0 }
 
-  return { ...object, liveStartTime, title }
+  return { ...object, liveStartTime, title, guardNum }
 }
 
 const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
@@ -58,6 +60,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
       log(`SKIP RETRY: ${vtb.mid}`)
       return vtb.mid
     } else {
+      await wait(2000)
       await waitStatePending(512)
       log(`RETRY: ${vtb.mid}`)
       return core({ io, db, INTERVAL, biliAPI, log }, retry + 1)(vtb)
@@ -119,6 +122,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   if (roomid) {
     await roomidMap.put(roomid, mid)
   }
+  updateInfoArrayMap(mid, newInfo)
 
   log(`UPDATED: ${mid} - ${uname}`)
   return mid
@@ -144,7 +148,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
     io.emit('spiderLeft', spiderLeft)
     db.status.put('spiderLeft', spiderLeft)
 
-    const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
+    await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
       await waitStatePending()
       return [...mids, core({ io, db, INTERVAL, biliAPI, log })(vtb).then(mid => {
@@ -154,10 +158,8 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
         return mid
       })]
     }, []))
-    const infoArray = (await Promise.all(spiders.map(mid => db.info.get(mid))))
-      .filter(Boolean)
-      .map(infoFilter)
-    io.emit('info', infoArray)
+    await deleteOldInfoArray()
+    io.emit('info', infoArray())
 
     worm({ vtbs: await vdb.get(), io, biliAPI })
       .then(wormArray => io.emit('worm', wormArray))

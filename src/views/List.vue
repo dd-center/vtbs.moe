@@ -1,17 +1,31 @@
 <template>
 <div class="center">
-  <input class="input search" v-model="search" type="text" placeholder="模糊搜索">
-  <list :search='search'></list>
+  <input class="input search" v-model="search" type="text" placeholder="搜索">
+  <list :search='realSearch'></list>
 </div>
 </template>
 
 <script>
 import List from '@/components/list'
 
+let lastSearchUpdate = 0
+
 export default {
   data: () => {
     return {
       search: '',
+      realSearch: '',
+    }
+  },
+  watch: {
+    search() {
+      const now = Date.now()
+      lastSearchUpdate = now
+      setTimeout(() => {
+        if (now === lastSearchUpdate) {
+          this.realSearch = this.search
+        }
+      }, 1000)
     }
   },
   components: {

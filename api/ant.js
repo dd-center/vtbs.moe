@@ -1,5 +1,6 @@
 import { guardMacroK } from './unit/index.js'
 import { waitStatePending } from './interface/index.js'
+import { status } from './database.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -124,7 +125,14 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     }
   })
   while (true) {
-    const intervalWait = wait(INTERVAL)
+    const lastGuardUpdate = await status.get('guardMacroNum') || 0
+    const now = Date.now()
+    const nextUpdate = lastGuardUpdate + INTERVAL
+    const waitTime = nextUpdate - now
+    if (waitTime > 0) {
+      log(`Guard Wait ${waitTime}`)
+      await wait(nextUpdate - now)
+    }
 
     const vtbs = (await vdb.getPure())
     const mids = vtbs.map(({ mid }) => mid)
@@ -170,7 +178,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)
 
-    await intervalWait
+    await status.put('guardMacroNum', Date.now())
   }
 }
 

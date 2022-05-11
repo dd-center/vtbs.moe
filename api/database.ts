@@ -3,12 +3,6 @@ import leveldown from 'leveldown'
 import encode from 'encoding-down'
 import sub from 'subleveldown'
 
-import LRU from 'lru-cache'
-
-const cache = new LRU({
-  max: 100000,
-})
-
 class LevelDatabase {
   name: string
   db: LevelUp
@@ -18,16 +12,10 @@ class LevelDatabase {
     this.db = db
   }
   put(key: any, value: any) {
-    cache.set(`${this.name}_${key}`, value)
     return this.db.put(`${this.name}_${key}`, value)
   }
-  async get(key: any) {
-    let value = cache.get(`${this.name}_${key}`)
-    if (!value) {
-      value = await this.db.get(`${this.name}_${key}`).catch(() => undefined)
-      cache.set(`${this.name}_${key}`, value)
-    }
-    return value
+  get(key: any) {
+    return this.db.get(`${this.name}_${key}`).catch(() => undefined)
   }
 }
 
@@ -40,7 +28,7 @@ class SubLevelDatabase<K = any, V = any> {
   put(key: K, value: V) {
     return this.db.put(key, value)
   }
-  get(key: K): Promise<V | undefined > {
+  get(key: K): Promise<V | undefined> {
     return this.db.get(key).catch(() => undefined)
   }
 }
@@ -68,7 +56,7 @@ let db = levelup(encode(leveldown('./db'), { valueEncoding: 'json' }))
 export const site = new ArrayDatabase({ name: 'site', db })
 export const num = new LevelDatabase({ name: 'num', db })
 
-export const status = new SubLevelDatabase({ name: 'status', db })
+export const status = new SubLevelDatabase<string, number>({ name: 'status', db })
 export const roomidMap = new SubLevelDatabase<number, number>({ name: 'roomidMap', db })
 
 export const info = new LevelDatabase({ name: 'info', db })
@@ -97,6 +85,7 @@ status
 spiderLeft: Number
 spiderDuration: Number
 spiderTime: Number
+lastGuardUpdate: Number
 
 roomidMap
 roomid: mid
