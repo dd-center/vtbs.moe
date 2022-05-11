@@ -11,23 +11,22 @@ export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archive
 
 const metaMap = new WeakMap()
 
-let infoArray = []
-let infoArrayLastUpdate = 0
-const updateInfoArray = async () => {
-  if (infoArrayLastUpdate + 1000 * 30 > Date.now()) {
-    return
-  }
-  const now = Date.now()
-  infoArrayLastUpdate = Date.now() + 1000 * 300
-  const vtbs = await vdb.getPure()
-  infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
-    .filter(Boolean)
-    .map(infoFilter)
-  infoArrayLastUpdate = Date.now()
-  console.log('updateInfoArray', Date.now() - now)
+const infoArrayMap = new Map()
+export const updateInfoArrayMap = (mid, newInfo) => infoArrayMap.set(mid, infoFilter(newInfo))
+export const deleteOldInfoArray = async () => {
+  const mids = (await vdb.getPure()).map(({ mid }) => mid)
+  const keys = [...infoArrayMap.keys()]
+  keys.filter(mid => !mids.includes(mid)).forEach(mid => infoArrayMap.delete(mid))
 }
-
-await updateInfoArray()
+export const infoArray = () => [...infoArrayMap.values()]
+const fillInfoArray = async () => {
+  const mids = (await vdb.getPure()).map(({ mid }) => mid)
+  const arrayPromise = await Promise.all(mids.map(mid => info.get(mid)))
+  arrayPromise.filter(Boolean)
+    .forEach(({ mid, ...newInfo }) => infoArrayMap.set(mid, { mid, ...newInfo }))
+}
+await fillInfoArray()
+console.log('fillInfoArray')
 
 const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
@@ -202,8 +201,7 @@ export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, I
   socket.emit('log', `ID: ${socket.id}`)
   const vtbs = await vdb.getPure()
   socket.emit('vtbs', vtbs)
-  socket.emit('info', infoArray)
-  updateInfoArray()
+  socket.emit('info', infoArray())
 
   socket.emit('worm', wormResult())
 

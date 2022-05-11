@@ -1,6 +1,8 @@
 import { roomidMap } from './database.js'
 import { waitStatePending } from './interface/index.js'
 
+import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
+
 const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -120,6 +122,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   if (roomid) {
     await roomidMap.put(roomid, mid)
   }
+  updateInfoArrayMap(mid, newInfo)
 
   log(`UPDATED: ${mid} - ${uname}`)
   return mid
@@ -145,7 +148,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
     io.emit('spiderLeft', spiderLeft)
     db.status.put('spiderLeft', spiderLeft)
 
-    const spiders = await Promise.all(await pending.reduce(async (p, vtb) => {
+    await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
       await waitStatePending()
       return [...mids, core({ io, db, INTERVAL, biliAPI, log })(vtb).then(mid => {
@@ -155,10 +158,8 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
         return mid
       })]
     }, []))
-    const infoArray = (await Promise.all(spiders.map(mid => db.info.get(mid))))
-      .filter(Boolean)
-      .map(infoFilter)
-    io.emit('info', infoArray)
+    await deleteOldInfoArray()
+    io.emit('info', infoArray())
 
     worm({ vtbs: await vdb.get(), io, biliAPI })
       .then(wormArray => io.emit('worm', wormArray))
