@@ -17,13 +17,14 @@ const updateInfoArray = async () => {
   if (infoArrayLastUpdate + 1000 * 30 > Date.now()) {
     return
   }
-  infoArrayLastUpdate = Date.now() + 1000 * 30
+  const now = Date.now()
+  infoArrayLastUpdate = Date.now() + 1000 * 300
   const vtbs = await vdb.getPure()
   infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
     .filter(Boolean)
     .map(infoFilter)
   infoArrayLastUpdate = Date.now()
-  console.log('updateInfoArray')
+  console.log('updateInfoArray', Date.now() - now)
 }
 
 await updateInfoArray()
