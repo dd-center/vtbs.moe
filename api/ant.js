@@ -178,7 +178,7 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
     await fullGuard.put('number', Object.keys(all).length)
     log(`Guard: Count ${Object.keys(all).length}`)
 
-    status.put('guardMacroNum', Date.now())
+    await status.put('guardMacroNum', Date.now())
   }
 }
 
