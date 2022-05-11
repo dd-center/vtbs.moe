@@ -181,6 +181,13 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
+  const vtbs = await vdb.get()
+  socket.emit('vtbs', vtbs.filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474'))
+  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+    .filter(Boolean)
+    .map(infoFilter)
+
+  socket.emit('info', infoArray)
 
   socket.emit('worm', wormResult())
 
