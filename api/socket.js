@@ -5,35 +5,25 @@ import { macro, num, info } from './database.js'
 import { io } from './interface/io.js'
 import { vdb } from './interface/index.js'
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-
 const deflateAsync = promisify(deflate)
 
 const metaMap = new WeakMap()
 
-const infoArrayPending = new Set()
-let infoArrayLock = Promise.resolve()
-
-const emitInfoArray = async () => {
-  if (!infoArrayPending.size) {
+let infoArray = []
+let infoArrayLastUpdate = 0
+const updateInfoArray = async () => {
+  if (infoArrayLastUpdate + 1000 * 30 > Date.now()) {
     return
   }
   const vtbs = await vdb.getPure()
-  const infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
+  infoArray = (await Promise.all(vtbs.map(({ mid }) => mid).map(mid => info.get(mid))))
     .filter(Boolean)
     .map(infoFilter)
-  const pending = [...infoArrayPending]
-  infoArrayPending.clear()
-  pending.filter(socket => socket.connected)
-    .forEach(socket => socket.emit('info', infoArray))
-  console.log('emitInfoArray')
-  await wait(1000 * 10)
+  infoArrayLastUpdate = Date.now()
+  console.log('updateInfoArray')
 }
 
-const sendInfoArray = socket => {
-  infoArrayPending.add(socket)
-  infoArrayLock = infoArrayLock.then(emitInfoArray).catch(console.error)
-}
+await updateInfoArray()
 
 const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
@@ -210,7 +200,8 @@ export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, I
   socket.emit('log', `ID: ${socket.id}`)
   const vtbs = await vdb.getPure()
   socket.emit('vtbs', vtbs)
-  sendInfoArray(socket)
+  socket.emit('info', infoArray)
+  updateInfoArray()
 
   socket.emit('worm', wormResult())
 
