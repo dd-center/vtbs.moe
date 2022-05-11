@@ -95,10 +95,16 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
   }
 }
 
-export const get = async () => {
+export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => ReturnType<typeof vtb2moe>) => {
   if (vtbs) {
+    if (filterfn !== undefined) {
+      return filterfn(vtbs)
+    }
     return vtbs
   } else {
+    if (filterfn !== undefined) {
+      return filterfn((await update()).moe)
+    }
     return (await update()).moe
   }
 }
