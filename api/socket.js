@@ -7,6 +7,8 @@ import { vdb } from './interface/index.js'
 
 const deflateAsync = promisify(deflate)
 
+export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
+
 const metaMap = new WeakMap()
 
 let infoArray = []
@@ -68,8 +70,6 @@ const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
   }, { get: (obj, prop) => obj[prop] || (() => undefined) })
   return handlerTable[key](rest)
 }
-
-export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
 
 export const linkDanmaku = ({ io, cState }) => {
   cState.subscribe('cluster').on('danmaku', (nickname, danmaku) => {
