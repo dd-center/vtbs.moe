@@ -56,7 +56,7 @@ let db = levelup(encode(leveldown('./db'), { valueEncoding: 'json' }))
 export const site = new ArrayDatabase({ name: 'site', db })
 export const num = new LevelDatabase({ name: 'num', db })
 
-export const status = new SubLevelDatabase({ name: 'status', db })
+export const status = new SubLevelDatabase<string, number>({ name: 'status', db })
 export const roomidMap = new SubLevelDatabase<number, number>({ name: 'roomidMap', db })
 
 export const info = new LevelDatabase({ name: 'info', db })
@@ -85,6 +85,7 @@ status
 spiderLeft: Number
 spiderDuration: Number
 spiderTime: Number
+lastGuardUpdate: Number
 
 roomidMap
 roomid: mid
