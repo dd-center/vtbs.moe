@@ -8,16 +8,6 @@ const deflateAsync = promisify(deflate)
 
 const metaMap = new WeakMap()
 
-let lastSendOnline = 0
-const sendOnline = () => {
-  const now = Date.now()
-  if (now - lastSendOnline < 1000) {
-    return
-  }
-  lastSendOnline = now
-  io.emit('online', clients.length)
-}
-
 const wsRouter = ({ socket, info, vdb }) => ([key, ...rest], map = []) => {
   if (map.includes(key)) {
     return undefined
@@ -159,7 +149,7 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
     if (error) {
       console.error(error)
     }
-    sendOnline()
+    io.emit('online', clients.length)
   })
 
   console.log('a user connected')
@@ -186,7 +176,7 @@ export const connect = ({ site, info, active, guard, vdb, fullGuard, guardType, 
       if (error) {
         console.error(error)
       }
-      sendOnline()
+      io.emit('online', clients.length)
     })
     console.log('user disconnected')
   })
