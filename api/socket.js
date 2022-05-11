@@ -28,6 +28,7 @@ const emitInfoArray = async () => {
   infoArrayPending.clear()
   pending.filter(socket => socket.connected)
     .forEach(socket => {
+      socket.emit('vtbs', vtbs)
       socket.emit('info', infoArray)
     })
   console.log('emitInfoArray')
@@ -210,9 +211,7 @@ export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, I
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
-  const vtbs = await vdb.getPure()
-  socket.emit('vtbs', vtbs)
-  // sendInfoArray(socket)
+  sendInfoArray(socket)
 
   socket.emit('worm', wormResult())
 
