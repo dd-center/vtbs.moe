@@ -107,8 +107,10 @@
             <div class="column">
               <h5 class="title is-5">Spider: <small>({{spiderLeft}}/{{number}})</small></h5>
               <progress class="progress" max="100" :value="spiderProgress" :class="{'is-success': spiderProgress === 100}"></progress>
-              <p>上次更新: {{spiderTime | parseTime}} <br>
-                目前负载: {{spiderDuration | load(interval)}}</p>
+              <p>上次更新: {{spiderTime | parseTime}}</p>
+              <p v-if="fastLoad">目前负载: {{spiderDuration | load(interval)}}</p>
+              <p v-else-if="slowLoad" :style="{ color: '#ec0000'}">目前负载过高: {{spiderDuration | load(interval)}}</p>
+              <p v-else>目前负载: 加载中</p>
             </div>
           </div>
           <br>
@@ -152,6 +154,12 @@ export default {
       /* beautify ignore:start */
       return this.currentVtbs?.length
       /* beautify ignore:end */
+    },    
+    fastLoad: function() {
+      return this.spiderDuration < this.interval * 2;
+    },
+    slowLoad: function () {
+      return this.spiderDuration >= this.interval * 2;
     },
     spiderProgress() {
       return 100 - Math.round(this.spiderLeft / (this.number || 1) * 100)
