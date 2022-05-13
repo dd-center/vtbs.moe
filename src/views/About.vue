@@ -44,6 +44,19 @@
             <a href="https://github.com/dd-center/ddatelectron/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/ddatelectron.svg?style=social"></a>
           </p>
           <hr>
+          <h4 class="title is-4">DD@Home</h4>
+          <h4 class="subtitle is-4">搭建服务器分布式DD!</h4>
+          <p>现在搭建DD@Home, 帮助vtbs.moe持续运行<br>
+            开源软件, 服务器持续运行<br>
+            分布式信息获取DD@Home<br>
+            NodeJS: <a href="https://github.com/dd-center/DDatHome-nodejs" target="_blank" rel="noopener noreferrer">https://github.com/dd-center/DDatHome-nodejs</a><br>
+            Go: <a href="https://github.com/dd-center/DDatHome-go" target="_blank" rel="noopener noreferrer">https://github.com/dd-center/DDatHome-go</a><br>
+            Docker: <a href="https://github.com/dd-center/DDatDocker" target="_blank" rel="noopener noreferrer">https://github.com/dd-center/DDatDocker</a><br>
+            Java: <a href="https://github.com/dd-center/DDatJava" target="_blank" rel="noopener noreferrer">https://github.com/dd-center/DDatJava</a><br>
+            <br>
+            <a href="https://github.com/dd-center/DDatHome-nodejs/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/DDatHome-nodejs.svg?style=social"></a>
+          </p>
+          <hr>
           <p> 🍉 按照关注数排列<br>
             直播势：直播中的按照人气排列，靠前，其他按照舰队排列<br>
             宏观经济：bilibili 虚拟世界宏观走势<br>
@@ -109,7 +122,7 @@
               <progress class="progress" max="100" :value="spiderProgress" :class="{'is-success': spiderProgress === 100}"></progress>
               <p>上次更新: {{spiderTime | parseTime}}</p>
               <p v-if="fastLoad">目前负载: {{spiderDuration | load(interval)}}</p>
-              <p v-else-if="slowLoad" :style="{ color: '#ec0000'}">目前负载过高: {{spiderDuration | load(interval)}}</p>
+              <p v-else-if="slowLoad" :style="{ color: '#ec0000'}">目前负载过高: {{spiderDuration | load(interval)}}<br>请使用任何一种分布式DD帮助vtbs.moe运行</p>
               <p v-else>目前负载: 加载中</p>
             </div>
           </div>
