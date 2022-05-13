@@ -24,7 +24,11 @@ export default ({ vdSocket, io, info }) => {
   vdSocket.on('online', async ({ online, mid }) => {
     let currentInfo = await info.get(mid)
     let { liveStatus } = currentInfo
-    currentInfo = { ...currentInfo, online: liveStatus && online }
+    if (online === 1) {
+      currentInfo = {currentInfo, liveStatus: 0, online: 0}
+    } else {
+      currentInfo = { ...currentInfo, online: liveStatus && online }
+    }
     await info.put(mid, currentInfo)
     if (online > 1) {
       updatePending.add(mid)
