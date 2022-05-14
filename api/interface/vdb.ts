@@ -95,7 +95,9 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
   }
 }
 
+console.log('vdb init')
 await update()
+console.log('vdb init done')
 
 export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => ReturnType<typeof vtb2moe>) => {
   if (vtbs) {
