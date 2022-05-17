@@ -45,6 +45,7 @@ export default {
     this.sortable = {
       follower: '关注',
       rise: '日增',
+      drop: '日增',
       archiveView: '播放量',
       video: '视频数',
       guardNum: '舰团',
