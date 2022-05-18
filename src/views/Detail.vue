@@ -77,10 +77,11 @@
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
-                24小时粉丝增量
+                24小时粉丝变化
               </div>
               <div class="center">
-                <span class="big el-icon-caret-top"></span>
+                <span v-if="rise >= 0" class="big el-icon-caret-top"></span>
+                <span v-else class="big el-icon-caret-bottom"></span>
                 <h3 v-if="rise > 0" class="more">+{{rise | parseNumber}}</h3>
                 <h3 v-if="rise < 0" class="less">{{rise | parseNumber}}</h3>
                 <h3 v-if="rise === 0">{{rise | parseNumber}}</h3>

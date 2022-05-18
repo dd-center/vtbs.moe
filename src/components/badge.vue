@@ -8,7 +8,7 @@
       <span :class="props.icon[key]"></span>
     </div>
     <div class="column is-7">
-      <template v-if="key === 'rise' && value !== 0">
+      <template v-if="(key === 'rise' || key ==='drop') && value !== 0">
         <span v-if="value > 0" class="more">+{{value | parseNumber}}</span>
         <span v-if="value < 0" class="less">{{value | parseNumber}}</span>
       </template>
@@ -30,6 +30,7 @@ export default {
         guardNum: '舰团',
         pastLive: '直播',
         rise: '日增',
+        drop: '日增',
       }),
     },
     icon: {
@@ -40,6 +41,7 @@ export default {
         guardNum: 'el-icon-location-outline',
         pastLive: 'el-icon-time',
         rise: 'el-icon-caret-top',
+        drop: 'el-icon-caret-bottom',
       }),
     },
   },

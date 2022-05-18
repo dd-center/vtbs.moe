@@ -88,6 +88,9 @@ export default {
     lastLive() {
       return this.info.lastLive || {}
     },
+    dropPage() {
+      return this.$route.path.includes('drop')
+    },
     livePage() {
       return this.$route.path.includes('live')
     },
@@ -102,8 +105,14 @@ export default {
         follower: this.info.follower,
       }
       if (!this.worm) {
-        object.rise = this.info.rise
+        if (!this.dropPage) {
+          object.rise = this.info.rise
+        }
       }
+      if (this.dropPage) {
+        object.drop = this.info.rise
+      }
+
       if (this.livePage || this.guardPage) {
         if (this.info.guardNum) {
           object.guardNum = this.info.guardNum
