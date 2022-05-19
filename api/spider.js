@@ -1,4 +1,4 @@
-import { info, roomidMap } from './database.js'
+import { roomidMap } from './database.js'
 import { waitStatePending } from './interface/index.js'
 
 import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
@@ -128,7 +128,6 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   return mid
 }
 
-
 export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
   const log = log => (output => {
     console.log(output)
@@ -141,56 +140,10 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
       console.error('Spider, NOT OK')
     }
   }, 1000 * 60 * 5)
-  const requeue = async () => {
-    const now = Date.now()
-    const vtbs = await vdb.get()
-    const mids = vtbs.map(({ mid }) => mid)
-    const info = (await Promise.all(mids.map((mid) => db.info.get(mid)))).filter(Boolean)
-    const follower_rank = info
-      .sort((a, b) => (b.follower - a.follower))
-      .slice(0, 100)
-    const rise_rank = info
-      .sort((a, b) => (b.rise - a.rise))
-      .slice(0, 100)
-    const guard_rank = info
-      .sort((a, b) => (b.guardNum - a.guardNum))
-      .slice(0, 100)
-    const total_rank = new Set(follower_rank.concat(rise_rank).concat(guard_rank))
-    db.queue.put("1",JSON.stringify([...total_rank].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
-
-    let nolive = info.filter(({lastLive: {time}}) => ((now - time) > 2592000000 && (now-time) < 7776000000))
-    nolive = new Set(nolive.filter((x) => !total_rank.has(x)))
-    db.queue.put("3", JSON.stringify([...nolive].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
-
-    let frozen = info.filter(({lastLive: {time}}) => ((now-time) > 7776000000))
-    frozen = new Set(frozen.filter((x) => !total_rank.has(x)))
-    db.queue.put("4", JSON.stringify([...frozen].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
-
-    const normal = info.filter((x) => !total_rank.has(x)).filter((x) => !nolive.has(x)).filter((x) => !frozen.has(x))
-    db.queue.put("2", JSON.stringify(normal.map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
-  }
-  await requeue()
-  setInterval(requeue, 1000*60*60*24)
   while (true) {
     const startTime = Date.now()
+    const pending = [...(await vdb.get())]
 
-    if (db.status.get("queueCounter") === undefined) {
-      db.status.put("queueCounter", 1)
-    }
-    let queues = ["1"]
-    const queueCounter = await db.status.get("queueCounter")
-    if(queueCounter % 7 === 0)  queues.push("2")
-    if(queueCounter % 23 === 0) queues.push("3")
-    if(queueCounter === 100 ) {
-      queues.push("4")
-      db.status.put("queueCounter", 1)
-    } else {
-      db.status.put("queueCounter", queueCounter + 1)
-    }
-    const pending = (await Promise.all(queues.map(async (q) => {
-      let queue = await db.queue.get(q)
-      return JSON.parse(queue)
-    }))).flat()
     let spiderLeft = pending.length
     io.emit('spiderLeft', spiderLeft)
     db.status.put('spiderLeft', spiderLeft)
