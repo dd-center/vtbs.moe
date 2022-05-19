@@ -174,7 +174,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
   while (true) {
     const startTime = Date.now()
 
-    if (await db.status.get("queueCounter") === undefined) {
+    if (db.status.get("queueCounter") === undefined) {
       db.status.put("queueCounter", 1)
     }
     let queues = ["1"]
