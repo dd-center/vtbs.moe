@@ -25,7 +25,7 @@ export default ({ vdSocket, io, info }) => {
     let currentInfo = await info.get(mid)
     let { liveStatus } = currentInfo
     if (online === 1) {
-      currentInfo = {currentInfo, liveStatus: 0, online: 0}
+      currentInfo = { ...currentInfo, liveStatus: 0, online: 0}
     } else {
       currentInfo = { ...currentInfo, online: liveStatus && online }
     }
