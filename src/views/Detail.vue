@@ -152,17 +152,6 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6" :xs="12" :xl="4" v-if="liveNum" v-loading="!liveHistory">
-            <el-card class="box-card" shadow="hover">
-              <div slot="header">
-                共直播
-              </div>
-              <div class="center">
-                <span class="big el-icon-time"></span>
-                <h3>{{liveTime}}</h3>
-              </div>
-            </el-card>
-          </el-col>
           <el-col :span="6" :xs="12" :xl="4">
             <el-card class="box-card" shadow="hover">
               <div slot="header">
@@ -197,82 +186,6 @@
             </el-card>
           </el-col>
         </el-row>
-        <template v-if="roomid">
-          <el-divider>直播记录</el-divider>
-          <el-row>
-            <el-col>
-              <el-table :data="liveHistoryParse" height="320" border style="width: 100%" v-loading="!liveHistory" :default-sort="{prop: 'beginTime', order: 'descending'}" empty-text="无直播记录">
-                <el-table-column prop="beginTime" label="时间" sortable :formatter="timeFormatter">
-                </el-table-column>
-                <el-table-column prop="duration" label="时长" sortable :formatter="durationFormatter">
-                </el-table-column>
-                <el-table-column prop="title" label="标题">
-                </el-table-column>
-                <el-table-column prop="online" label="最高人气" sortable>
-                  <template slot-scope="scope">
-                    <el-button icon="el-icon-search" circle @click="showLive(scope.row)" size="small"></el-button>
-                    {{scope.row.online | parseNumber}}
-                  </template>
-                </el-table-column>
-              </el-table>
-            </el-col>
-          </el-row>
-          <el-row type="flex" justify="space-around">
-            <el-col :span="23">
-              <el-progress :percentage="liveDisplayInfo.progress"></el-progress>
-            </el-col>
-          </el-row>
-          <template v-if="liveDisplayTime">
-            <el-row>
-              <el-col>
-                <el-card class="box-card" shadow="hover">
-                  <ve-line :data="{rows:rawLive}" :settings="liveLine" :extend="liveExtend" :data-zoom="[liveDisplayZoom]" :not-set-unchange="['dataZoom']" v-loading="!rawLive.length"></ve-line>
-                </el-card>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="8" :xs="24">
-                <el-card class="box-card" shadow="hover">
-                  <h3 class="center">弹幕榜</h3>
-                  <transition-group name="flip-list">
-                    <el-row v-for="person in liveDisplayDanmakuByPersonRank" :key="`danmaku_${person.name}`">
-                      <el-col :span="12">
-                        <span class="right">{{person.name}}</span>
-                      </el-col>
-                      <el-col :span="12">
-                        {{person.number | parseNumber}}
-                      </el-col>
-                    </el-row>
-                  </transition-group>
-                </el-card>
-              </el-col>
-              <el-col :span="8" :xs="24">
-                <el-card class="box-card" shadow="hover">
-                  <h3 class="center">礼物榜</h3>
-                  <transition-group name="flip-list">
-                    <el-row v-for="person in liveDisplayGiftByPersonRank" :key="`gift_${person.name}`">
-                      <el-col :span="12">
-                        <span class="right">{{person.name}}</span>
-                      </el-col>
-                      <el-col :span="12">
-                        {{person.coin | parseNumber}}
-                      </el-col>
-                    </el-row>
-                  </transition-group>
-                </el-card>
-              </el-col>
-              <el-col :span="8" :xs="24">
-                <el-card class="box-card" shadow="hover">
-                  <h3 class="center">总计</h3>
-                  <p>弹幕数: {{liveDisplayDanmakuNumber | parseNumber}}</p>
-                  <p>发言人数: {{liveDisplayDanmakuByPersonNumber | parseNumber}}</p>
-                  <p>金瓜子: {{liveDisplayCoinGiftCost | parseNumber}} <small class="right">(~{{Math.round(liveDisplayCoinGiftCost/1000)}}元)</small></p>
-                  <p>银瓜子: {{liveDisplaySilverGiftCost | parseNumber}}</p>
-                </el-card>
-              </el-col>
-            </el-row>
-          </template>
-        </template>
         <el-divider><i class="el-icon-s-data"></i></el-divider>
         <el-row>
           <el-col :span="24">
@@ -487,8 +400,7 @@ export default {
       liveDisplaySilverGift: [],
       liveDisplaySilverGiftCost: 0,
       liveDisplayGiftByType: {},
-      liveDisplayGiftByPerson: {},
-      liveHistory: undefined,
+      liveDisplayGiftByPerson: {}
     }
   },
   beforeDestroy() {
@@ -522,15 +434,6 @@ export default {
         /* beautify ignore:end */
         this.active = await activeAnalyzer(active)
         this.unchange = ['dataZoom']
-
-        let liveHistory = await ky(`https://api.vtb.wiki/v2/bilibili/live/${uuid}/history`).json().catch(() => ({}))
-        if (!liveHistory.Success) {
-          liveHistory.LiveTime = 0
-        }
-        if (!liveHistory.Lives) {
-          liveHistory.Lives = []
-        }
-        this.liveHistory = liveHistory
       },
     },
     DD: function(newValue) {
@@ -693,29 +596,6 @@ export default {
       }
       return result.join(' ')
     },
-    liveTime() {
-      if (!this.liveHistory) {
-        return undefined
-      }
-      let duration = moment.duration(this.liveHistory.LiveTime || 0, 'seconds')
-      let result = []
-      let d = Math.floor(duration.asDays())
-      let h = duration.hours()
-      let m = duration.minutes()
-      if (d) {
-        result.push(`${d} 天`)
-      }
-      if (h) {
-        result.push(`${h} 小时`)
-      }
-      if (m) {
-        result.push(`${m} 分钟`)
-      }
-      if (!result.length) {
-        result.push('一分钟不到')
-      }
-      return result.join(' ')
-    },
     weekLive() {
       if (this.info.weekLive === undefined) {
         return undefined
@@ -738,10 +618,6 @@ export default {
         result.push(`${m} 分钟`)
       }
       return result.join(' ')
-    },
-    liveHistoryParse() {
-      let { Lives = [] } = this.liveHistory || {}
-      return Lives.map(({ Title, MaxPopularity, BeginTime, EndTime, Id }) => ({ beginTime: BeginTime, endTime: EndTime, title: Title, online: MaxPopularity, duration: EndTime - BeginTime, id: Id }))
     },
     liveDisplayDanmakuByPersonRank() {
       return Object.values(this.liveDisplayDanmakuByPerson)
@@ -864,106 +740,6 @@ export default {
     },
     timeFormatter({ beginTime }) {
       return moment(beginTime * 1000).format('M月D日 H:mm')
-    },
-    async showLive({ beginTime, endTime, title, id }) {
-      this.rawLive = []
-      this.liveDisplayDanmaku = []
-      this.liveDisplayDanmakuNumber = 0
-      this.liveDisplayDanmakuByPerson = {}
-      this.liveDisplayCoinGift = []
-      this.liveDisplaySilverGift = []
-      this.liveDisplayGiftByType = {}
-      this.liveDisplayGiftByPerson = {}
-      this.liveDisplayCoinGiftCost = 0
-      this.liveDisplaySilverGiftCost = 0
-      let beginTimeBuffer = beginTime - 60 * 5
-      let endTimeBuffer = endTime + 60 * 5
-      let giftCache = []
-
-      this.liveDisplayZoom = {
-        type: 'slider',
-        startValue: beginTimeBuffer * 1000,
-        endValue: endTimeBuffer * 1000,
-      }
-      this.liveDisplayInfo = { beginTime, endTime, title, id, progress: 0 }
-
-      let timeNow = Date.now()
-      this.liveDisplayTime = timeNow
-
-      this.rawLive.push({ online: 0, gold: 0, time: beginTimeBuffer * 1000 })
-      for (let time = beginTimeBuffer; time < endTimeBuffer;) {
-        let { Comments, Gifts } = await ky(`https://api.vtb.wiki/v2/bilibili/${this.uuid}/danmaku?time=${time}`, { retry: 3 }).json().catch(() => ({}))
-        if (timeNow !== this.liveDisplayTime) {
-          break
-        }
-        let mergeEvent = (Comments || []).concat(Gifts || [])
-          .sort((a, b) => a.PublishTime - b.PublishTime)
-        if (!mergeEvent.length) {
-          this.liveDisplayInfo.progress = 100
-          break
-        }
-        time = mergeEvent[mergeEvent.length - 1].PublishTime + 1
-        this.liveDisplayInfo.progress = Math.min(100, (1000 - Math.round(((endTimeBuffer - time) / (endTimeBuffer - beginTimeBuffer)) * 1000)) / 10)
-        mergeEvent
-          .filter(({ PublishTime }) => PublishTime < endTimeBuffer)
-          .forEach(({ Popularity, PublishTime, AuthorId, AuthorName, GiftName, CostType, GiftCount, CostAmount, Content }) => {
-            let { online, time } = this.rawLive[this.rawLive.length - 1] || {}
-            if (online !== Popularity && time !== PublishTime * 1000) {
-              if (giftCache.length < 1) {
-                giftCache.push({ gold: 0, time: 0 })
-              }
-              if (giftCache.length < 2) {
-                giftCache.push({ gold: 0, time: giftCache[0].time + 60 })
-              }
-              let timeDifference = PublishTime * 1000 - this.rawLive[this.rawLive.length - 1].time
-              let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
-              giftCache = []
-              this.rawLive.push({ online: Popularity, time: PublishTime * 1000, gold: Math.min(gold, gold * 60 * 1000 / timeDifference) })
-            }
-            if (!GiftName) {
-              if (!this.liveDisplayDanmakuByPerson[AuthorId]) {
-                this.liveDisplayDanmakuByPerson[AuthorId] = { number: 0 }
-              }
-              this.liveDisplayDanmakuByPerson[AuthorId].name = AuthorName
-              this.liveDisplayDanmakuByPerson[AuthorId].number++
-              this.liveDisplayDanmakuNumber++
-              // this.liveDisplayDanmaku.push({ name: AuthorName, content: Content })
-            } else {
-              if (!this.liveDisplayGiftByPerson[AuthorId]) {
-                this.liveDisplayGiftByPerson[AuthorId] = { coin: 0, silver: 0 }
-              }
-              if (!this.liveDisplayGiftByType[GiftName]) {
-                this.liveDisplayGiftByType[GiftName] = { coin: 0, silver: 0, count: 0 }
-              }
-              this.liveDisplayGiftByPerson[AuthorId].name = AuthorName
-              this.liveDisplayGiftByType[GiftName].count += GiftCount
-              if (CostType === 'gold') {
-                this.liveDisplayGiftByPerson[AuthorId].coin += CostAmount
-                this.liveDisplayGiftByType[GiftName].coin += CostAmount
-                // this.liveDisplayCoinGift.push({ name: AuthorName, cost: CostAmount, count: GiftCount })
-                this.liveDisplayCoinGiftCost += CostAmount
-                giftCache.push({ time: PublishTime, gold: CostAmount })
-              } else {
-                this.liveDisplayGiftByPerson[AuthorId].silver += CostAmount
-                this.liveDisplayGiftByType[GiftName].silver += CostAmount
-                // this.liveDisplaySilverGift.push({ name: AuthorName, cost: CostAmount, count: GiftCount })
-                this.liveDisplaySilverGiftCost += CostAmount
-              }
-            }
-          })
-        this.liveDisplayDanmakuByPerson = { ...this.liveDisplayDanmakuByPerson }
-        this.liveDisplayGiftByPerson = { ...this.liveDisplayGiftByPerson }
-      }
-      if (giftCache.length < 1) {
-        giftCache.push({ gold: 0, time: 0 })
-      }
-      if (giftCache.length < 2) {
-        giftCache.push({ gold: 0, time: giftCache[0].time + 60 })
-      }
-      let timeDifference = giftCache[giftCache.length - 1].time - giftCache[0].time
-      let { gold } = giftCache.reduce((a, b) => ({ gold: a.gold + b.gold }))
-      giftCache = []
-      this.rawLive.push({ online: 0, time: this.rawLive[this.rawLive.length - 1].time + 1, gold: gold * 60 / timeDifference })
     },
     async loadMoreActive() {
       this.loadingActive = true
