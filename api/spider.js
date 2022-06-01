@@ -142,23 +142,8 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
   }, 1000 * 60 * 5)
   while (true) {
     const startTime = Date.now()
-    if (await db.status.get("queueCounter") === undefined) {
-      db.status.put("queueCounter", 1)
-    }
-    let queues = ["1"]
-    const queueCounter = await db.status.get("queueCounter")
-    if(queueCounter % 7 === 0)  queues.push("2")
-    if(queueCounter % 23 === 0) queues.push("3")
-    if(queueCounter === 100 ) {
-      queues.push("4")
-      db.status.put("queueCounter", 1)
-    } else {
-      db.status.put("queueCounter", queueCounter + 1)
-    }
-    const pending = (await Promise.all(queues.map(async (q) => {
-      let queue = await db.queue.get(q)
-      return JSON.parse(queue)
-    }))).flat()
+    const pending = [...(await vdb.get())]
+
     let spiderLeft = pending.length
     io.emit('spiderLeft', spiderLeft)
     db.status.put('spiderLeft', spiderLeft)
