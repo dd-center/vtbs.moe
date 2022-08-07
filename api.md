@@ -2,9 +2,17 @@
 
 vtbs.moe does provide some public APIs. Please do not abuse.
 
-`api.vtbs.moe` tokyo
+CDN:
 
-`api.vtbs.moe` hongkong -> tokyo
+`api.vtbs.moe` aws
+
+(recommend 推荐) `api.aws.vtbs.moe` aws, same as the one above
+
+(recommend 推荐) `cfapi.vtbs.moe` cloudflare
+
+`api.hk.vtbs.moe` hongkong -> aws
+
+(depreciated 别用) `api.tokyo.vtbs.moe` tokyo -> aws
 
 ## V1 (JSON)
 
@@ -15,6 +23,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...{mid, note}]`
 
   Return list of vtbs, without any further information.
+
+  简单v列表
 
   **Example:** <https://api.vtbs.moe/v1/vtbs>
 
@@ -34,7 +44,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     ...
   ]
   ```
-  
+
 
   Keys:
 
@@ -51,6 +61,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...{mid, uname, …}]`
 
   Return records of all vtbs.
+
+  完整v列表
 
   **Example:** <https://api.vtbs.moe/v1/info>
 
@@ -91,8 +103,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 * #### Short info <https://api.vtbs.moe/v1/short>
 
   => Array, `[...{mid, uname, roomid}]`
-  
+
   Return short records
+
+  信息较少的列表
 
   **Example:** <https://api.vtbs.moe/v1/short>
 
@@ -122,6 +136,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...{mid, uname, vdb, ...}]`
 
   Info with vdb data
+
+  包括vdb数据的列表
 
   **Example**: <https://api.vtbs.moe/v1/fullInfo>
 
@@ -163,6 +179,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Return record of certain vtb based on given mid.
 
+  单个v数据
+
   **Example:** <https://api.vtbs.moe/v1/detail/349991143>
 
   ```json
@@ -202,6 +220,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Object, `{...[mid]: {uname, face, …}}`
 
   Return all the Guards.
+
+  返回所有舰长
 
   **Example:** <https://api.vtbs.moe/v1/guard/all>
 
@@ -244,6 +264,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Return some of the Guards, who is at least「提督」or DD.
 
+  过滤掉只有一个舰长的
+
   **Example:** <https://api.vtbs.moe/v1/guard/some>
 
   Same as the one above.
@@ -253,6 +275,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[{mid, uname, ...}]`
 
   Return the Guards of certain vtb based on given mid.
+
+  按照v的id查询舰长
 
   **Example:** <https://api.vtbs.moe/v1/guard/1576121>
 
@@ -287,9 +311,11 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Number, `Number`
 
   Timestamp, when guards list updated.
-  
+
+  舰长列表更新时间
+
   **Example:** <https://api.vtbs.moe/v1/guard/time>
-  
+
   ```json
   1560050332931
   ```
@@ -299,6 +325,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...roomid]`, `number[]`
 
   Roomids of living rooms
+
+  直播中
 
   **Examble:** <https://api.vtbs.moe/v1/living>
 
@@ -314,8 +342,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   room info
 
-  **Example:** <https://api.vtbs.moe/v1/room/8899503>
+  直播信息
 
+  **Example:** <https://api.vtbs.moe/v1/room/8899503>
+  
   ```json
   {
     "uid":286179206,
@@ -336,8 +366,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   h: last hour
 
-  **Example <https://api.vtbs.moe/v1/hawk>**
+  直播热词
 
+  **Example <https://api.vtbs.moe/v1/hawk>**
+  
   ```json
   {
     "day": [
@@ -346,7 +378,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
       { "word": "哈哈哈", "weight": 81216.98377892945 }, { "word": "哭哭", "weight": 77225.85928327849 }, ...]
   }
   ```
-
+  
   
 
 ## V2 (JSON)
@@ -358,6 +390,8 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   => Array, `[...{archiveView, follower, time}]`
 
   History of video views and follower counts.
+
+  关注历史
 
   **Example:** https://api.vtbs.moe/v2/bulkActive/349991143
 
@@ -397,11 +431,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Same as above, but limited to recent `512` entries.
   
+  关注历史，但是只有最近的一部分
+  
 * #### Guard <https://api.vtbs.moe/v2/bulkGuard/:mid>
 
   => Array, `[...{guardNum, areaRank, time}]`
 
   History of guard changes.
+  
+  舰长历史
   
 * #### Online <https://api.vtbs.moe/v2/bulkOnline>
 
@@ -413,8 +451,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   * online: sum of online (人气)
   * time: timestamp
 
-  **Example**: <https://api.vtbs.moe/v2/bulkOnline>
+  全站人气历史
 
+  **Example**: <https://api.vtbs.moe/v2/bulkOnline>
+  
   ```json
   [
     ...
@@ -423,7 +463,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     { "liveStatus": 484, "online": 9287726, "time": 1617282737540 }
   ]
   ```
-
+  
   
 
 ## V3 (Buffer)
