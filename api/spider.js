@@ -190,6 +190,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
       let queue = await db.queue.get(q)
       return JSON.parse(queue)
     }))).flat()
+    pending.push(...(await Promise.all((await vdb.get()).map(async ({ mid, uuid }) => ({ mid, uuid, info: await infoDB.get(mid) })))).filter(({ info }) => !info))
     let spiderLeft = pending.length
     io.emit('spiderLeft', spiderLeft)
     await db.status.put('spiderLeft', spiderLeft)
