@@ -5,9 +5,3 @@ apps:
     autorestart: true
     watch: false
     node_args: '--max-old-space-size=8192'
-  - name: api.vtbs.moe/hawk
-    script: 'hawk.cjs'
-    instances: 1
-    autorestart: true
-    watch: false
-    node_args: '--max-old-space-size=8192'

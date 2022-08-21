@@ -30,7 +30,6 @@
     "levelup": "^4.3.2",
     "lru-cache": "^5.1.1",
     "moment": "^2.24.0",
-    "nodejieba": "^2.5.2",
     "push.js": "^1.0.12",
     "register-service-worker": "^1.6.2",
     "socket.io": "^2.3.0",

@@ -7,7 +7,6 @@
     "noImplicitAny": true
   },
   "include": [
-    "hawk",
     "api",
     "cdn.ts"
   ],
