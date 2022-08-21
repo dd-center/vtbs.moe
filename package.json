@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service serve",
     "build": "npm run tsc && npm run build:vue",
-    "build:vue": "vue-cli-service build",
+    "build:vue": "NODE_OPTIONS=--openssl-legacy-provider vue-cli-service build",
     "test": "npm run build",
     "lint": "vue-cli-service lint",
     "tsc": "npx tsc -b",
