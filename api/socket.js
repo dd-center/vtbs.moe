@@ -12,6 +12,8 @@ export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archive
 
 const metaMap = new WeakMap()
 
+let lastOnlineUpdate = 0
+
 const infoArrayMap = new Map()
 export const updateInfoArrayMap = (mid, newInfo) => infoArrayMap.set(mid, infoFilter(newInfo))
 export const deleteOldInfoArray = async () => {
@@ -168,7 +170,11 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     if (error) {
       console.error(error)
     }
-    io.emit('online', clients.length)
+    const now = Date.now()
+    if (now - lastOnlineUpdate > 1000) {
+      lastOnlineUpdate = now
+      io.emit('online', clients.length)
+    }
   })
 
   console.log('a user connected')
@@ -195,7 +201,11 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
       if (error) {
         console.error(error)
       }
-      io.emit('online', clients.length)
+      const now = Date.now()
+      if (now - lastOnlineUpdate > 1000) {
+        lastOnlineUpdate = now
+        io.emit('online', clients.length)
+      }
     })
     console.log('user disconnected')
   })
