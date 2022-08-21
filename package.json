@@ -27,7 +27,7 @@
     "koa": "^2.11.0",
     "ky": "^0.16.1",
     "lru-cache": "^5.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "push.js": "^1.0.12",
     "rave-level": "^1.0.0",
     "register-service-worker": "^1.6.2",
