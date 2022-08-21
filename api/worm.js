@@ -1,6 +1,8 @@
 import got from 'got'
 
-import { waitStatePending, io, biliAPI } from './interface/index.js'
+import { waitStatePending } from './interface/state.js'
+import { biliAPI } from './interface/biliAPI.js'
+import { io } from './interface/io.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 

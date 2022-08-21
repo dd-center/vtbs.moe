@@ -1,7 +1,8 @@
 import { deflate } from 'zlib'
 import { promisify } from 'util'
 
-import { vdb, io } from './interface/index.js'
+import * as vdb from './interface/vdb.js'
+import { io } from './interface/io.js'
 import { site, active, guard, fullGuard, guardType, status, macro, num, info } from './database.js'
 import { wormResult } from './worm.js'
 

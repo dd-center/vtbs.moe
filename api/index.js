@@ -4,7 +4,11 @@ import ant from './ant.js'
 
 import http from 'http'
 
-import { vd, hawk, vdb, stateSocket, io } from './interface/index.js'
+import { vd } from './interface/vd.js'
+import { hawk } from './interface/hawk.js'
+import * as vdb from './interface/vdb.js'
+import { socket as stateSocket } from './interface/state.js'
+import { io } from './interface/io.js'
 
 import snake from './snake.js'
 

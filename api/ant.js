@@ -1,5 +1,9 @@
 import { guardMacroK } from './unit/index.js'
-import { vdb, biliAPI, waitStatePending, io } from './interface/index.js'
+import * as vdb from './interface/vdb.js'
+import { biliAPI } from './interface/biliAPI.js'
+import { waitStatePending } from './interface/state.js'
+import { io } from './interface/io.js'
+
 
 import { num, info, macro, fullGuard, guardType, status } from './database.js'
 

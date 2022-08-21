@@ -1,4 +1,5 @@
-import { vdSocket, io } from './interface/index.js'
+import { vdSocket } from './interface/vd.js'
+import { io } from './interface/io.js'
 
 import { info } from './database.js'
 
