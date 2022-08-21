@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
-import { vdb, biliAPI, io } from './interface/index.js'
+import { vdb, biliAPI, io, waitStatePending } from './interface/index.js'
 import { info as infoDB, roomidMap, active as activeDB, guard as guardDB, guardType as guardTypeDB, status as statusDB, queue as queueDB } from './database.js'
 import { worm } from './worm.js'
-import { waitStatePending } from './interface/index.js'
 
 import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
 
