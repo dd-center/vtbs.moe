@@ -1,6 +1,6 @@
 cdn.js
 
-/db
+!/db/.gitkeep
 /static
 
 .DS_Store

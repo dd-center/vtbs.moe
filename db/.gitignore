@@ -1,0 +1,6 @@
+CURRENT
+LOCK
+LOG
+LOG.*
+MANIFEST*
+*.log
