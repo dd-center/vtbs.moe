@@ -163,11 +163,11 @@ export default async ({ INTERVAL }) => {
     const total_rank = new Set(follower_rank.concat(rise_rank).concat(guard_rank))
     await queueDB.put("1", JSON.stringify([...total_rank].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
-    let nolive = info.filter(({ lastLive: { time } }) => ((now - time) > 2592000000 && (now - time) < 7776000000))
+    let nolive = info.filter(({ lastLive: { time } = { time: 0 } }) => ((now - time) > 2592000000 && (now - time) < 7776000000))
     nolive = new Set(nolive.filter((x) => !total_rank.has(x)))
     await queueDB.put("3", JSON.stringify([...nolive].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
-    let frozen = info.filter(({ lastLive: { time } }) => ((now - time) > 7776000000))
+    let frozen = info.filter(({ lastLive: { time } = { time: 0 } }) => ((now - time) > 7776000000))
     frozen = new Set(frozen.filter((x) => !total_rank.has(x)))
     await queueDB.put("4", JSON.stringify([...frozen].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
