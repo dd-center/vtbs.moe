@@ -1,9 +1,9 @@
 import { deflate } from 'zlib'
 import { promisify } from 'util'
 
-import { macro, num, info } from './database.js'
-import { io } from './interface/io.js'
-import { vdb } from './interface/index.js'
+import { vdb, io } from './interface/index.js'
+import { site, active, guard, fullGuard, guardType, status, macro, num, info } from './database.js'
+import { wormResult } from './worm.js'
 
 const deflateAsync = promisify(deflate)
 
@@ -78,7 +78,7 @@ export const linkDanmaku = ({ io, cState }) => {
   })
 }
 
-export const connect = ({ site, active, guard, fullGuard, guardType, PARALLEL, INTERVAL, wormResult, status }) => async socket => {
+export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
   const newHandler = wsRouter({ socket })
   const handler = e => socket.on(e, async (target, arc) => {
     if (typeof arc === 'function') {

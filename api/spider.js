@@ -1,4 +1,7 @@
-import { info, roomidMap } from './database.js'
+/* eslint-disable camelcase */
+import { vdb, biliAPI, io } from './interface/index.js'
+import { info as infoDB, roomidMap, active as activeDB, guard as guardDB, guardType as guardTypeDB, status as statusDB, queue as queueDB } from './database.js'
+import { worm } from './worm.js'
 import { waitStatePending } from './interface/index.js'
 
 import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
@@ -34,7 +37,7 @@ const setDayCache = (mid, object) => {
 }
 const CACHE_KEYS = ['mid', 'uname', 'video', 'roomid', 'sign', 'notice', 'face', 'topPhoto']
 
-const coreFetch = async ({ vtb, biliAPI }) => {
+const coreFetch = async ({ vtb }) => {
   const { mid } = vtb
   const basic = { ...getDayCache(mid), ...vtb }
   const updateDayCache = !dayCache.has(mid)
@@ -51,10 +54,10 @@ const coreFetch = async ({ vtb, biliAPI }) => {
   return { ...object, liveStartTime, title, guardNum }
 }
 
-const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
+const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
   const time = Date.now()
 
-  const object = await coreFetch({ vtb, biliAPI }).catch(console.error)
+  const object = await coreFetch({ vtb }).catch(console.error)
   if (!object) {
     if (retry > 5) {
       log(`SKIP RETRY: ${vtb.mid}`)
@@ -63,23 +66,23 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
       await wait(2000)
       await waitStatePending(512)
       log(`RETRY: ${vtb.mid}`)
-      return core({ io, db, INTERVAL, biliAPI, log }, retry + 1)(vtb)
+      return core({ INTERVAL, log }, retry + 1)(vtb)
     }
   }
 
   const { mid, uname, video, roomid, sign, notice, follower, archiveView = 0, guardNum, title, face, topPhoto, bot, uuid, liveStartTime } = object
 
-  let info = await db.info.get(mid)
+  let info = await infoDB.get(mid)
   if (!info) {
     info = {}
   }
   let { recordNum = 0, guardChange = 0, online = 0 } = info
 
-  const currentActive = await db.active.get({ mid, num: recordNum })
+  const currentActive = await activeDB.get({ mid, num: recordNum })
   if (notable({ object, time, currentActive })) {
     recordNum++
     io.to(mid).emit('detailActive', { mid, data: { archiveView, follower, time } })
-    await db.active.put({ mid, num: recordNum, value: { archiveView, follower, time } })
+    await activeDB.put({ mid, num: recordNum, value: { archiveView, follower, time } })
   }
 
   let { lastLive = {} } = info
@@ -92,13 +95,13 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   if (guardNum !== info.guardNum) {
     guardChange++
     io.to(mid).emit('detailGuard', { mid, data: { guardNum, time } })
-    await db.guard.put({ mid, num: guardChange, value: { guardNum, time } })
+    await guardDB.put({ mid, num: guardChange, value: { guardNum, time } })
   }
 
   const dayNum = 1000 * 60 * 60 * 24 / INTERVAL
   const dayBackSkip = Math.max(recordNum - dayNum, 0)
   const totalRecordNum = Math.min(dayNum, recordNum)
-  const actives = await db.active.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
+  const actives = await activeDB.bulkGet({ mid, num: totalRecordNum, skip: dayBackSkip })
   const oldTime = time - 1000 * 60 * 60 * 24
   const todayActives = actives.filter(active => active.time > oldTime)
   todayActives.push({ time: time - 1, follower })
@@ -113,12 +116,12 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
   const followerChange = follower - todayActives[0].follower
   const rise = Math.round(followerChange * 1000 * 60 * 60 * 24 / timeDifference)
 
-  const guardType = await db.guardType.get(mid)
+  const guardType = await guardTypeDB.get(mid)
 
   const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime }
 
   io.to(mid).emit('detailInfo', { mid, data: newInfo })
-  await db.info.put(mid, newInfo)
+  await infoDB.put(mid, newInfo)
   if (roomid) {
     await roomidMap.put(roomid, mid)
   }
@@ -129,7 +132,7 @@ const core = ({ io, db, INTERVAL, biliAPI, log }, retry = 0) => async vtb => {
 }
 
 
-export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
+export default async ({ INTERVAL }) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -145,7 +148,7 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
     const now = Date.now()
     const vtbs = await vdb.get()
     const mids = vtbs.map(({ mid }) => mid)
-    const info = (await Promise.all(mids.map((mid) => db.info.get(mid)))).filter(Boolean)
+    const info = (await Promise.all(mids.map((mid) => infoDB.get(mid)))).filter(Boolean)
     const follower_rank = info
       .sort((a, b) => (b.follower - a.follower))
       .slice(0, 100)
@@ -156,67 +159,67 @@ export default async ({ INTERVAL, vdb, db, io, worm, biliAPI, infoFilter }) => {
       .sort((a, b) => (b.guardNum - a.guardNum))
       .slice(0, 100)
     const total_rank = new Set(follower_rank.concat(rise_rank).concat(guard_rank))
-    await db.queue.put("1",JSON.stringify([...total_rank].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
+    await queueDB.put("1", JSON.stringify([...total_rank].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
-    let nolive = info.filter(({lastLive: {time}}) => ((now - time) > 2592000000 && (now-time) < 7776000000))
+    let nolive = info.filter(({ lastLive: { time } }) => ((now - time) > 2592000000 && (now - time) < 7776000000))
     nolive = new Set(nolive.filter((x) => !total_rank.has(x)))
-    await db.queue.put("3", JSON.stringify([...nolive].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
+    await queueDB.put("3", JSON.stringify([...nolive].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
-    let frozen = info.filter(({lastLive: {time}}) => ((now-time) > 7776000000))
+    let frozen = info.filter(({ lastLive: { time } }) => ((now - time) > 7776000000))
     frozen = new Set(frozen.filter((x) => !total_rank.has(x)))
-    await db.queue.put("4", JSON.stringify([...frozen].map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
+    await queueDB.put("4", JSON.stringify([...frozen].map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
 
     const normal = info.filter((x) => !total_rank.has(x)).filter((x) => !nolive.has(x)).filter((x) => !frozen.has(x))
-    await db.queue.put("2", JSON.stringify(normal.map(({mid, uuid}) => {return {"mid": mid, "uuid": uuid}})))
+    await queueDB.put("2", JSON.stringify(normal.map(({ mid, uuid }) => { return { "mid": mid, "uuid": uuid } })))
   }
   await requeue()
-  setInterval(requeue, 1000*60*60*24)
+  setInterval(requeue, 1000 * 60 * 60 * 24)
   while (true) {
     const startTime = Date.now()
-    if (await db.status.get("queueCounter") === undefined) {
-      await db.status.put("queueCounter", 1)
+    if (await statusDB.get("queueCounter") === undefined) {
+      await statusDB.put("queueCounter", 1)
     }
     let queues = ["1"]
-    const queueCounter = await db.status.get("queueCounter")
-    if(queueCounter % 7 === 0)  queues.push("2")
-    if(queueCounter % 23 === 0) queues.push("3")
-    if(queueCounter === 100 ) {
+    const queueCounter = await statusDB.get("queueCounter")
+    if (queueCounter % 7 === 0) queues.push("2")
+    if (queueCounter % 23 === 0) queues.push("3")
+    if (queueCounter === 100) {
       queues.push("4")
-      await db.status.put("queueCounter", 1)
+      await statusDB.put("queueCounter", 1)
     } else {
-      await db.status.put("queueCounter", queueCounter + 1)
+      await statusDB.put("queueCounter", queueCounter + 1)
     }
     const pending = (await Promise.all(queues.map(async q => {
-      let queue = await db.queue.get(q)
+      let queue = await queueDB.get(q)
       return JSON.parse(queue)
     }))).flat()
     pending.push(...(await Promise.all((await vdb.get()).map(async ({ mid, uuid }) => ({ mid, uuid, info: await infoDB.get(mid) })))).filter(({ info }) => !info))
     let spiderLeft = pending.length
     io.emit('spiderLeft', spiderLeft)
-    await db.status.put('spiderLeft', spiderLeft)
+    await statusDB.put('spiderLeft', spiderLeft)
 
     await Promise.all(await pending.reduce(async (p, vtb) => {
       const mids = [...await p]
       await waitStatePending()
-      return [...mids, core({ io, db, INTERVAL, biliAPI, log })(vtb).then(mid => {
+      return [...mids, core({ INTERVAL, log })(vtb).then(mid => {
         spiderLeft--
         io.emit('spiderLeft', spiderLeft)
-        db.status.put('spiderLeft', spiderLeft)
+        statusDB.put('spiderLeft', spiderLeft)
         return mid
       })]
     }, []))
     await deleteOldInfoArray()
     io.emit('info', infoArray())
 
-    worm({ vtbs: await vdb.get(), io, biliAPI })
+    worm({ vtbs: await vdb.get() })
       .then(wormArray => io.emit('worm', wormArray))
 
     const endTime = Date.now()
     lastUpdate = endTime
     io.emit('spiderDuration', endTime - startTime)
-    db.status.put('spiderDuration', endTime - startTime)
+    statusDB.put('spiderDuration', endTime - startTime)
     io.emit('spiderTime', endTime)
-    db.status.put('spiderTime', endTime)
+    statusDB.put('spiderTime', endTime)
     console.log(`WAIT: ${INTERVAL - (endTime - startTime)}`)
     await wait(INTERVAL - (endTime - startTime))
   }

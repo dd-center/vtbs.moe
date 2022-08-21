@@ -1,4 +1,8 @@
-export default ({ vdSocket, io, info }) => {
+import { vdSocket, io } from './interface/index.js'
+
+import { info } from './database.js'
+
+export default () => {
   let updatePending = new Set()
   vdSocket.on('LIVE', async ({ mid, roomid }) => {
     let currentInfo = await info.get(mid)
@@ -24,7 +28,7 @@ export default ({ vdSocket, io, info }) => {
   vdSocket.on('online', async ({ online, mid }) => {
     let currentInfo = await info.get(mid)
     if (online === 1) {
-      currentInfo = { ...currentInfo, liveStatus: 0, online: 0}
+      currentInfo = { ...currentInfo, liveStatus: 0, online: 0 }
     } else {
       currentInfo = { ...currentInfo, online }
     }

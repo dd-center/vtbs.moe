@@ -6,7 +6,7 @@ import Router from '@koa/router'
 
 import LRU from 'lru-cache'
 
-import { roomidMap } from './database.js'
+import { roomidMap, num, info, active, guard, macro, fullGuard } from './database.js'
 import * as vdb from './interface/vdb.js'
 import { hawkEmitter } from './interface/state.js'
 
@@ -78,7 +78,7 @@ class BufferStream extends Duplex {
   }
 }
 
-export default ({ info, fullGuard, active, live, num, macro, guard }: any) => {
+export default () => {
   const app = new Koa()
 
   app.use(async (ctx, next) => {

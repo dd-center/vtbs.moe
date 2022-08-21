@@ -1,6 +1,7 @@
+import { io } from './io.js'
 import { hawkEmitter } from './state.js'
 
-export const hawk = ({ io }) => {
+export const hawk = () => {
   let analyzed = { day: [], h: [] }
   hawkEmitter.on('analyze', data => {
     analyzed = data

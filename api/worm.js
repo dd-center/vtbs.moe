@@ -1,12 +1,12 @@
 import got from 'got'
 
-import { waitStatePending } from './interface/index.js'
+import { waitStatePending, io, biliAPI } from './interface/index.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 let wormArray = []
 
-const round = async ({ vtb, io, biliAPI }, retry = 0) => {
+const round = async ({ vtb }, retry = 0) => {
   const log = log => (output => {
     console.log(output)
     io.emit('log', output)
@@ -21,7 +21,7 @@ const round = async ({ vtb, io, biliAPI }, retry = 0) => {
     } else {
       log(`RETRY W. PENDING: ${vtb.mid}`)
       await waitStatePending(512)
-      return round({ vtb, io, biliAPI }, retry + 1)
+      return round({ vtb }, retry + 1)
     }
   }
 
@@ -34,7 +34,7 @@ const round = async ({ vtb, io, biliAPI }, retry = 0) => {
 
 export const wormResult = () => wormArray
 
-export const worm = async ({ vtbs, io, biliAPI }) => {
+export const worm = async ({ vtbs }) => {
   const mids = vtbs.map(({ mid }) => mid)
   return Promise.all(await (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?parent_area_id=9&sort_type=online&page=1&page_size=99').json()).data.list
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
@@ -49,6 +49,6 @@ export const worm = async ({ vtbs, io, biliAPI }) => {
     .reduce(async (p, vtb) => {
       const wormArray = [...await p]
       await waitStatePending()
-      return [...wormArray, round({ vtb, io, biliAPI })]
+      return [...wormArray, round({ vtb })]
     }, []))
 }

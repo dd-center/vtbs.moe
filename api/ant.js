@@ -1,10 +1,11 @@
 import { guardMacroK } from './unit/index.js'
-import { waitStatePending } from './interface/index.js'
-import { status } from './database.js'
+import { vdb, biliAPI, waitStatePending, io } from './interface/index.js'
+
+import { num, info, macro, fullGuard, guardType, status } from './database.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
+const vup = async ({ INTERVAL, log }) => {
   await wait(INTERVAL - ((new Date()).getTime() - ((await macro.get({ mid: 'vup', num: (await num.get('vupMacroNum') || 0) })) || { time: 0 }).time))
   for (;;) {
     const startTime = (new Date()).getTime()
@@ -35,7 +36,7 @@ const vup = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
+const vtb = async ({ INTERVAL, log }) => {
   for (;;) {
     const startTime = (new Date()).getTime()
 
@@ -75,7 +76,7 @@ const vtb = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
+const guardF = async ({ INTERVAL, log }) => {
   for (;;) {
     const startTime = (new Date()).getTime()
     const pause = wait(INTERVAL)
@@ -112,7 +113,7 @@ const guard = async ({ vdb, macro, info, num, INTERVAL, log, io }) => {
   }
 }
 
-const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
+const dd = async ({ INTERVAL, log }) => {
   const core = (mid, tries = 0) => biliAPI({ mid }, ['guards', 'guardLevel'], 1000 * 60 * 30).catch(async e => {
     console.error(e)
     if (tries < 2) {
@@ -182,13 +183,13 @@ const dd = async ({ vdb, INTERVAL, fullGuard, guardType, log, biliAPI }) => {
   }
 }
 
-export default ({ vdb, macro, info, num, fullGuard, guardType, INTERVAL, io, biliAPI }) => {
+export default ({ INTERVAL }) => {
   const log = log => {
     console.log(log)
     io.emit('log', log)
   }
-  vup({ vdb, macro, info, num, INTERVAL: 1000 * 60 * 60 * 24, log, io })
-  vtb({ vdb, macro, info, num, INTERVAL, log, io })
-  guard({ vdb, macro, info, num, INTERVAL, log, io })
-  dd({ vdb, INTERVAL: 1000 * 60 * 60 * 24, fullGuard, guardType, log, biliAPI })
+  vup({ INTERVAL: 1000 * 60 * 60 * 24, log })
+  vtb({ INTERVAL, log })
+  guardF({ INTERVAL, log })
+  dd({ INTERVAL: 1000 * 60 * 60 * 24, log })
 }
