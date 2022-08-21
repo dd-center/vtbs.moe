@@ -4,3 +4,4 @@ LOG
 LOG.*
 MANIFEST*
 *.log
+*.ldb
