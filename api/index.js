@@ -18,6 +18,8 @@ import httpAPI from './http.js'
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
+const handler = connect({ PARALLEL, INTERVAL })
+
 stateSocket.on('log', log => io.to('state').emit('stateLog', log))
 vdb.bind(io)
 const server = http.createServer(httpAPI())
@@ -28,5 +30,5 @@ spider({ INTERVAL })
 snake()
 hawk()
 ant({ INTERVAL })
-io.on('connection', connect({ PARALLEL, INTERVAL }))
+io.on('connection', handler)
 server.listen(8001)
