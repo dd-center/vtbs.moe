@@ -5,3 +5,4 @@ LOG.*
 MANIFEST*
 *.log
 *.ldb
+*.sock

@@ -4,7 +4,8 @@
     "module": "ESNext",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "skipLibCheck": true
   },
   "include": [
     "api",
