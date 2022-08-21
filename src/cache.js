@@ -1,4 +1,4 @@
-import level from 'level'
+import { BrowserLevel } from 'browser-level'
 
 const url = new URL(location.href)
 
@@ -9,7 +9,7 @@ export default (() => {
 
     return { put, get }
   } else {
-    const cache = level('cache', { valueEncoding: 'json' })
+    const cache = new BrowserLevel('cache', { valueEncoding: 'json' })
 
     const put = (...params) => cache.put(...params)
     const get = (...params) => cache.get(...params)
