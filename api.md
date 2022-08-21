@@ -2,21 +2,31 @@
 
 vtbs.moe does provide some public APIs. Please do not abuse.
 
-`api.tokyo.vtbs.moe` tokyo
+CDN:
 
-`api.vtbs.moe` hongkong -> tokyo
+`api.vtbs.moe` aws
+
+(recommend 推荐) `api.aws.vtbs.moe` aws, same as the one above
+
+(recommend 推荐) `cfapi.vtbs.moe` cloudflare
+
+`api.hk.vtbs.moe` hongkong -> aws
+
+(depreciated 别用) `api.tokyo.vtbs.moe` tokyo -> aws
 
 ## V1 (JSON)
 
 	Simple JSON API.
 
-* #### vtbs <https://api.tokyo.vtbs.moe/v1/vtbs>
+* #### vtbs <https://api.vtbs.moe/v1/vtbs>
 
   => Array, `[...{mid, note}]`
 
   Return list of vtbs, without any further information.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/vtbs>
+  简单v列表
+
+  **Example:** <https://api.vtbs.moe/v1/vtbs>
 
   ```json
   [{
@@ -34,7 +44,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     ...
   ]
   ```
-  
+
 
   Keys:
 
@@ -46,13 +56,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
     Just some Note...
 
-* #### info <https://api.tokyo.vtbs.moe/v1/info>
+* #### info <https://api.vtbs.moe/v1/info>
 
   => Array, `[...{mid, uname, …}]`
 
   Return records of all vtbs.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/info>
+  完整v列表
+
+  **Example:** <https://api.vtbs.moe/v1/info>
 
   ```json
   [{
@@ -88,13 +100,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-* #### Short info <https://api.tokyo.vtbs.moe/v1/short>
+* #### Short info <https://api.vtbs.moe/v1/short>
 
   => Array, `[...{mid, uname, roomid}]`
-  
+
   Return short records
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/short>
+  信息较少的列表
+
+  **Example:** <https://api.vtbs.moe/v1/short>
 
   ```json
   [
@@ -117,13 +131,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-* #### Full info <https://api.tokyo.vtbs.moe/v1/fullInfo>
+* #### Full info <https://api.vtbs.moe/v1/fullInfo>
 
   => Array, `[...{mid, uname, vdb, ...}]`
 
   Info with vdb data
 
-  **Example**: <https://api.tokyo.vtbs.moe/v1/fullInfo>
+  包括vdb数据的列表
+
+  **Example**: <https://api.vtbs.moe/v1/fullInfo>
 
   ```json
   [
@@ -157,13 +173,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-* #### Detail <https://api.tokyo.vtbs.moe/v1/detail/:mid>
+* #### Detail <https://api.vtbs.moe/v1/detail/:mid>
 
   => Object, `{mid, uname, …}`
 
   Return record of certain vtb based on given mid.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/detail/349991143>
+  单个v数据
+
+  **Example:** <https://api.vtbs.moe/v1/detail/349991143>
 
   ```json
   {
@@ -197,13 +215,15 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   }
   ```
 
-* #### All Guards <https://api.tokyo.vtbs.moe/v1/guard/all>
+* #### All Guards <https://api.vtbs.moe/v1/guard/all>
 
   => Object, `{...[mid]: {uname, face, …}}`
 
   Return all the Guards.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/guard/all>
+  返回所有舰长
+
+  **Example:** <https://api.vtbs.moe/v1/guard/all>
 
   ```json
   {
@@ -238,23 +258,27 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     * 提督
     * 舰长
 
-* #### Some Guards <https://api.tokyo.vtbs.moe/v1/guard/some>
+* #### Some Guards <https://api.vtbs.moe/v1/guard/some>
 
   => Object, `{...[mid]: {uname, face, …}}`
 
   Return some of the Guards, who is at least「提督」or DD.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/guard/some>
+  过滤掉只有一个舰长的
+
+  **Example:** <https://api.vtbs.moe/v1/guard/some>
 
   Same as the one above.
 
-* #### Guards <https://api.tokyo.vtbs.moe/v1/guard/:mid>
+* #### Guards <https://api.vtbs.moe/v1/guard/:mid>
 
   => Array, `[{mid, uname, ...}]`
 
   Return the Guards of certain vtb based on given mid.
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/guard/1576121>
+  按照v的id查询舰长
+
+  **Example:** <https://api.vtbs.moe/v1/guard/1576121>
 
   ```json
   [{
@@ -282,25 +306,29 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
     `2`: 舰长
 
-* #### Guards update time <https://api.tokyo.vtbs.moe/v1/guard/time>
+* #### Guards update time <https://api.vtbs.moe/v1/guard/time>
 
   => Number, `Number`
 
   Timestamp, when guards list updated.
-  
-  **Example:** <https://api.tokyo.vtbs.moe/v1/guard/time>
-  
+
+  舰长列表更新时间
+
+  **Example:** <https://api.vtbs.moe/v1/guard/time>
+
   ```json
   1560050332931
   ```
 
-* #### List of living rooms <https://api.tokyo.vtbs.moe/v1/living>
+* #### List of living rooms <https://api.vtbs.moe/v1/living>
 
   => Array, `[...roomid]`, `number[]`
 
   Roomids of living rooms
 
-  **Examble:** <https://api.tokyo.vtbs.moe/v1/living>
+  直播中
+
+  **Examble:** <https://api.vtbs.moe/v1/living>
 
   ```json
   [746929,21665984,3012597,179883,6760154,7038458
@@ -308,14 +336,16 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   ]
   ```
 
-* #### Room info <https://api.tokyo.vtbs.moe/v1/room/:roomid>
+* #### Room info <https://api.vtbs.moe/v1/room/:roomid>
 
   => Object, `{}`
 
   room info
 
-  **Example:** <https://api.tokyo.vtbs.moe/v1/room/8899503>
+  直播信息
 
+  **Example:** <https://api.vtbs.moe/v1/room/8899503>
+  
   ```json
   {
     "uid":286179206,
@@ -326,7 +356,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   }
   ```
   
-* #### Hawk <https://api.tokyo.vtbs.moe/v1/hawk>
+* #### Hawk <https://api.vtbs.moe/v1/hawk>
 
   => `{day: [...{word, weight}], h: [...{word, weight}]}`
 
@@ -336,8 +366,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   h: last hour
 
-  **Example <https://api.tokyo.vtbs.moe/v1/hawk>**
+  直播热词
 
+  **Example <https://api.vtbs.moe/v1/hawk>**
+  
   ```json
   {
     "day": [
@@ -346,20 +378,22 @@ vtbs.moe does provide some public APIs. Please do not abuse.
       { "word": "哈哈哈", "weight": 81216.98377892945 }, { "word": "哭哭", "weight": 77225.85928327849 }, ...]
   }
   ```
-
+  
   
 
 ## V2 (JSON)
 
 	Simple JSON API with Bulk Historical Data.
 
-* #### Active <https://api.tokyo.vtbs.moe/v2/bulkActive/:mid>
+* #### Active <https://api.vtbs.moe/v2/bulkActive/:mid>
 
   => Array, `[...{archiveView, follower, time}]`
 
   History of video views and follower counts.
 
-  **Example:** https://api.tokyo.vtbs.moe/v2/bulkActive/349991143
+  关注历史
+
+  **Example:** https://api.vtbs.moe/v2/bulkActive/349991143
 
   ```json
   [{
@@ -389,7 +423,7 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
     Timestamp
 
-* #### Some active <https://api.tokyo.vtbs.moe/v2/bulkActiveSome/:mid>
+* #### Some active <https://api.vtbs.moe/v2/bulkActiveSome/:mid>
 
   => Array, `[...{archiveView, follower, time}]`
 
@@ -397,13 +431,17 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 
   Same as above, but limited to recent `512` entries.
   
-* #### Guard <https://api.tokyo.vtbs.moe/v2/bulkGuard/:mid>
+  关注历史，但是只有最近的一部分
+  
+* #### Guard <https://api.vtbs.moe/v2/bulkGuard/:mid>
 
   => Array, `[...{guardNum, areaRank, time}]`
 
   History of guard changes.
   
-* #### Online <https://api.tokyo.vtbs.moe/v2/bulkOnline>
+  舰长历史
+  
+* #### Online <https://api.vtbs.moe/v2/bulkOnline>
 
   => Array, [...{liveStatus, online, time}]
 
@@ -413,8 +451,10 @@ vtbs.moe does provide some public APIs. Please do not abuse.
   * online: sum of online (人气)
   * time: timestamp
 
-  **Example**: <https://api.tokyo.vtbs.moe/v2/bulkOnline>
+  全站人气历史
 
+  **Example**: <https://api.vtbs.moe/v2/bulkOnline>
+  
   ```json
   [
     ...
@@ -423,14 +463,14 @@ vtbs.moe does provide some public APIs. Please do not abuse.
     { "liveStatus": 484, "online": 9287726, "time": 1617282737540 }
   ]
   ```
-
+  
   
 
 ## V3 (Buffer)
 
 	"Not so simple" Buffer API with Bulk Historical Data.
 
-* #### All Active <https://api.tokyo.vtbs.moe/v3/allActive>
+* #### All Active <https://api.vtbs.moe/v3/allActive>
 
   => Buffer:
 
@@ -492,19 +532,19 @@ Metadata
 
 * ### ping
 
-  <https://api.tokyo.vtbs.moe/meta/ping>
+  <https://api.vtbs.moe/meta/ping>
 
   `pong`
 
 * ### cdn
 
-  <https://api.tokyo.vtbs.moe/meta/cdn>
+  <https://api.vtbs.moe/meta/cdn>
 
-  `["https://api.vtbs.moe","https://api.tokyo.vtbs.moe","https://vtbs.musedash.moe"]`
+  `['https://api.vtbs.moe', 'https://api.aws.vtbs.moe', 'https://cfapi.vtbs.moe', 'https://api.hk.vtbs.moe', 'https://api.tokyo.vtbs.moe']`
 
 * ### timestamp
 
-  <https://api.tokyo.vtbs.moe/meta/timestamp>
+  <https://api.vtbs.moe/meta/timestamp>
 
   `1590850640669`
 
@@ -512,7 +552,7 @@ Metadata
 
 	Live danmaku integrated WebSocket.
 	
-	Use Socket.io connect to `https://api.tokyo.vtbs.moe/vds` // const socket = io('https://api.vtbs.moe', { path: '/vds' })
+	Use Socket.io connect to `https://api.vtbs.moe/vds` // const socket = io('https://api.vtbs.moe', { path: '/vds' })
 	
 	Document: https://github.com/dd-center/vtuber-danmaku#socketio
 
@@ -543,10 +583,10 @@ Metadata
 
 	Endpoint, used for `shields.io` endpoint
 
-* Number of vtubers <https://api.tokyo.vtbs.moe/endpoint/vtbs>
-* Number of guards <https://api.tokyo.vtbs.moe/endpoint/guardNum>
-* Streaming now <https://api.tokyo.vtbs.moe/endpoint/live>
-* Total online <https://api.tokyo.vtbs.moe/endpoint/onlineSum>
+* Number of vtubers <https://api.vtbs.moe/endpoint/vtbs>
+* Number of guards <https://api.vtbs.moe/endpoint/guardNum>
+* Streaming now <https://api.vtbs.moe/endpoint/live>
+* Total online <https://api.vtbs.moe/endpoint/onlineSum>
 
 ## vtbs.moe api (Socket.IO)
 
