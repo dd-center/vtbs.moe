@@ -1,7 +1,7 @@
 import got from 'got'
 
 import { waitStatePending } from './interface/state.js'
-import { biliAPI } from './interface/biliAPI.js'
+import { biliAPI } from './interface/biliapi.js'
 import { io } from './interface/io.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))

@@ -1,6 +1,6 @@
 import { guardMacroK } from './unit/index.js'
 import * as vdb from './interface/vdb.js'
-import { biliAPI } from './interface/biliAPI.js'
+import { biliAPI } from './interface/biliapi.js'
 import { waitStatePending } from './interface/state.js'
 import { io } from './interface/io.js'
 
