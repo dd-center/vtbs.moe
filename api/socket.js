@@ -40,7 +40,13 @@ const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
     vdbTable: () => vdb.getVdbTable(),
     fullInfo: async () => {
       const vtbs = await vdb.getPure()
-      return (await Promise.all(vtbs.map(({ mid }) => mid).map(async mid => ({ ...await info.get(mid), mid }))))
+      return (await Promise.all(vtbs.map(({ mid }) => mid).map(async mid => {
+          const i = await info.get(mid)
+          if (i) {
+            return { ...i, mid }
+          }
+          return undefined
+        })))
         .filter(Boolean)
     },
     async guardMacroK([week = false]) {
