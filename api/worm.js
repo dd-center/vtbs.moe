@@ -2,7 +2,7 @@ import got from 'got'
 
 import { waitStatePending } from './interface/state.js'
 import { biliAPI } from './interface/biliapi.js'
-import { io } from './interface/io.js'
+import { emit } from './interface/io.js'
 
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -11,7 +11,7 @@ let wormArray = []
 const round = async ({ vtb }, retry = 0) => {
   const log = log => (output => {
     console.log(output)
-    io.emit('log', output)
+    emit(['log', output])
   })(`worm: ${log}`)
 
   const time = Date.now()

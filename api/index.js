@@ -1,14 +1,15 @@
+import http from 'http'
+import cluster from 'node:cluster'
+
 import spider from './spider.js'
 
 import ant from './ant.js'
-
-import http from 'http'
 
 import { vd } from './interface/vd.js'
 import { hawk } from './interface/hawk.js'
 import * as vdb from './interface/vdb.js'
 import { socket as stateSocket } from './interface/state.js'
-import { io } from './interface/io.js'
+import { ioRaw } from './interface/io.js'
 
 import snake from './snake.js'
 
@@ -18,15 +19,20 @@ import httpAPI from './http.js'
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
-stateSocket.on('log', log => io.to('state').emit('stateLog', log))
-vdb.bind(io)
-const server = http.createServer(httpAPI())
-io.attach(server)
-vd.attach(server)
-console.log('starting spider')
-spider({ INTERVAL })
-snake()
-hawk()
-ant({ INTERVAL })
-io.on('connection', connect({ PARALLEL, INTERVAL }))
-server.listen(8001)
+if (cluster.isPrimary) {
+  console.log('starting spider')
+  spider({ INTERVAL })
+  ant({ INTERVAL })
+  cluster.fork()
+} else {
+  console.log('oh no, I am a worker')
+  stateSocket.on('log', log => ioRaw.to('state').emit('stateLog', log))
+  vdb.bind(ioRaw)
+  const server = http.createServer(httpAPI())
+  ioRaw.attach(server)
+  vd.attach(server)
+  snake()
+  hawk(ioRaw)
+  ioRaw.on('connection', connect({ PARALLEL, INTERVAL }))
+  server.listen(8001)
+}

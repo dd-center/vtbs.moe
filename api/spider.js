@@ -2,7 +2,7 @@
 import * as vdb from './interface/vdb.js'
 import { biliAPI } from './interface/biliapi.js'
 import { waitStatePending } from './interface/state.js'
-import { io } from './interface/io.js'
+import { emit, to } from './interface/io.js'
 import { info as infoDB, roomidMap, active as activeDB, guard as guardDB, guardType as guardTypeDB, status as statusDB, queue as queueDB } from './database.js'
 import { worm } from './worm.js'
 
@@ -83,7 +83,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
   const currentActive = await activeDB.get({ mid, num: recordNum })
   if (notable({ object, time, currentActive })) {
     recordNum++
-    io.to(mid).emit('detailActive', { mid, data: { archiveView, follower, time } })
+    to(mid).emit(['detailActive', { mid, data: { archiveView, follower, time } }])
     await activeDB.put({ mid, num: recordNum, value: { archiveView, follower, time } })
   }
 
@@ -96,7 +96,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
 
   if (guardNum !== info.guardNum) {
     guardChange++
-    io.to(mid).emit('detailGuard', { mid, data: { guardNum, time } })
+    to(mid).emit(['detailGuard', { mid, data: { guardNum, time } }])
     await guardDB.put({ mid, num: guardChange, value: { guardNum, time } })
   }
 
@@ -122,7 +122,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
 
   const newInfo = { mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime }
 
-  io.to(mid).emit('detailInfo', { mid, data: newInfo })
+  to(mid).emit(['detailInfo', { mid, data: newInfo }])
   await infoDB.put(mid, newInfo)
   if (roomid) {
     await roomidMap.put(roomid, mid)
@@ -137,7 +137,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
 export default async ({ INTERVAL }) => {
   const log = log => (output => {
     console.log(output)
-    io.emit('log', output)
+    emit(['log', output])
   })(`spider: ${log}`)
 
   let lastUpdate = Date.now()
@@ -197,7 +197,7 @@ export default async ({ INTERVAL }) => {
     }))).flat()
     pending.push(...(await Promise.all((await vdb.get()).map(async ({ mid, uuid }) => ({ mid, uuid, info: await infoDB.get(mid) })))).filter(({ info }) => !info))
     let spiderLeft = pending.length
-    io.emit('spiderLeft', spiderLeft)
+    emit(['spiderLeft', spiderLeft])
     await statusDB.put('spiderLeft', spiderLeft)
 
     await Promise.all(await pending.reduce(async (p, vtb) => {
@@ -205,22 +205,22 @@ export default async ({ INTERVAL }) => {
       await waitStatePending()
       return [...mids, core({ INTERVAL, log })(vtb).then(mid => {
         spiderLeft--
-        io.emit('spiderLeft', spiderLeft)
+        emit(['spiderLeft', spiderLeft])
         statusDB.put('spiderLeft', spiderLeft)
         return mid
       })]
     }, []))
     await deleteOldInfoArray()
-    io.emit('info', infoArray())
+    emit(['info', infoArray()])
 
     worm({ vtbs: await vdb.get() })
-      .then(wormArray => io.emit('worm', wormArray))
+      .then(wormArray => emit(['worm', wormArray]))
 
     const endTime = Date.now()
     lastUpdate = endTime
-    io.emit('spiderDuration', endTime - startTime)
+    emit(['spiderDuration', endTime - startTime])
     statusDB.put('spiderDuration', endTime - startTime)
-    io.emit('spiderTime', endTime)
+    emit(['spiderTime', endTime])
     statusDB.put('spiderTime', endTime)
     console.log(`WAIT: ${INTERVAL - (endTime - startTime)}`)
     await wait(INTERVAL - (endTime - startTime))

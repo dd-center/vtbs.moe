@@ -1,6 +1,6 @@
 import { num, macro } from '../database.js'
 import moment from 'moment'
-import { io } from '../interface/io.js'
+import { to } from '../interface/io.js'
 moment.locale('zh-cn')
 
 const format = new Intl.DateTimeFormat('zh-CN', { timeZone: 'Asia/Shanghai' })
@@ -34,7 +34,7 @@ const calculateWeekK = async (guardMacroKNum: number, time: number) => {
       }
     })
   }
-  io.to('guardMacroWeekK').emit('guardMacroWeekK', await macro.get({ mid: 'guardMacroWeekK', num: guardMacroWeekKNum }))
+  to('guardMacroWeekK').emit(['guardMacroWeekK', await macro.get({ mid: 'guardMacroWeekK', num: guardMacroWeekKNum })])
 }
 
 const calculate = async (goal: number) => {
@@ -66,7 +66,7 @@ const calculate = async (goal: number) => {
     })
   }
 
-  io.to('guardMacroK').emit('guardMacroK', await macro.get({ mid: 'guardMacroK', num: guardMacroKNum }))
+  to('guardMacroK').emit(['guardMacroK', await macro.get({ mid: 'guardMacroK', num: guardMacroKNum })])
   await calculateWeekK(guardMacroKNum, time)
 
   await num.put('guardMacroKLocationNum', goal)

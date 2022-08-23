@@ -2,7 +2,7 @@ import { guardMacroK } from './unit/index.js'
 import * as vdb from './interface/vdb.js'
 import { biliAPI } from './interface/biliapi.js'
 import { waitStatePending } from './interface/state.js'
-import { io } from './interface/io.js'
+import { to, emit } from './interface/io.js'
 
 
 import { num, info, macro, fullGuard, guardType, status } from './database.js'
@@ -33,7 +33,7 @@ const vup = async ({ INTERVAL, log }) => {
 
     await macro.put({ mid: 'vup', num: macroNum, value: sum })
     await num.put('vupMacroNum', macroNum)
-    io.to('vupMacro').emit('vupMacro', sum)
+    to('vupMacro').emit(['vupMacro', sum])
     log('VUP Macroeconomics Update')
     const endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
@@ -73,7 +73,7 @@ const vtb = async ({ INTERVAL, log }) => {
 
     await macro.put({ mid: 'vtb', num: macroNum, value: sum })
     await num.put('vtbMacroNum', macroNum)
-    io.to('vtbMacro').emit('vtbMacro', sum)
+    to('vtbMacro').emit(['vtbMacro', sum])
     log('VTB Macroeconomics Update')
     const endTime = (new Date()).getTime()
     await wait(INTERVAL - (endTime - startTime))
@@ -111,7 +111,7 @@ const guardF = async ({ INTERVAL, log }) => {
     await macro.put({ mid: 'guard', num: macroNum, value: sum })
     await num.put('guardMacroNum', macroNum)
     await guardMacroK(macroNum)
-    io.to('guardMacro').emit('guardMacro', sum)
+    to('guardMacro').emit(['guardMacro', sum])
     log('Guard Macroeconomics Update')
     await pause
   }
@@ -190,7 +190,7 @@ const dd = async ({ INTERVAL, log }) => {
 export default ({ INTERVAL }) => {
   const log = log => {
     console.log(log)
-    io.emit('log', log)
+    emit(['log', log])
   }
   vup({ INTERVAL: 1000 * 60 * 60 * 24, log })
   vtb({ INTERVAL, log })
