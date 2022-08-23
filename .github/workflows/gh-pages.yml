@@ -19,7 +19,7 @@ jobs:
         node-version: 18
 
     - name: install
-      run: npm install --legacy-peer-deps
+      run: npm install --legacy-peer-deps -f
 
     - name: build
       run: npm run build
