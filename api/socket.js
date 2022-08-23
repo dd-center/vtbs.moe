@@ -180,6 +180,14 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     if (now - lastOnlineUpdate > 1000) {
       lastOnlineUpdate = now
       io.emit('online', clients.length)
+    } else {
+      const n = lastOnlineUpdate
+      setTimeout(() => {
+        if (n === lastOnlineUpdate) {
+          io.emit('online', clients.length)
+        }
+        lastOnlineUpdate = Date.now()
+      }, 1000)
     }
   })
 
