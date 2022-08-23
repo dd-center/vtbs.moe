@@ -1,6 +1,5 @@
 import './Cluster-center/index.js'
 import '../../state-center/index.js'
-import './bilibili-vtuber-live-danmaku-relay/index.js'
 
 process.env.VERBOSE = true
 process.env.MOCK = true
