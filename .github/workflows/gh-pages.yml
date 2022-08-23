@@ -13,10 +13,10 @@ jobs:
       with:
         submodules: 'recursive'
 
-    - name: Use Node.js 14
+    - name: Use Node.js 18
       uses: actions/setup-node@v2.4.0
       with:
-        node-version: 14.10.1
+        node-version: 18
 
     - name: install
       run: npm install
