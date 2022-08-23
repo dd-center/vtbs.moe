@@ -47,7 +47,6 @@
   "devDependencies": {
     "@babel/core": "^7.8.0",
     "@babel/plugin-proposal-pipeline-operator": "^7.8.0",
-    "@dd-center/relay": "file:api/mock/bilibili-vtuber-live-danmaku-relay",
     "@types/encoding-down": "^5.0.0",
     "@types/koa__router": "^8.0.2",
     "@types/node": "^18.7.11",
