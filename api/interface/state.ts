@@ -1,6 +1,6 @@
 import CState from '../../state-center/api.js'
 
-export const cState = new CState({ name: 'vtbs.moe' })
+export const cState = new CState({ name: `vtbs.moe-${Math.random()}` })
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
