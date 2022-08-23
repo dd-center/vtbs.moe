@@ -4,4 +4,5 @@ apps:
     instances: 1
     autorestart: true
     watch: false
+    exec_mode: 'fork'
     node_args: '--max-old-space-size=8192'
