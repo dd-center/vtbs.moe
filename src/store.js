@@ -1,20 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { Notification } from 'element-ui'
-import Push from 'push.js'
 import router from './router'
 import cache from './cache'
-
-const liveNotification = ({ mid, uname, title }, msg = '开播了') => {
-  Push.create(`${uname} ${msg}!`, {
-    body: title,
-    requireInteraction: true,
-    onClick: function() {
-      router.push(`/detail/${mid}`)
-      this.close()
-    },
-  })
-}
 
 Vue.use(Vuex)
 
@@ -113,21 +100,7 @@ const x = new Vuex.Store({
       let info = { ...state.currentInfo }
       let face = { ...state.currentFace }
       for (let i = 0; i < data.length; i++) {
-        let { mid, uname, title } = data[i]
-        if (info[mid] && !info[mid].liveStatus && data[i].liveStatus) {
-          setTimeout(() => {
-            if (JSON.parse(localStorage.getItem(mid))) {
-              liveNotification({ mid, uname, title })
-            }
-            Notification({
-              iconClass: 'el-icon-ship',
-              title: `${uname} 开播了!`,
-              message: title,
-            })
-          }, 5000 * Math.random())
-        } else if (!info[mid] && data[i].liveStatus && JSON.parse(localStorage.getItem(mid))) {
-          liveNotification({ mid, uname, title }, '直播中')
-        }
+        let { mid } = data[i]
         info[mid] = data[i]
         if (!face[mid]) {
           face[mid] = data[i].face
