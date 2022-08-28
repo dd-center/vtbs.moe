@@ -12,8 +12,6 @@ CDN:
 
 `api.hk.vtbs.moe` hongkong -> aws
 
-(depreciated 别用) `api.tokyo.vtbs.moe` tokyo -> aws
-
 ## V1 (JSON)
 
 	Simple JSON API.
