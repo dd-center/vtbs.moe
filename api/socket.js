@@ -2,31 +2,21 @@ import { deflate } from 'zlib'
 import { promisify } from 'util'
 
 import * as vdb from './interface/vdb.js'
-import { ioRaw as io } from './interface/io.js'
+import { ioRaw as io, updateInfoArrayMapRaw, infoArray } from './interface/io.js'
 import { site, active, guard, fullGuard, guardType, status, macro, num, info } from './database.js'
 import { wormResult } from './worm.js'
 
 const deflateAsync = promisify(deflate)
 
-export const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
-
 const metaMap = new WeakMap()
 
 let lastOnlineUpdate = 0
 
-const infoArrayMap = new Map()
-export const updateInfoArrayMap = (mid, newInfo) => infoArrayMap.set(mid, infoFilter(newInfo))
-export const deleteOldInfoArray = async () => {
-  const mids = (await vdb.getPure()).map(({ mid }) => mid)
-  const keys = [...infoArrayMap.keys()]
-  keys.filter(mid => !mids.includes(mid)).forEach(mid => infoArrayMap.delete(mid))
-}
-export const infoArray = () => [...infoArrayMap.values()]
 const fillInfoArray = async () => {
   const mids = (await vdb.getPure()).map(({ mid }) => mid)
   const arrayPromise = await Promise.all(mids.map(mid => info.get(mid)))
   arrayPromise.filter(Boolean)
-    .forEach(({ mid, ...newInfo }) => infoArrayMap.set(mid, { mid, ...newInfo }))
+    .forEach(({ mid, ...newInfo }) => updateInfoArrayMapRaw(mid, { mid, ...newInfo }))
 }
 await fillInfoArray()
 console.log('fillInfoArray')

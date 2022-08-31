@@ -2,11 +2,9 @@
 import * as vdb from './interface/vdb.js'
 import { biliAPI } from './interface/biliapi.js'
 import { waitStatePending } from './interface/state.js'
-import { emit, to } from './interface/io.js'
+import { emit, to, infoArray, updateInfoArrayMap, deleteOldInfoArray } from './interface/io.js'
 import { info as infoDB, roomidMap, active as activeDB, guard as guardDB, guardType as guardTypeDB, status as statusDB, queue as queueDB } from './database.js'
 import { worm } from './worm.js'
-
-import { updateInfoArrayMap, deleteOldInfoArray, infoArray } from './socket.js'
 
 const oneHours = 1000 * 60 * 60
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
