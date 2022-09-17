@@ -97,6 +97,9 @@ export default {
     guardPage() {
       return this.$route.path.includes('guard')
     },
+    secretPage() {
+      return this.$route.path.includes('secret')
+    },
     worm() {
       return this.info.worm
     },
@@ -113,7 +116,7 @@ export default {
         object.drop = this.info.rise
       }
 
-      if (this.livePage || this.guardPage) {
+      if (this.livePage || this.guardPage || this.secretPage) {
         if (this.info.guardNum) {
           object.guardNum = this.info.guardNum
         }
