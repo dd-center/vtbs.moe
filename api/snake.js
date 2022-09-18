@@ -8,7 +8,7 @@ const TEN_MINUTES = 10 * 60 * 1000
 const wasOnline = new Map()
 
 const online = (id, liveStatus) => {
-  wasOnline.delete(id)
+  wasOffline.delete(id)
   const now = Date.now()
   const data = { liveStatus, now }
 
