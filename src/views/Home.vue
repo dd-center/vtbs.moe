@@ -142,7 +142,6 @@ export default {
   },
   mounted() {
     this.intersectionObserver.observe(this.$refs.container)
-    //this.fetchSecretList()  只有测试的时候用，如果生产用就会导致每次每个页面加载都有这个，更优的解决方法写在上面的watch
   },
   destroyed() {
     this.resizeObserver.disconnect()

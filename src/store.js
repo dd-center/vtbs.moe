@@ -189,7 +189,7 @@ const x = new Vuex.Store({
   },
   actions: {
     fetchSecretList(context) {
-      return fetch("https://localhost:8001/v1/secret") //dev stage
+      return fetch("https://api.vtbs.moe/v1/secret") //dev stage
         .then((response) => response.json())
         .then((data) => {
           context.commit("setSecrets", data);
