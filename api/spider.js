@@ -85,8 +85,9 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
     await activeDB.put({ mid, num: recordNum, value: { archiveView, follower, time } })
   }
 
-  let { lastLive = {}, liveStatus } = info
+  let { lastLive = {} } = info
 
+  const liveStatus = !!online
   if (liveStatus) {
     lastLive = { online, time }
   }
