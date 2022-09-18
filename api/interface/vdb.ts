@@ -53,7 +53,19 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
       uuid: '9c1b7e15-a13a-51f3-88be-bd923b746474',
       type: 'vtuber',
       bot: false,
-      accounts: ['32472953', '697654195', '382651856', '1197454103', '471259688', '1636034895', '1340190821', '401742377', '161775300', '27534330', '33605910'].map(id => ({ id, type: 'official', platform: 'bilibili' })),
+      accounts: [
+        '32472953',
+        '697654195',
+        '382651856',
+        '1197454103',
+        '471259688',
+        '1636034895',
+        '1340190821',
+        '401742377',
+        '161775300',
+        '27534330',
+        '33605910'
+      ].map(id => ({ id, type: 'official', platform: 'bilibili' })),
       name: {
         en: "hide",
         default: "en"
