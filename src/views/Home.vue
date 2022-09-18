@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     ...mapState(['currentVtbs', 'cachedTime']),
-    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank','guardRank']),
+    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank','guardRank', 'secretRank']),
     baseHeight() {
       if (this.cacheAge) {
         return 57 + 86
@@ -90,6 +90,9 @@ export default {
       }
       if (this.$route.path.includes('guard')) {
         return this.guardRank
+      }
+      if (this.$route.path.includes('secret')) {
+        return this.secretRank
       }
       return this.followerRank
     },

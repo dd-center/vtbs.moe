@@ -55,6 +55,8 @@ const x = new Vuex.Store({
     followerRank: rank((state, a, b) => b.follower - a.follower),
     riseRank: rank((state, a, b) => b.rise - a.rise),
     guardRank: rank((state, a, b) => b.guardNum - a.guardNum),
+    //secretRank: secretRank((state, a, b) => b.follower - a.follower),
+    secretRank: rank((state, a, b) => b.follower - a.follower),
     liveRank(state, getters) {
       return getters.vtbs
         .map(({ mid }) => getters.info[mid] || { mid })
