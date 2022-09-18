@@ -87,7 +87,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
 
   let { lastLive = {} } = info
 
-  const liveStatus = !!online
+  const liveStatus = online ? 1 : 0
   if (liveStatus) {
     lastLive = { online, time }
   }
