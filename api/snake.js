@@ -1,5 +1,5 @@
 import { vdSocket } from './interface/vd.js'
-import { to, emit } from './interface/io.js'
+import { to, emit, updateInfoArrayMap } from './interface/io.js'
 
 import { info } from './database.js'
 
@@ -28,6 +28,7 @@ export default () => {
     online(mid, 1)
     let currentInfo = await info.get(mid)
     currentInfo = { ...currentInfo, liveStatus: 1 }
+    updateInfoArrayMap(mid, currentInfo)
     await info.put(mid, currentInfo)
     updatePending.add(mid)
     to(mid).emit(['detailInfo', { mid, data: currentInfo }])
@@ -36,6 +37,7 @@ export default () => {
     online(mid, 0)
     let currentInfo = await info.get(mid)
     currentInfo = { ...currentInfo, liveStatus: 0, online: 0 }
+    updateInfoArrayMap(mid, currentInfo)
     await info.put(mid, currentInfo)
     updatePending.add(mid)
     to(mid).emit(['detailInfo', { mid, data: currentInfo }])
@@ -44,6 +46,7 @@ export default () => {
     online(mid, 0)
     let currentInfo = await info.get(mid)
     currentInfo = { ...currentInfo, liveStatus: 0, online: 0 }
+    updateInfoArrayMap(mid, currentInfo)
     await info.put(mid, currentInfo)
     updatePending.add(mid)
     to(mid).emit(['detailInfo', { mid, data: currentInfo }])
@@ -64,6 +67,7 @@ export default () => {
         currentInfo = { ...currentInfo, online }
       }
     }
+    updateInfoArrayMap(mid, currentInfo)
     await info.put(mid, currentInfo)
     if (online > 1) {
       updatePending.add(mid)
@@ -78,6 +82,7 @@ export default () => {
     if (liveStatus) {
       updatePending.add(mid)
     }
+    updateInfoArrayMap(mid, currentInfo)
     await info.put(mid, currentInfo)
   })
   setInterval(async () => {
