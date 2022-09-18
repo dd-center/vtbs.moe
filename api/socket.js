@@ -13,7 +13,7 @@ const metaMap = new WeakMap()
 let lastOnlineUpdate = 0
 
 const fillInfoArray = async () => {
-  const mids = (await vdb.getPure()).map(({ mid }) => mid)
+  const mids = (await vdb.get()).map(({ mid }) => mid)
   const arrayPromise = await Promise.all(mids.map(mid => info.get(mid)))
   arrayPromise.filter(Boolean)
     .forEach(({ mid, ...newInfo }) => updateInfoArrayMapRaw(mid, { mid, ...newInfo }))

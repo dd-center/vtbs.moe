@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import card from '@/components/card'
 import moment from 'moment'
 
@@ -26,7 +26,14 @@ const SHOW = 16
 const threshold = Array(2000).fill(0).map((_, i) => 1 / 2000 * i)
 
 export default {
-  name: 'home',
+  name: 'home', 
+
+  methods: {
+    ...mapActions([
+      'fetchSecretList',
+    ]),
+  },
+
   data() {
     return {
       show: 32,
@@ -51,6 +58,12 @@ export default {
         }
       },
     },
+    secretPage: {
+      immediate: true,
+      async handler() {
+        await this.fetchSecretList();
+      }
+    }
   },
   computed: {
     ...mapState(['currentVtbs', 'cachedTime']),
@@ -129,6 +142,7 @@ export default {
   },
   mounted() {
     this.intersectionObserver.observe(this.$refs.container)
+    //this.fetchSecretList()  只有测试的时候用，如果生产用就会导致每次每个页面加载都有这个，更优的解决方法写在上面的watch
   },
   destroyed() {
     this.resizeObserver.disconnect()

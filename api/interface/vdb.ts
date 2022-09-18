@@ -38,17 +38,17 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
       uuid,
     }
   }))
-  .filter((_, index) => {
-    if (process.env.MOCK) { // 如果使用node api/mock来运行后端
-      return index < 5      // 返回少于5条数据
-    } else {
-      return true
-    }
-  })
+  // .filter((_, index) => {
+  //   if (process.env.MOCK) { // 如果使用node api/mock来运行后端
+  //     return index < 5      // 返回少于5条数据
+  //   } else {
+  //     return true
+  //   }
+  // })
 
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
   const body: VDB | void = await got('https://vdb.vtbs.moe/json/list.json').json<VDB>().catch(console.error)
-  const secretList = await got('https://raw.githubusercontent.com/dd-center/vtbs.moe/master/public/private.json').json().catch(console.error) as Array<string>
+  const secretList = await got('https://master.vtbs.moe/private.json').json().catch(console.error) as Array<string>
   //console.log(secretList)
   if (body) {
     body.vtbs.push({
