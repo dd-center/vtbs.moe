@@ -11,8 +11,10 @@ setDefaultHandler(
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-registerRoute(
-  /https:\/\/api\.vtbs\.moe/,
+registerRoute((w) => {
+    console.log('w', w)
+    return false
+  },
   new NetworkOnly()
 )
 
