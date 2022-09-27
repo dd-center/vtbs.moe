@@ -11,12 +11,7 @@ setDefaultHandler(
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-registerRoute((w) => {
-    console.log('w', w)
-    return false
-  },
-  new NetworkOnly()
-)
+registerRoute(({ url }) => url.pathname.includes('socket.io'), new NetworkOnly())
 
 registerRoute(
   /https:\/\/www\.google-analytics\.com/,
