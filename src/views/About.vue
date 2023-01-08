@@ -24,8 +24,8 @@
           <h4 class="title is-4">submit.vtbs.moe</h4>
           <h4 class="subtitle is-4">名单查漏补缺!</h4>
           <p>
-            提交新的虚拟主播，修改已有的虚拟主播:<br>
-            <a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
+            自助提交：<a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
+            或者邮件: simon3000@163.com<br>
             <br>
             <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer">github:dd-center/submit.vtbs.moe</a><br>
             <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/submit.vtbs.moe.svg?style=social"></a>
@@ -66,10 +66,8 @@
             宏观中视频势每 6 小时更新一次<br>
             宏观中词云每分钟更新一次<br>
             风云榜，24小时更新一次 <br>
-            名单查漏补缺: <a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
-            或者邮件: simon3000@163.com
+            急上升的数据是最近24小时内粉丝数变化，并非昨天一日的变化
             <br>
-            急上升的数据是过去24小时粉丝数变化，并不是昨天一天的变化
           </p>
           <hr>
           <a href="https://github.com/dd-center/vtbs.moe/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/vtbs.moe.svg?style=social"></a> <br>
@@ -101,6 +99,7 @@
           </div>
           <hr>
            <p>友情链接 <a href="https://xuehusang.cn/ " target="_blank">雪狐冰屋</a></p>
+           <p>如您要求删除自己的账号/社团信息，可随时邮件到simon3000@163.com</p>
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
@@ -112,7 +111,7 @@
             <p>Spiders: {{spiders}}</p>
             <p v-loading="!interval">Interval: {{interval}} ms</p>
             <p v-loading="!upMoment">Uptime: {{upMoment}}</p>
-            <p v-loading="!number">共收录VTB/VUP: {{number}} 个</p>
+            <p v-loading="!number">已收录虚拟主播/社团: {{number}} 个</p>
           </div>
           <progress v-else class="progress is-small" max="100"></progress>
           <p v-if="online">目前在线: {{online}}</p>
