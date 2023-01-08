@@ -26,6 +26,7 @@
           <p>
             自助提交：<a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
             或者邮件: simon3000@163.com<br>
+            请注意：只有经过人工复核后满足条件的用户会被收录
             <br>
             <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer">github:dd-center/submit.vtbs.moe</a><br>
             <a href="https://github.com/dd-center/submit.vtbs.moe/" target="_blank" rel="noopener noreferrer"><img alt="GitHub stars" src="https://img.shields.io/github/stars/dd-center/submit.vtbs.moe.svg?style=social"></a>
