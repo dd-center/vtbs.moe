@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@koa/router": "^8.0.8",
-    "@types/express-serve-static-core": "^4.17.33",
     "bili-api": "^1.8.1",
     "browser-level": "^1.0.1",
     "bulma": "^0.8.0",
@@ -48,6 +47,7 @@
     "@babel/core": "^7.8.0",
     "@babel/plugin-proposal-pipeline-operator": "^7.8.0",
     "@types/encoding-down": "^5.0.0",
+    "@types/express-serve-static-core": "^4.17.33",
     "@types/koa__router": "^8.0.2",
     "@types/leveldown": "^4.0.3",
     "@types/levelup": "^5.1.2",
