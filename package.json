@@ -17,7 +17,6 @@
     "bili-api": "^1.8.1",
     "browser-level": "^1.0.1",
     "bulma": "^0.8.0",
-    "caniuse-lite": "^1.0.30001380",
     "core-js": "^3.4.4",
     "cytoscape": "^3.13.0",
     "danmaku": "^2.0.0",
