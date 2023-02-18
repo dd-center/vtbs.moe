@@ -93,34 +93,29 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
       }
 
       if (e === 'vupMacroCompressed') {
-        socket.join('vupMacro', async () => {
-          const macroNum = await num.get('vupMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
-        })
+        socket.join('vupMacro')
+        const macroNum = await num.get('vupMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
       }
       if (e === 'vtbMacroCompressed') {
-        socket.join('vtbMacro', async () => {
-          const macroNum = await num.get('vtbMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
-        })
+        socket.join('vtbMacro')
+        const macroNum = await num.get('vtbMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
       }
       if (e === 'vtbMacroWeekCompressed') {
-        socket.join('vtbMacro', async () => {
-          const macroNum = await num.get('vtbMacroNum')
-          const skip = macroNum - 24 * 60 * 7 / 5
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
-        })
+        socket.join('vtbMacro')
+        const macroNum = await num.get('vtbMacroNum')
+        const skip = macroNum - 24 * 60 * 7 / 5
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
       }
       if (e === 'guardMacroCompressed') {
-        socket.join('guardMacro', async () => {
-          const macroNum = await num.get('guardMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'guard', num: macroNum }))
-        })
+        socket.join('guardMacro')
+        const macroNum = await num.get('guardMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'guard', num: macroNum }))
       }
       if (e === 'info') {
-        socket.join(target, async () => {
-          arc(await info.get(target))
-        })
+        socket.join(target)
+        arc(await info.get(target))
       }
       if (e === 'bulkActiveCompressed') {
         const { recordNum, mid } = target

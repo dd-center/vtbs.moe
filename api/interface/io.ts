@@ -1,13 +1,13 @@
 import cluster from 'node:cluster'
 import EventEmitter from 'node:events'
 
-import Server from 'socket.io'
+import { Server, BroadcastOperator } from 'socket.io'
 
 import * as vdb from './vdb.js'
 
 const ipcEvent = new EventEmitter()
 
-export const ioRaw = Server({ serveClient: false })
+export const ioRaw = new Server({ serveClient: false, allowEIO3: true })
 
 type Emit = [string, ...any[]]
 type To = string[]
@@ -66,7 +66,7 @@ export const emitInfoArray = () => {
 }
 
 const rawEmit = (emit: Emit, to: To) => {
-  let raw = ioRaw as unknown as Server.Namespace
+  let raw = ioRaw as typeof ioRaw | ReturnType<typeof ioRaw['to']>
   for (const id of to) {
     raw = raw.to(id)
   }
