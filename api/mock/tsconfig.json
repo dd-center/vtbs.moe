@@ -8,13 +8,15 @@
     "skipLibCheck": true
   },
   "include": [
-    "api",
-    "cdn.ts"
   ],
   "exclude": [
-    "api/mock"
   ],
   "references": [
-    { "path": "state-center" }
+    {
+      "path": "../../"
+    },
+    {
+      "path": "./Cluster-center"
+    }
   ]
 }
