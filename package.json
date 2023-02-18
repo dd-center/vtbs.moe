@@ -59,7 +59,7 @@
     "@vue/cli-plugin-pwa": "~5.0.0-beta.2",
     "@vue/cli-plugin-router": "^4.1.0",
     "@vue/cli-plugin-vuex": "^4.1.0",
-    "@vue/cli-service": "^4.5.11",
+    "@vue/cli-service": "^5.0.8",
     "copy-webpack-plugin": "^5.1.1",
     "git-revision-webpack-plugin": "^3.0.4",
     "sass": "^1.32.7",
