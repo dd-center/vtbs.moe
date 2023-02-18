@@ -1,4 +1,3 @@
-import got from 'got'
 import { Server } from 'socket.io'
 
 const SECRET_UUID = '9c1b7e15-a13a-51f3-88be-bd923b746474'
@@ -49,8 +48,8 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
   })
 
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
-  const body: VDB | void = await got('https://vdb.vtbs.moe/json/list.json').json<VDB>().catch(console.error)
-  const secretList = await got('https://master.vtbs.moe/private.json').json().catch(console.error) as Array<string>
+  const body: VDB | void = await fetch('https://vdb.vtbs.moe/json/list.json').then(w=>w.json()).catch(console.error)
+  const secretList = await fetch('https://master.vtbs.moe/private.json').then(w=>w.json()).catch(console.error) as string[]
   if (body) {
     body.vtbs.push({
       uuid: SECRET_UUID,
