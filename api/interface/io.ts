@@ -1,13 +1,18 @@
 import cluster from 'node:cluster'
 import EventEmitter from 'node:events'
 
-import { Server, BroadcastOperator } from 'socket.io'
+import { Server } from 'socket.io'
 
 import * as vdb from './vdb.js'
 
 const ipcEvent = new EventEmitter()
 
-export const ioRaw = new Server({ serveClient: false, allowEIO3: true })
+export const ioRaw = new Server({
+  serveClient: false, allowEIO3: true,
+  cors: {
+    origin: '*',
+  }
+})
 
 type Emit = [string, ...any[]]
 type To = string[]
