@@ -13,7 +13,7 @@ import { hawkEmitter } from './interface/state.js'
 import cdn from '../cdn.js'
 
 const cache = new LRU({
-  maxAge: 1000 * 5,
+  ttl: 1000 * 5,
   max: 100,
 })
 
