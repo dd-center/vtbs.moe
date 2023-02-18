@@ -10,7 +10,8 @@ const ipcEvent = new EventEmitter()
 export const ioRaw = new Server({
   serveClient: false, allowEIO3: true,
   cors: {
-    origin: '*',
+    origin: true,
+    credentials: true,
   }
 })
 
