@@ -49,7 +49,7 @@ const x = new Vuex.Store({
     },
     info(state) {
       return Object.keys(state.currentInfo).length ? state.currentInfo : state.cachedInfo
-    },    
+    },
     face(state) {
       return Object.keys(state.currentFace).length ? state.currentFace : state.cachedFace
     },
@@ -188,11 +188,14 @@ const x = new Vuex.Store({
     },
   },
   actions: {
-    fetchSecretList(context) {
+    fetchSecretList({ commit, state }) {
+      if (state.secretList.length) {
+        return
+      }
       return fetch("https://api.vtbs.moe/v1/secret") //dev stage
         .then((response) => response.json())
         .then((data) => {
-          context.commit("setSecrets", data);
+          commit("setSecrets", data);
           console.log(data);
         })
         .catch((err) => console.error(err));

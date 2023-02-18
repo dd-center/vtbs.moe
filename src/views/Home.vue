@@ -26,7 +26,7 @@ const SHOW = 16
 const threshold = Array(2000).fill(0).map((_, i) => 1 / 2000 * i)
 
 export default {
-  name: 'home', 
+  name: 'home',
 
   methods: {
     ...mapActions([
@@ -61,13 +61,15 @@ export default {
     secretPage: {
       immediate: true,
       async handler() {
-        await this.fetchSecretList();
+        if (this.secretPage) {
+          await this.fetchSecretList()
+        }
       }
     }
   },
   computed: {
     ...mapState(['currentVtbs', 'cachedTime']),
-    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank','guardRank', 'secretRank']),
+    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank', 'guardRank', 'secretRank']),
     baseHeight() {
       if (this.cacheAge) {
         return 57 + 86
@@ -90,6 +92,9 @@ export default {
       } else {
         return false
       }
+    },
+    secretPage() {
+      return this.$route.path.includes('secret')
     },
     rank: function() {
       if (this.$route.path.includes('live')) {
