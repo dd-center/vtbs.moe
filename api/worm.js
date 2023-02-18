@@ -1,5 +1,3 @@
-import got from 'got'
-
 import { waitStatePending } from './interface/state.js'
 import { biliAPI } from './interface/biliapi.js'
 import { emit } from './interface/io.js'
@@ -38,7 +36,7 @@ export const wormResult = () => wormArray
 
 export const worm = async ({ vtbs }) => {
   const mids = vtbs.map(({ mid }) => mid)
-  return Promise.all(await (await got('https://api.live.bilibili.com/room/v3/area/getRoomList?parent_area_id=9&sort_type=online&page=1&page_size=99').json()).data.list
+  return Promise.all(await (await fetch('https://api.live.bilibili.com/room/v3/area/getRoomList?parent_area_id=9&sort_type=online&page=1&page_size=99').then(w => w.json())).data.list
     .map(({ roomid, uid, uname, online, face, title }) => ({ roomid, mid: uid, uname, online, face, title }))
     .filter(({ mid }) => !mids.includes(mid))
     .filter((_, index) => {
