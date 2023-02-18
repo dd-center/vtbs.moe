@@ -106,6 +106,14 @@ export default () => {
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
   })
 
+  v1.get('/secret', async ctx => {
+    ctx.body = await vdb.getSecret()
+  })
+
+  v1.get('/secretInfo', async ctx => {
+    ctx.body = (await Promise.all((await vdb.getSecret()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
+  })
+
   v1.get('/fullInfo', async ctx => {
     const vdbTable = await vdb.getVdbTable();
     ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))

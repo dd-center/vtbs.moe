@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import card from '@/components/card'
 import moment from 'moment'
 
@@ -27,6 +27,13 @@ const threshold = Array(2000).fill(0).map((_, i) => 1 / 2000 * i)
 
 export default {
   name: 'home',
+
+  methods: {
+    ...mapActions([
+      'fetchSecretList',
+    ]),
+  },
+
   data() {
     return {
       show: 32,
@@ -51,10 +58,18 @@ export default {
         }
       },
     },
+    secretPage: {
+      immediate: true,
+      async handler() {
+        if (this.secretPage) {
+          await this.fetchSecretList()
+        }
+      }
+    }
   },
   computed: {
     ...mapState(['currentVtbs', 'cachedTime']),
-    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank','guardRank', 'secretRank']),
+    ...mapGetters(['vtbs', 'followerRank', 'liveRank', 'riseRank', 'guardRank', 'secretRank']),
     baseHeight() {
       if (this.cacheAge) {
         return 57 + 86
@@ -77,6 +92,9 @@ export default {
       } else {
         return false
       }
+    },
+    secretPage() {
+      return this.$route.path.includes('secret')
     },
     rank: function() {
       if (this.$route.path.includes('live')) {

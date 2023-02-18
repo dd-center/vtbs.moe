@@ -1,6 +1,8 @@
 import got from 'got'
 import { Server } from 'socket.io'
 
+const SECRET_UUID = '9c1b7e15-a13a-51f3-88be-bd923b746474'
+
 let vdb: VDB
 let vdbTable: ReturnType<typeof vtb2Table>
 let vtbs: ReturnType<typeof vtb2moe>
@@ -39,8 +41,8 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
     }
   }))
   .filter((_, index) => {
-    if (process.env.MOCK) {
-      return index < 5
+    if (process.env.MOCK) { // 如果使用node api/mock来运行后端
+      return index < 5      // 返回少于5条数据
     } else {
       return true
     }
@@ -48,24 +50,13 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
 
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
   const body: VDB | void = await got('https://vdb.vtbs.moe/json/list.json').json<VDB>().catch(console.error)
+  const secretList = await got('https://master.vtbs.moe/private.json').json().catch(console.error) as Array<string>
   if (body) {
     body.vtbs.push({
-      uuid: '9c1b7e15-a13a-51f3-88be-bd923b746474',
+      uuid: SECRET_UUID,
       type: 'vtuber',
       bot: false,
-      accounts: [
-        '32472953',
-        '697654195',
-        '382651856',
-        '1197454103',
-        '471259688',
-        '1636034895',
-        '1340190821',
-        '401742377',
-        '161775300',
-        '27534330',
-        '33605910'
-      ].map(id => ({ id, type: 'official', platform: 'bilibili' })),
+      accounts: secretList.map(id => ({ id, type: 'official', platform: 'bilibili' })),
       name: {
         en: "hide",
         default: "en"
@@ -109,7 +100,8 @@ export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => Retur
   }
 }
 
-export const getPure = async () => (await get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
+export const getPure = async () => (await get()).filter(({ uuid }) => uuid !== SECRET_UUID)
+export const getSecret = async () => (await get()).filter(({ uuid }) => uuid === SECRET_UUID)
 
 export const getVdbTable = async () => {
   if (vdbTable) {

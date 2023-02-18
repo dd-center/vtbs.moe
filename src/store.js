@@ -23,6 +23,7 @@ const x = new Vuex.Store({
     online: 0,
     currentVtbs: [],
     cachedVtbs: [],
+    secretList: [],
     currentInfo: {},
     cachedInfo: {},
     cachedTime: 0,
@@ -55,8 +56,6 @@ const x = new Vuex.Store({
     followerRank: rank((state, a, b) => b.follower - a.follower),
     riseRank: rank((state, a, b) => b.rise - a.rise),
     guardRank: rank((state, a, b) => b.guardNum - a.guardNum),
-    //secretRank: secretRank((state, a, b) => b.follower - a.follower),
-    secretRank: rank((state, a, b) => b.follower - a.follower),
     liveRank(state, getters) {
       return getters.vtbs
         .map(({ mid }) => getters.info[mid] || { mid })
@@ -78,11 +77,20 @@ const x = new Vuex.Store({
           return 100000000000 * (liveDifference + roomDifference + liveStatus) + 1000000 * guardDifference + b.follower - a.follower
         })
     },
+    secretRank(state, getters) {
+      console.log(state.secretList)
+      return state.secretList
+        .map(({ mid }) => getters.info[mid] || { mid })
+        .sort((a, b) => ((b.follower || 0) - (a.follower || 0)))
+    },
   },
   mutations: {
     SOCKET_vtbs(state, data) {
       cache.put('vdb', data)
       state.currentVtbs = [...data]
+    },
+    setSecrets(state, secretdata) {
+      state.secretList = [...secretdata];
     },
     loadCache(state, { vdb, info, time, face }) {
       if (vdb) {
@@ -179,7 +187,20 @@ const x = new Vuex.Store({
       }
     },
   },
-  actions: {},
+  actions: {
+    fetchSecretList({ commit, state }) {
+      if (state.secretList.length) {
+        return
+      }
+      return fetch("https://api.vtbs.moe/v1/secret") //dev stage
+        .then((response) => response.json())
+        .then((data) => {
+          commit("setSecrets", data);
+          console.log(data);
+        })
+        .catch((err) => console.error(err));
+    }
+  },
 })
 
 window.x = x
