@@ -60,11 +60,6 @@ export default new Router({
     path: '/about',
     name: 'about',
     component: About,
-  },
-  {
-    path: '/secret',
-    name: 'secret',
-    component: Home,
   }, {
     path: '/dev',
     /* beautify ignore:start */

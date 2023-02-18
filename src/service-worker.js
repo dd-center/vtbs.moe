@@ -11,10 +11,8 @@ setDefaultHandler(
 
 precacheAndRoute(self.__WB_MANIFEST)
 
-registerRoute(
-  /https:\/\/api\.vtbs\.moe/,
-  new NetworkOnly()
-)
+registerRoute(({ url }) => url.pathname.includes('socket.io'), new NetworkOnly())
+registerRoute(({ url }) => url.pathname.includes('ads/ga'), new NetworkOnly())
 
 registerRoute(
   /https:\/\/www\.google-analytics\.com/,

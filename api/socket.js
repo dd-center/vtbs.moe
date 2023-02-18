@@ -93,34 +93,29 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
       }
 
       if (e === 'vupMacroCompressed') {
-        socket.join('vupMacro', async () => {
-          const macroNum = await num.get('vupMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
-        })
+        socket.join('vupMacro')
+        const macroNum = await num.get('vupMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vup', num: macroNum }))
       }
       if (e === 'vtbMacroCompressed') {
-        socket.join('vtbMacro', async () => {
-          const macroNum = await num.get('vtbMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
-        })
+        socket.join('vtbMacro')
+        const macroNum = await num.get('vtbMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: macroNum }))
       }
       if (e === 'vtbMacroWeekCompressed') {
-        socket.join('vtbMacro', async () => {
-          const macroNum = await num.get('vtbMacroNum')
-          const skip = macroNum - 24 * 60 * 7 / 5
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
-        })
+        socket.join('vtbMacro')
+        const macroNum = await num.get('vtbMacroNum')
+        const skip = macroNum - 24 * 60 * 7 / 5
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'vtb', num: Math.min(24 * 60 * 7 / 5, macroNum), skip: Math.max(0, skip) }))
       }
       if (e === 'guardMacroCompressed') {
-        socket.join('guardMacro', async () => {
-          const macroNum = await num.get('guardMacroNum')
-          arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'guard', num: macroNum }))
-        })
+        socket.join('guardMacro')
+        const macroNum = await num.get('guardMacroNum')
+        arcTimeSeriesDeflate(await macro.bulkGet({ mid: 'guard', num: macroNum }))
       }
       if (e === 'info') {
-        socket.join(target, async () => {
-          arc(await info.get(target))
-        })
+        socket.join(target)
+        arc(await info.get(target))
       }
       if (e === 'bulkActiveCompressed') {
         const { recordNum, mid } = target
@@ -162,24 +157,19 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     metaMap.set(socket, { ...metaMap.get(socket), cdn })
   })
 
-  io.clients((error, clients) => {
-    if (error) {
-      console.error(error)
-    }
-    const now = Date.now()
-    if (now - lastOnlineUpdate > 1000) {
-      lastOnlineUpdate = now
-      io.emit('online', clients.length)
-    } else {
-      const n = lastOnlineUpdate
-      setTimeout(() => {
-        if (n === lastOnlineUpdate) {
-          io.emit('online', clients.length)
-        }
-        lastOnlineUpdate = Date.now()
-      }, 1000)
-    }
-  })
+  const now = Date.now()
+  if (now - lastOnlineUpdate > 1000) {
+    lastOnlineUpdate = now
+    io.emit('online', io.engine.clientsCount)
+  } else {
+    const n = lastOnlineUpdate
+    setTimeout(() => {
+      if (n === lastOnlineUpdate) {
+        io.emit('online', io.engine.clientsCount)
+      }
+      lastOnlineUpdate = Date.now()
+    }, 1000)
+  }
 
   console.log('a user connected')
   handler('new')
@@ -201,16 +191,12 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     }
   })
   socket.on('disconnect', () => {
-    io.clients((error, clients) => {
-      if (error) {
-        console.error(error)
-      }
-      const now = Date.now()
-      if (now - lastOnlineUpdate > 1000) {
-        lastOnlineUpdate = now
-        io.emit('online', clients.length)
-      }
-    })
+    const count = io.engine.clientsCount
+    const now = Date.now()
+    if (now - lastOnlineUpdate > 1000) {
+      lastOnlineUpdate = now
+      io.emit('online', count)
+    }
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)

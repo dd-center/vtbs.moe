@@ -1,13 +1,19 @@
 import cluster from 'node:cluster'
 import EventEmitter from 'node:events'
 
-import Server from 'socket.io'
+import { Server } from 'socket.io'
 
 import * as vdb from './vdb.js'
 
 const ipcEvent = new EventEmitter()
 
-export const ioRaw = Server({ serveClient: false })
+export const ioRaw = new Server({
+  serveClient: false, allowEIO3: true,
+  cors: {
+    origin: true,
+    credentials: true,
+  }
+})
 
 type Emit = [string, ...any[]]
 type To = string[]
@@ -23,6 +29,7 @@ type Message = {
   }
   info?: Info
   deleteOld?: boolean
+  emitInfoArray?: boolean
 }
 
 const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }: any) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
@@ -55,10 +62,17 @@ export const deleteOldInfoArray = async () => {
 }
 export const infoArray = () => [...infoArrayMap.values()]
 
+const emitInfoArrayRaw = () => rawEmit(['info', infoArray()], [])
 
+export const emitInfoArray = () => {
+  emitInfoArrayRaw()
+  if (cluster.isPrimary) {
+    dispatch({ emitInfoArray: true })
+  }
+}
 
 const rawEmit = (emit: Emit, to: To) => {
-  let raw = ioRaw as unknown as Server.Namespace
+  let raw = ioRaw as typeof ioRaw | ReturnType<typeof ioRaw['to']>
   for (const id of to) {
     raw = raw.to(id)
   }
@@ -74,7 +88,7 @@ if (cluster.isPrimary) {
     dispatch(message)
   })
 } else {
-  process.on('message', async ({ io, info, deleteOld }: Message) => {
+  process.on('message', async ({ io, info, deleteOld, emitInfoArray }: Message) => {
     if (io) {
       const { emit, to } = io
       rawEmit(emit, to)
@@ -85,6 +99,9 @@ if (cluster.isPrimary) {
     }
     if (deleteOld) {
       await deleteOldInfoArrayRaw()
+    }
+    if (emitInfoArray) {
+      emitInfoArrayRaw()
     }
   })
 }

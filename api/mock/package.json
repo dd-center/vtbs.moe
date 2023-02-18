@@ -1,0 +1,19 @@
+{
+  "name": "mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "npm run tsc",
+    "tsc": "npx tsc -b",
+    "dev": "npx tsc -b -w"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cluster-center": "file:Cluster-center",
+    "ddatnodejs": "file:DDatHome-nodejs",
+    "state-center": "file:../../state-center"
+  }
+}
