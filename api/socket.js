@@ -157,24 +157,19 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     metaMap.set(socket, { ...metaMap.get(socket), cdn })
   })
 
-  io.clients((error, clients) => {
-    if (error) {
-      console.error(error)
-    }
-    const now = Date.now()
-    if (now - lastOnlineUpdate > 1000) {
-      lastOnlineUpdate = now
-      io.emit('online', clients.length)
-    } else {
-      const n = lastOnlineUpdate
-      setTimeout(() => {
-        if (n === lastOnlineUpdate) {
-          io.emit('online', clients.length)
-        }
-        lastOnlineUpdate = Date.now()
-      }, 1000)
-    }
-  })
+  const now = Date.now()
+  if (now - lastOnlineUpdate > 1000) {
+    lastOnlineUpdate = now
+    io.emit('online', io.engine.clientsCount)
+  } else {
+    const n = lastOnlineUpdate
+    setTimeout(() => {
+      if (n === lastOnlineUpdate) {
+        io.emit('online', io.engine.clientsCount)
+      }
+      lastOnlineUpdate = Date.now()
+    }, 1000)
+  }
 
   console.log('a user connected')
   handler('new')
@@ -196,16 +191,12 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     }
   })
   socket.on('disconnect', () => {
-    io.clients((error, clients) => {
-      if (error) {
-        console.error(error)
-      }
-      const now = Date.now()
-      if (now - lastOnlineUpdate > 1000) {
-        lastOnlineUpdate = now
-        io.emit('online', clients.length)
-      }
-    })
+    const count = io.engine.clientsCount
+    const now = Date.now()
+    if (now - lastOnlineUpdate > 1000) {
+      lastOnlineUpdate = now
+      io.emit('online', count)
+    }
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
