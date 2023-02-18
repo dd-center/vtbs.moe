@@ -1,6 +1,8 @@
 import got from 'got'
 import { Server } from 'socket.io'
 
+const SECRET_UUID = '9c1b7e15-a13a-51f3-88be-bd923b746474'
+
 let vdb: VDB
 let vdbTable: ReturnType<typeof vtb2Table>
 let vtbs: ReturnType<typeof vtb2moe>
@@ -51,7 +53,7 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
   const secretList = await got('https://master.vtbs.moe/private.json').json().catch(console.error) as Array<string>
   if (body) {
     body.vtbs.push({
-      uuid: '9c1b7e15-a13a-51f3-88be-bd923b746474',
+      uuid: SECRET_UUID,
       type: 'vtuber',
       bot: false,
       accounts: secretList.map(id => ({ id, type: 'official', platform: 'bilibili' })),
@@ -98,8 +100,8 @@ export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => Retur
   }
 }
 
-export const getPure = async () => (await get()).filter(({ uuid }) => uuid !== '9c1b7e15-a13a-51f3-88be-bd923b746474')
-export const getSecret = async () => (await get()).filter(({ uuid }) => uuid === '9c1b7e15-a13a-51f3-88be-bd923b746474')
+export const getPure = async () => (await get()).filter(({ uuid }) => uuid !== SECRET_UUID)
+export const getSecret = async () => (await get()).filter(({ uuid }) => uuid === SECRET_UUID)
 
 export const getVdbTable = async () => {
   if (vdbTable) {
