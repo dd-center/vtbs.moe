@@ -99,8 +99,11 @@
             <br>
           </div>
           <hr>
-           <p>友情链接 <a href="https://xuehusang.cn/ " target="_blank">雪狐冰屋</a></p>
-           <p>如您要求删除自己的账号/社团信息，可随时邮件到simon3000@163.com</p>
+          <p class="friends">友情链接
+            <a href="https://xuehusang.cn/ " target="_blank">雪狐冰屋</a>
+            <a href="https://laplace.live/" target="_blank">LAPLACE 花园</a>
+          </p>
+          <p>如您要求删除自己的账号/社团信息，可随时邮件到simon3000@163.com</p>
         </div>
         <div class="column">
           <h3 class="title">api.vtbs.moe</h3>
@@ -168,11 +171,11 @@ export default {
       /* beautify ignore:start */
       return this.currentVtbs?.length
       /* beautify ignore:end */
-    },    
+    },
     fastLoad: function() {
       return this.spiderDuration < this.interval * 2;
     },
-    slowLoad: function () {
+    slowLoad: function() {
       return this.spiderDuration >= this.interval * 2;
     },
     spiderProgress() {
@@ -238,3 +241,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.friends>a {
+  margin-right: 6px;
+}
+</style>
