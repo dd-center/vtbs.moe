@@ -99,11 +99,11 @@ export default () => {
   const v1 = new Router({ prefix: '/v1' })
 
   v1.get('/vtbs', async ctx => {
-    ctx.body = await vdb.get()
+    ctx.body = await vdb.getPure()
   })
 
   v1.get('/info', async ctx => {
-    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
+    ctx.body = (await Promise.all((await vdb.getPure()).map(({ mid }: { mid: number }) => info.get(mid)))).filter(Boolean)
   })
 
   v1.get('/secret', async ctx => {
@@ -116,13 +116,13 @@ export default () => {
 
   v1.get('/fullInfo', async ctx => {
     const vdbTable = await vdb.getVdbTable();
-    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
+    ctx.body = (await Promise.all((await vdb.getPure()).map(({ mid }: { mid: number }) => info.get(mid))))
       .filter(Boolean)
       .map(({ uuid, ...rest }) => ({ ...rest, uuid, vdb: vdbTable[uuid] }))
   })
 
   v1.get('/short', async ctx => {
-    ctx.body = (await Promise.all((await vdb.get()).map(({ mid }: { mid: number }) => info.get(mid))))
+    ctx.body = (await Promise.all((await vdb.getPure()).map(({ mid }: { mid: number }) => info.get(mid))))
       .filter(Boolean)
       .map(({ mid, uname, roomid }) => ({ mid, uname, roomid }))
   })
@@ -261,7 +261,7 @@ export default () => {
   endpoint.get('/vtbs', async ctx => {
     ctx.body = {
       ...endpointSchema,
-      message: String((await vdb.get()).length),
+      message: String((await vdb.getPure()).length),
       label: 'vtubers',
       color: 'blue',
     }
@@ -288,7 +288,7 @@ export default () => {
   // })
 
   endpoint.get('/live', async ctx => {
-    let vtbs = [...await vdb.get()]
+    let vtbs = [...await vdb.getPure()]
     let liveStatusSum = (await Promise.all([...vtbs
       .map(({ mid }) => info.get(mid))
       .map(async promise => (await promise || {}).liveStatus || 0)]))
@@ -302,7 +302,7 @@ export default () => {
   })
 
   endpoint.get('/onlineSum', async ctx => {
-    let vtbs = [...await vdb.get()]
+    let vtbs = [...await vdb.getPure()]
     let onlineSum = (await Promise.all([...vtbs
       .map(({ mid }) => info.get(mid))
       .map(async promise => (await promise || {}).online || 0)]))
