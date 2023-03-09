@@ -25,6 +25,7 @@
           <h4 class="subtitle is-4">名单查漏补缺!</h4>
           <p>
             自助提交：<a href="https://submit.vtbs.moe" target="_blank" rel="noopener noreferrer">https://submit.vtbs.moe</a><br>
+            如何正确提交：<a href="https://docs.vtbs.top" target="_blank" rel="noopener noreferrer">https://docs.vtbs.top</a><br>
             或者邮件: simon3000@163.com<br>
             请注意：只有经过人工复核后满足条件的用户会被收录
             <br>
