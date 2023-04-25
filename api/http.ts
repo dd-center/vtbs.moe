@@ -84,6 +84,7 @@ export default () => {
   app.use(async (ctx, next) => {
     const hit = cache.get(ctx.url)
     ctx.set('Access-Control-Allow-Origin', '*')
+    console.log('http', hit ? 'hit' : 'miss', ctx.url)
     if (hit) {
       ctx.body = hit
     } else {
