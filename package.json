@@ -67,7 +67,7 @@
     "vue-template-compiler": "^2.5.21",
     "webpack": "^4.41.5",
     "worker-loader": "^2.0.0",
-    "zrender": "^4.2.0"
+    "zrender": "^5.4.3"
   },
   "engines": {
     "node": ">=13"
