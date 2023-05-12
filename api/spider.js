@@ -2,7 +2,7 @@
 import * as vdb from './interface/vdb.js'
 import { biliAPI } from './interface/biliapi.js'
 import { waitStatePending } from './interface/state.js'
-import { emit, to, emitInfoArray, updateInfoArrayMap, deleteOldInfoArray } from './interface/io.js'
+import { emit, to, emitInfoArray, updateInfoArrayMap, deleteOldInfoArray, setWormArray } from './interface/io.js'
 import { info as infoDB, roomidMap, active as activeDB, guard as guardDB, guardType as guardTypeDB, status as statusDB, queue as queueDB } from './database.js'
 import { worm } from './worm.js'
 
@@ -211,7 +211,10 @@ export default async ({ INTERVAL }) => {
     emitInfoArray()
 
     worm({ vtbs: await vdb.get() })
-      .then(wormArray => emit(['worm', wormArray]))
+      .then(wormArray => {
+        setWormArray(wormArray)
+        emit(['worm', wormArray])
+      })
 
     const endTime = Date.now()
     lastUpdate = endTime

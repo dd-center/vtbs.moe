@@ -2,10 +2,6 @@ import { waitStatePending } from './interface/state.js'
 import { biliAPI } from './interface/biliapi.js'
 import { emit } from './interface/io.js'
 
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-let wormArray = []
-
 const round = async ({ vtb }, retry = 0) => {
   const log = log => (output => {
     console.log(output)
@@ -31,8 +27,6 @@ const round = async ({ vtb }, retry = 0) => {
 
   return info
 }
-
-export const wormResult = () => wormArray
 
 export const worm = async ({ vtbs }) => {
   const mids = vtbs.map(({ mid }) => mid)

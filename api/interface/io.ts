@@ -22,6 +22,11 @@ type Info = {
   newInfo: any
 }
 
+type ShareDB = {
+  key: string
+  value: any
+}
+
 type Message = {
   io?: {
     emit: Emit
@@ -30,7 +35,26 @@ type Message = {
   info?: Info
   deleteOld?: boolean
   emitInfoArray?: boolean
+  sharedDB?: ShareDB
 }
+
+const sharedDB = new Map()
+
+const rawSetSharedDB = (key: string, value: any) => sharedDB.set(key, value)
+
+const setSharedDB = (key: string, value: any) => {
+  if (cluster.isPrimary) {
+    rawSetSharedDB(key, value)
+    dispatch({ sharedDB: { key, value } })
+  } else {
+    ipcEvent.emit('shareDB', { key, value })
+  }
+}
+
+const getSharedDB = (key: string) => sharedDB.get(key)
+
+export const setWormArray = (value: any) => setSharedDB('wormArray', value)
+export const getWormArray = () => getSharedDB('wormArray')
 
 const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }: any) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
 
@@ -87,8 +111,11 @@ if (cluster.isPrimary) {
     const message: Message = { io }
     dispatch(message)
   })
+  ipcEvent.on('shareDB', ({ key, value }: ShareDB) => {
+    setSharedDB(key, value)
+  })
 } else {
-  process.on('message', async ({ io, info, deleteOld, emitInfoArray }: Message) => {
+  process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB }: Message) => {
     if (io) {
       const { emit, to } = io
       rawEmit(emit, to)
@@ -102,6 +129,10 @@ if (cluster.isPrimary) {
     }
     if (emitInfoArray) {
       emitInfoArrayRaw()
+    }
+    if (sharedDB) {
+      const { key, value } = sharedDB
+      rawSetSharedDB(key, value)
     }
   })
 }

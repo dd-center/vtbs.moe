@@ -2,9 +2,8 @@ import { deflate } from 'zlib'
 import { promisify } from 'util'
 
 import * as vdb from './interface/vdb.js'
-import { ioRaw as io, updateInfoArrayMapRaw, infoArray } from './interface/io.js'
+import { ioRaw as io, updateInfoArrayMapRaw, infoArray, getWormArray } from './interface/io.js'
 import { site, active, guard, fullGuard, guardType, status, macro, num, info } from './database.js'
-import { wormResult } from './worm.js'
 
 const deflateAsync = promisify(deflate)
 
@@ -204,7 +203,7 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
   socket.emit('vtbs', vtbs)
   socket.emit('info', infoArray())
 
-  socket.emit('worm', wormResult())
+  socket.emit('worm', getWormArray())
 
   for (let i = 0; i < PARALLEL; i++) {
     socket.emit('spiderUpdate', await site.get({ mid: 'spider', num: i }))
