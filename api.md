@@ -2,6 +2,13 @@
 
 vtbs.moe does provide some public APIs. Please do not abuse.
 
+## 免责声明
+
+禁止利用 vdb 与 vtbs.moe 的开放数据与开放接口侵犯他人权益。如有任何纠纷，责任自负，vdb 与 vtbs.moe 相关团队成员不负任何责任。
+侵犯他人权益的行为可能包括以下内容，若您的业务存在这些内容，我们建议您立刻核查处理：
+- 获取、储存、公开用户或主播的收益、消费、评论、弹幕、入场等信息。
+- 分析用户或主播的行为，或借此发布舆论导致用户或主播名誉受损。
+
 CDN:
 
 `api.vtbs.moe` aws
