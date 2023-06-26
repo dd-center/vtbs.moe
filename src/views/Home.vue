@@ -135,7 +135,7 @@ export default {
     this.intersectionObserver = new IntersectionObserver(([{ intersectionRatio }]) => {
       this.ratio = intersectionRatio
     }, {
-      rootMargin: '999999px 0px -150% 0px',
+      rootMargin: '99999999px 0px -150% 0px',
       root: null,
       threshold,
     })
