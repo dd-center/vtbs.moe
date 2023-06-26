@@ -115,16 +115,11 @@ export default {
       return this.followerRank
     },
     preRank() {
-      // 临时变量, 存储将要展示的主播列表
-      let temRank = this.rank
-      if (this.search) {
-        temRank = temRank.filter(i => {
-          if (((this.$store.getters.info[i.mid] || {}).uname || []).includes(this.search)) {
-            return true
-          }
-        })
+      const keys = this.search.toLowerCase().split(' ').filter(Boolean)
+      if (keys.length) {
+        return this.rank.filter(i => keys.every(key => ((this.$store.getters.info[i.mid] || {}).uname || []).toLowerCase().includes(key)))
       }
-      return temRank
+      return this.rank
     },
     rankLimit: function() {
       return this.preRank
