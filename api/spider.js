@@ -211,6 +211,7 @@ export default async ({ INTERVAL }) => {
     emitInfoArray()
 
     worm({ vtbs: await vdb.get() })
+      .then(wormArray => wormArray.filter(Boolean))
       .then(wormArray => {
         setWormArray(wormArray)
         emit(['worm', wormArray])
