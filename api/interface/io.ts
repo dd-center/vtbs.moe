@@ -54,7 +54,7 @@ const setSharedDB = (key: string, value: any) => {
 const getSharedDB = (key: string) => sharedDB.get(key)
 
 export const setWormArray = (value: any) => setSharedDB('wormArray', value)
-export const getWormArray = () => getSharedDB('wormArray')
+export const getWormArray = () => getSharedDB('wormArray') || []
 
 const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }: any) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
 
