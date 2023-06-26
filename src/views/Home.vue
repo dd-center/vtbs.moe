@@ -1,6 +1,6 @@
 <template>
 <div class="column is-gapless gap">
-  <input class="input search is-rounded vtb-search" v-model="search" type="text" placeholder="查找主播~">
+  <input class="input search is-rounded vtb-search" :value="search" @change="search = $event.target.value" type="text" placeholder="查找主播~">
   <div class="columns">
     <div class="column vtb-column"></div>
     <div class="column is-full-mobile is-11-tablet is-10-desktop is-three-fifths-widescreen is-7-fullhd" :style="{height: sumHeight}" ref="container">
