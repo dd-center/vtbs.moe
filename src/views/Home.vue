@@ -117,12 +117,7 @@ export default {
     preRank() {
       const keys = this.search.toLowerCase().split(' ').filter(Boolean)
       if (keys.length) {
-        return this.rank.filter((i, a) => {
-          const mid = i.mid
-          const { uname = '' } = this.$store.getters.info[mid] || {}
-          const content = `${mid}${uname}`.toLowerCase()
-          return keys.every(key => content.includes(key))
-        })
+        return this.rank.filter(i => keys.every(key => ((this.$store.getters.info[i.mid] || {}).uname || []).toLowerCase().includes(key)))
       }
       return this.rank
     },
