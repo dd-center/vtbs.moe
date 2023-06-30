@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import VueAnalytics from 'vue-analytics'
+import VueGtag from "vue-gtag"
 import VueSocketIO from 'vue-socket.io'
 import './registerServiceWorker'
 
@@ -16,12 +16,10 @@ moment.locale('zh-cn')
 
 Vue.config.productionTip = false
 Vue.config.devtools = true;
-if (process.env.NODE_ENV === 'production') {
-  Vue.use(VueAnalytics, {
-    id: 'UA-123973162-4',
-    router,
-  })
-}
+
+Vue.use(VueGtag, {
+  config: { id: 'G-G0XP64L5G7' }
+}, router)
 
 Vue.use(new VueSocketIO({
   // debug: process.env.NODE_ENV === 'development',
