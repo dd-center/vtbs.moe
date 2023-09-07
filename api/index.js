@@ -19,11 +19,20 @@ import httpAPI from './http.js'
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 if (cluster.isPrimary) {
   console.log('starting spider')
   spider({ INTERVAL })
   ant({ INTERVAL })
-  cluster.fork()
+  let worker = cluster.fork()
+  while (true) {
+    await wait(1000)
+    if (worker.isDead()) {
+      console.log('worker died')
+      worker = cluster.fork()
+    }
+  }
 } else {
   console.log('oh no, I am a worker')
   stateSocket.on('log', log => ioRaw.to('state').emit('stateLog', log))
