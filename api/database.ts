@@ -14,6 +14,9 @@ class LevelDatabase {
   get(key: any) {
     return this.db.get(`${this.name}_${key}`).catch(() => undefined)
   }
+  values() {
+    return this.db.values({ gte: `${this.name}_`, lte: `${this.name}_\xff` })
+  }
 }
 
 class SubLevelDatabase<K = any, V = any> {
