@@ -59,7 +59,7 @@ const core = ({ INTERVAL, log }, retry = 0) => async vtb => {
 
   const object = await coreFetch({ vtb }).catch(console.error)
   if (!object) {
-    if (retry > 5) {
+    if (retry > 0) {
       log(`SKIP RETRY: ${vtb.mid}`)
       return vtb.mid
     } else {
