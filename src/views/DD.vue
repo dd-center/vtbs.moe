@@ -1,7 +1,13 @@
 <template>
 <div class="container padding">
   <progress v-if="!rank.length" class="progress" max="100"></progress>
-  <d :dd="dd" v-for="dd in rankLimit" :key="dd.mid"></d>
+  <virtual-list
+    :item-style="{'margin-bottom':'24px'}"
+    :data-key="'mid'"
+    :data-sources="rank"
+    :data-component="dComp"
+    page-mode
+  />
   <div v-if="!all && allDisplay" class="has-text-centered">
     <hr>
     <p>想要看完整列表? 可能会卡哦</p>
@@ -12,8 +18,10 @@
 </template>
 
 <script>
+import VirtualList from 'vue-virtual-scroll-list'
 import { get } from '@/socket'
 import d from '@/components/d'
+import dVirtualItem from '@/components/dVirtualItem'
 
 import moment from 'moment'
 
@@ -25,24 +33,17 @@ export default {
       loading: false,
       time: undefined,
       show: 64,
+      dComp: dVirtualItem
     }
+  },
+  components: {
+    'virtual-list': VirtualList
   },
   async created() {
     if (!Object.keys(this.dds).length) {
       this.time = await get('fullGuard', 'time')
       this.dds = await get('fullGuard', 'some')
     }
-  },
-  mounted() {
-    this.$nextTick(function() {
-      document.onscroll = () => {
-        if (document.body.clientHeight - window.scrollY - window.innerHeight < (document.body.clientHeight / this.show * 64) && this.rank.length) {
-          if (!this.allDisplay) {
-            this.show += 32
-          }
-        }
-      }
-    })
   },
   destroyed() {
     document.onscroll = null
@@ -55,9 +56,9 @@ export default {
         .map(dd => ({ ...dd, power: dd.dd[0].length * 100 + dd.dd[1].length * 10 + dd.dd[2].length }))
         .sort((a, b) => b.power - a.power)
     },
-    rankLimit() {
-      return this.rank.filter((g, index) => index < this.show)
-    },
+    // rankLimit() {
+    //   return this.rank.filter((g, index) => index < this.show)
+    // },
     lastUpdate() {
       if (this.time) {
         return moment(this.time).format('M月D日 H:M')
