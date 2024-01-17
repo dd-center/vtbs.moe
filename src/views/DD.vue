@@ -8,9 +8,9 @@
     :data-component="dComp"
     page-mode
   />
-  <div v-if="!all && allDisplay" class="has-text-centered">
+  <div v-if="!all" class="has-text-centered">
     <hr>
-    <p>想要看完整列表? 可能会卡哦</p>
+    <p>想要看完整列表? </p>
     <button class="button is-primary is-outlined is-rounded" @click="loadAll" :disabled="loading">看!</button>
   </div>
   <p v-if="lastUpdate">上次更新: {{lastUpdate}}</p>
@@ -32,7 +32,6 @@ export default {
       all: false,
       loading: false,
       time: undefined,
-      show: 64,
       dComp: dVirtualItem
     }
   },
@@ -45,9 +44,6 @@ export default {
       this.dds = await get('fullGuard', 'some')
     }
   },
-  destroyed() {
-    document.onscroll = null
-  },
   computed: {
     rank: function() {
       let dds = { ...this.dds }
@@ -56,17 +52,11 @@ export default {
         .map(dd => ({ ...dd, power: dd.dd[0].length * 100 + dd.dd[1].length * 10 + dd.dd[2].length }))
         .sort((a, b) => b.power - a.power)
     },
-    // rankLimit() {
-    //   return this.rank.filter((g, index) => index < this.show)
-    // },
     lastUpdate() {
       if (this.time) {
         return moment(this.time).format('M月D日 H:M')
       }
       return undefined
-    },
-    allDisplay() {
-      return this.show >= this.rank.length
     },
   },
   methods: {
@@ -74,7 +64,6 @@ export default {
       this.loading = true
       this.dds = await get('fullGuard', 'all')
       this.all = true
-      this.show = Infinity
     },
   },
   components: {
