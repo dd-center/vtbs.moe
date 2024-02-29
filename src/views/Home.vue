@@ -1,6 +1,13 @@
 <template>
 <div class="column is-gapless gap">
-  <input class="input search is-rounded vtb-search" v-model="search" type="text" placeholder="查找主播~">
+  <div :class="`vtb-search ${searchFocusStatus ? 'search-focus' : ''}`">
+    <div class="is-relative">
+      <input ref="searchInput" :class="`input search is-rounded`" v-model="search" type="text" placeholder="查找主播~">
+      <div v-if="!searchFocusStatus && (!search || search.length === 0)" class="search-shortcut">
+        <span>/</span>
+      </div>
+    </div>
+  </div>
   <div class="columns">
     <div class="column vtb-column"></div>
     <div class="column is-full-mobile is-11-tablet is-10-desktop is-three-fifths-widescreen is-7-fullhd" :style="{height: sumHeight}" ref="container">
@@ -8,7 +15,7 @@
       <progress class="progress" max="100" v-if="!currentVtbs.length"></progress>
       <card v-if="mountCard" :vtb="mountCard" hover class="aboveTop" ref="mountCard"></card>
       <transition-group name="flip-list">
-        <card v-for="{vtb, h} in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card" :style="{top: h, width: unitWidth}"></card>
+        <card :search="search" v-for="{vtb, h} in rankLimit" :vtb="vtb" hover :key="vtb.mid" class="card" :style="{top: h, width: unitWidth}"></card>
       </transition-group>
     </div>
     <div class="column"></div>
@@ -32,6 +39,26 @@ export default {
     ...mapActions([
       'fetchSecretList',
     ]),
+    handleKeyDown(event) {
+      const isSearchShortcut = (event.key === '/')
+      const isSearchEsc = (event.key === 'Escape')
+      if (isSearchShortcut) {
+        this.searchFocusStatus ? '' : event.preventDefault()
+        this.searchFocusStatus = true
+        this.$refs.searchInput.focus();
+      }
+      if (isSearchEsc) {
+        if (this.searchFocusStatus) {
+          this.$refs.searchInput.blur();
+          this.searchFocusStatus = false
+        }
+      }
+    },
+    handleSearchBlur() {
+      if (this.searchFocusStatus) {
+        this.searchFocusStatus = false
+      }
+    }
   },
 
   data() {
@@ -43,6 +70,7 @@ export default {
       unitHeight: 172,
       unitWidth: undefined,
       ratio: 0,
+      searchFocusStatus: false,
     }
   },
   components: {
@@ -117,7 +145,13 @@ export default {
     preRank() {
       const keys = this.search.toLowerCase().split(' ').filter(Boolean)
       if (keys.length) {
-        return this.rank.filter(i => keys.every(key => ((this.$store.getters.info[i.mid] || {}).uname || []).toLowerCase().includes(key)))
+        return this.rank.filter(i => keys.every(key => {
+          const user = this.$store.getters.info[i.mid];
+          if (user && user.uname && typeof user.uname === 'string') {
+            return user.uname.toLowerCase().includes(key);
+          }
+          return false;
+        }));
       }
       return this.rank
     },
@@ -142,6 +176,16 @@ export default {
   },
   mounted() {
     this.intersectionObserver.observe(this.$refs.container)
+    // 挂载搜索相关监听
+    window.addEventListener('keydown', this.handleKeyDown)
+    this.$refs.searchInput.addEventListener('keydown', this.handleKeyDown)
+    this.$refs.searchInput.addEventListener('blur', this.handleSearchBlur)
+  },
+  beforeDestroy(){
+    // 移除搜索相关监听
+    window.removeEventListener('keydown', this.handleKeyDown)
+    this.$refs.searchInput.removeEventListener('keydown', this.handleKeyDown)
+    this.$refs.searchInput.removeEventListener('blur', this.handleSearchBlur)
   },
   destroyed() {
     this.resizeObserver.disconnect()
@@ -154,18 +198,48 @@ export default {
 .vtb-search {
   right: 10px;
   bottom: 10px;
-  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05);
-  outline: none;
-  /* border: none; */
   width: 260px;
+  height: 40px;
   position: fixed;
   z-index: 99;
+}
+
+.vtb-search>div>input {
+  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05);
+  outline: none;
   backdrop-filter: blur(6px) grayscale(50%);
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-.vtb-search:focus {
-  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05);
+.search-shortcut {
+  width: 24px;
+  color: #dbdbdb;
+  background-color: rgba(150, 150, 150, 0.06);
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  right: 24px;
+  top: 8px;
+  height: 24px;
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-shortcut>span {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.search-focus {
+  top: calc(50% - 12px);
+  right: calc(50vw - 130px);
+  transition: .5s cubic-bezier(0.39, 0.575, 0.565, 1);
+}
+.search-focus>div>input {
+  box-shadow: inset 0 0.0625em 1em rgba(10, 10, 10, 0.05),
+    0 0 3000px 3000px rgba(10, 10, 10, 0.5);
+  transition: .5s cubic-bezier(0.39, 0.575, 0.565, 1);
 }
 
 .vtb-column {
