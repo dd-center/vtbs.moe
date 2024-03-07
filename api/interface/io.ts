@@ -1,4 +1,5 @@
 import cluster from 'node:cluster'
+import type { Server as HTTPServer } from 'node:http'
 
 import { Server } from 'socket.io'
 
@@ -35,7 +36,16 @@ type Message = {
   emitInfoArray?: boolean
   sharedDB?: ShareDB
   updateVDB?: true
+  close?: true
+  online?: number
 }
+
+type MessageToPrimary = {
+  overLimit?: true
+  online?: number
+}
+
+const ONLINE_REPORT_INTERVAL = 1000 * 7
 
 const sharedDB = new Map()
 
@@ -47,6 +57,10 @@ const sendMessageToWorkers = (message: Message) => {
       worker.send(message)
     }
   }
+}
+
+const sendMessageToPrimary = (message: MessageToPrimary) => {
+  process.send(message)
 }
 
 const setSharedDB = (key: string, value: any) => {
@@ -104,8 +118,35 @@ const rawEmit = (emit: Emit, to: To) => {
   }
 }
 
-if (!cluster.isPrimary) {
-  process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB }: Message) => {
+if (cluster.isPrimary) {
+  let online = 0
+  cluster.fork()
+
+  setInterval(() => {
+    sendMessageToWorkers({ close: true })
+    cluster.fork()
+  }, 1000 * 60 * 60)
+
+  setInterval(async () => {
+    sendMessageToWorkers({ online })
+  }, ONLINE_REPORT_INTERVAL * 0.7)
+
+  cluster.on('message', (_, message: MessageToPrimary) => {
+    if (message.overLimit) {
+      cluster.fork()
+    }
+    if (message.online !== undefined) {
+      online += message.online
+      setTimeout(() => {
+        online -= message.online
+      }, ONLINE_REPORT_INTERVAL);
+    }
+  })
+} else {
+  setInterval(() => {
+    sendMessageToPrimary({ online: (ioRaw.engine as any).clientsCount })
+  }, ONLINE_REPORT_INTERVAL)
+  process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB, online }: Message) => {
     if (io) {
       const { emit, to } = io
       rawEmit(emit, to)
@@ -126,6 +167,9 @@ if (!cluster.isPrimary) {
     }
     if (updateVDB) {
       await vdb.update()
+    }
+    if (online !== undefined) {
+      emit(['online', online])
     }
   })
 }
@@ -148,8 +192,51 @@ export const to = (...ids: To) => {
 }
 
 export const updateVDB = async () => {
+  await vdb.update()
   if (cluster.isPrimary) {
     sendMessageToWorkers({ updateVDB: true })
   }
-  await vdb.update()
+}
+
+const sumOnline = (ios: Server[]) => ios.reduce((sum, io) => sum + (io.engine as any).clientsCount as number, 0)
+
+export const connectionLimit = (server: HTTPServer, ios: Server[]) => {
+  const worker = cluster.worker
+  let closed = false
+
+  const close = () => {
+    console.log('Closing Worker ', worker.id)
+    closed = true
+    server.close()
+    setInterval(() => {
+      if (sumOnline(ios) === 0) {
+        console.log('Killing Worker ', worker.id)
+        worker.kill()
+      }
+    }, 1000 * 60)
+    setTimeout(() => {
+      console.log('Timeout Worker ', worker.id)
+      worker.kill()
+    }, 1000 * 60 * 60 * 24)
+  }
+
+  ios.forEach(io => {
+    io.on('connection', () => {
+      if (closed) {
+        return
+      }
+      if (sumOnline(ios) >= 128) {
+        sendMessageToPrimary({ overLimit: true })
+        close()
+      }
+    })
+  })
+  process.on('message', ({ close: c }: Message) => {
+    if (c) {
+      if (closed) {
+        return
+      }
+      close()
+    }
+  })
 }

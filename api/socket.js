@@ -9,8 +9,6 @@ const deflateAsync = promisify(deflate)
 
 const metaMap = new WeakMap()
 
-let lastOnlineUpdate = 0
-
 const fillInfoArray = async () => {
   const mids = (await vdb.get()).map(({ mid }) => mid)
   const arrayPromise = await Promise.all(mids.map(mid => info.get(mid)))
@@ -156,20 +154,6 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     metaMap.set(socket, { ...metaMap.get(socket), cdn })
   })
 
-  const now = Date.now()
-  if (now - lastOnlineUpdate > 1000) {
-    lastOnlineUpdate = now
-    io.emit('online', io.engine.clientsCount)
-  } else {
-    const n = lastOnlineUpdate
-    setTimeout(() => {
-      if (n === lastOnlineUpdate) {
-        io.emit('online', io.engine.clientsCount)
-      }
-      lastOnlineUpdate = Date.now()
-    }, 1000)
-  }
-
   console.log('a user connected')
   handler('new')
   handler('vupMacroCompressed')
@@ -190,12 +174,6 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     }
   })
   socket.on('disconnect', () => {
-    const count = io.engine.clientsCount
-    const now = Date.now()
-    if (now - lastOnlineUpdate > 1000) {
-      lastOnlineUpdate = now
-      io.emit('online', count)
-    }
     console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
