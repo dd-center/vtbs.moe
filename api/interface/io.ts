@@ -5,8 +5,6 @@ import { Server } from 'socket.io'
 
 import * as vdb from './vdb.js'
 
-const ipcEvent = new EventEmitter()
-
 export const ioRaw = new Server({
   serveClient: false, allowEIO3: true,
   cors: {
@@ -16,7 +14,8 @@ export const ioRaw = new Server({
 })
 
 type Emit = [string, ...any[]]
-type To = string[]
+type Channel = 'guardMacroK' | 'guardMacroWeekK'
+type To = (Channel)[]
 type Info = {
   mid: number
   newInfo: any
@@ -42,12 +41,16 @@ const sharedDB = new Map()
 
 const rawSetSharedDB = (key: string, value: any) => sharedDB.set(key, value)
 
+const sendMessageToWorkers = (message: Message) => {
+  for (const worker of Object.values(cluster.workers)) {
+    worker.send(message)
+  }
+}
+
 const setSharedDB = (key: string, value: any) => {
   if (cluster.isPrimary) {
     rawSetSharedDB(key, value)
-    dispatch({ sharedDB: { key, value } })
-  } else {
-    ipcEvent.emit('shareDB', { key, value })
+    sendMessageToWorkers({ sharedDB: { key, value } })
   }
 }
 
@@ -58,19 +61,13 @@ export const getWormArray = () => getSharedDB('wormArray') || []
 
 const infoFilter = ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title }: any) => ({ mid, uuid, uname, roomid, sign, face, rise, archiveView, follower, liveStatus, guardNum, lastLive, guardType, online, title })
 
-const dispatch = (message: Message) => {
-  for (const worker of Object.values(cluster.workers)) {
-    worker.send(message)
-  }
-}
-
 const infoArrayMap = new Map()
 export const updateInfoArrayMapRaw = (mid: number, newInfo: any) => infoArrayMap.set(mid, infoFilter(newInfo))
 export const updateInfoArrayMap = (mid: number, newInfo: any) => {
   updateInfoArrayMapRaw(mid, newInfo)
   if (cluster.isPrimary) {
     const info = { mid, newInfo }
-    dispatch({ info })
+    sendMessageToWorkers({ info })
   }
 }
 const deleteOldInfoArrayRaw = async () => {
@@ -80,7 +77,7 @@ const deleteOldInfoArrayRaw = async () => {
 }
 export const deleteOldInfoArray = async () => {
   if (cluster.isPrimary) {
-    dispatch({ deleteOld: true })
+    sendMessageToWorkers({ deleteOld: true })
   }
   await deleteOldInfoArrayRaw()
 }
@@ -91,7 +88,7 @@ const emitInfoArrayRaw = () => rawEmit(['info', infoArray()], [])
 export const emitInfoArray = () => {
   emitInfoArrayRaw()
   if (cluster.isPrimary) {
-    dispatch({ emitInfoArray: true })
+    sendMessageToWorkers({ emitInfoArray: true })
   }
 }
 
@@ -105,16 +102,7 @@ const rawEmit = (emit: Emit, to: To) => {
   }
 }
 
-if (cluster.isPrimary) {
-  ipcEvent.on('emit', (emit: Emit, to: To) => {
-    const io = { emit, to }
-    const message: Message = { io }
-    dispatch(message)
-  })
-  ipcEvent.on('shareDB', ({ key, value }: ShareDB) => {
-    setSharedDB(key, value)
-  })
-} else {
+if (!cluster.isPrimary) {
   process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB }: Message) => {
     if (io) {
       const { emit, to } = io
@@ -139,14 +127,17 @@ if (cluster.isPrimary) {
 
 export const emit = (emit: Emit, ids: To = []) => {
   if (cluster.isPrimary) {
-    ipcEvent.emit('emit', emit, ids)
+    const io = { emit, to: ids }
+    const message: Message = { io }
+    sendMessageToWorkers(message)
   } else {
     rawEmit(emit, ids)
   }
 }
+
 export const to = (...ids: To) => {
   return {
-    to: (id: string) => to(...ids, id),
+    to: (id: Channel) => to(...ids, id),
     emit: (e: Emit) => emit(e, ids)
   }
 }
