@@ -1,6 +1,7 @@
 import cluster from 'node:cluster'
 import { Server } from 'socket.io'
 import { updateVDB } from './io.js'
+import { cache } from '../database.js'
 
 const SECRET_UUID = '9c1b7e15-a13a-51f3-88be-bd923b746474'
 
@@ -49,10 +50,33 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
     }
   })
 
+const downloadVDB = async () => {
+  if (!cluster.isPrimary) {
+    const body: VDB = await cache.get('vdb')
+    const secretList: string[] = await cache.get('secretList')
+    return { body, secretList }
+  }
+  const body: VDB | void = await fetch('https://vdb.vtbs.moe/json/list.json').then(w => w.json()).catch(e => {
+    console.error(e)
+    console.log('vdb read from cache')
+    return cache.get('vdb')
+  })
+  const secretList = await fetch('https://master.vtbs.moe/private.json').then(w => w.json()).catch(e => {
+    console.error(e)
+    console.log('secretList read from cache')
+    return cache.get('secretList')
+  }) as string[]
+  return { body, secretList }
+}
+
+
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
-  const body: VDB | void = await fetch('https://vdb.vtbs.moe/json/list.json').then(w => w.json()).catch(console.error)
-  const secretList = await fetch('https://master.vtbs.moe/private.json').then(w => w.json()).catch(console.error) as string[]
+  const { body, secretList } = await downloadVDB()
   if (body) {
+    await cache.put('vdb', body)
+    if (secretList) {
+      await cache.put('secretList', secretList)
+    }
     body.vtbs.push({
       uuid: SECRET_UUID,
       type: 'vtuber',
@@ -63,7 +87,6 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
         default: "en"
       }
     })
-    console.log('vdb update')
     vdb = body
     vdbTable = vtb2Table(body)
     const moe = vtb2moe(body)
@@ -83,9 +106,7 @@ export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: 
   }
 }
 
-console.log('vdb init')
 await update()
-console.log('vdb init done')
 
 export const get = async (filterfn?: (vtbs: ReturnType<typeof vtb2moe>) => ReturnType<typeof vtb2moe>) => {
   if (vtbs) {

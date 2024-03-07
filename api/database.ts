@@ -59,6 +59,7 @@ export const num = new LevelDatabase({ name: 'num', db })
 export const status = new SubLevelDatabase<string, number>({ name: 'status', db })
 export const roomidMap = new SubLevelDatabase<number, number>({ name: 'roomidMap', db })
 export const queue = new SubLevelDatabase<string, string>({ name: 'queue', db })
+export const cache = new SubLevelDatabase<string, any>({ name: 'cache', db })
 
 export const info = new LevelDatabase({ name: 'info', db })
 export const active = new ArrayDatabase({ name: 'active', db })
@@ -90,6 +91,10 @@ lastGuardUpdate: Number
 
 roomidMap
 roomid: mid
+
+cache
+vdb: json
+secretList
 
 info
 mid: {mid, uuid, uname, video, roomid, sign, notice, face, rise, topPhoto, archiveView, follower, liveStatus, recordNum, guardNum, lastLive, guardChange, guardType, online, title, bot, time, liveStartTime}
