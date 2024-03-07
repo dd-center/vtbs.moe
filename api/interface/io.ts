@@ -1,5 +1,4 @@
 import cluster from 'node:cluster'
-import EventEmitter from 'node:events'
 
 import { Server } from 'socket.io'
 
@@ -35,6 +34,7 @@ type Message = {
   deleteOld?: boolean
   emitInfoArray?: boolean
   sharedDB?: ShareDB
+  updateVDB?: true
 }
 
 const sharedDB = new Map()
@@ -43,7 +43,9 @@ const rawSetSharedDB = (key: string, value: any) => sharedDB.set(key, value)
 
 const sendMessageToWorkers = (message: Message) => {
   for (const worker of Object.values(cluster.workers)) {
-    worker.send(message)
+    if (worker.isConnected()) {
+      worker.send(message)
+    }
   }
 }
 
@@ -122,6 +124,9 @@ if (!cluster.isPrimary) {
       const { key, value } = sharedDB
       rawSetSharedDB(key, value)
     }
+    if (updateVDB) {
+      await vdb.update()
+    }
   })
 }
 
@@ -140,4 +145,11 @@ export const to = (...ids: To) => {
     to: (id: Channel) => to(...ids, id),
     emit: (e: Emit) => emit(e, ids)
   }
+}
+
+export const updateVDB = async () => {
+  if (cluster.isPrimary) {
+    sendMessageToWorkers({ updateVDB: true })
+  }
+  await vdb.update()
 }

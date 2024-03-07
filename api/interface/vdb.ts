@@ -1,4 +1,6 @@
+import cluster from 'node:cluster'
 import { Server } from 'socket.io'
+import { updateVDB } from './io.js'
 
 const SECRET_UUID = '9c1b7e15-a13a-51f3-88be-bd923b746474'
 
@@ -48,8 +50,8 @@ const vtb2moe = (vdb: VDB) => vdb.vtbs.flatMap(({ accounts, uuid }) => accounts
   })
 
 export const update = async (): Promise<{ moe: typeof vtbs, vdb: VDB, vdbTable: typeof vdbTable }> => {
-  const body: VDB | void = await fetch('https://vdb.vtbs.moe/json/list.json').then(w=>w.json()).catch(console.error)
-  const secretList = await fetch('https://master.vtbs.moe/private.json').then(w=>w.json()).catch(console.error) as string[]
+  const body: VDB | void = await fetch('https://vdb.vtbs.moe/json/list.json').then(w => w.json()).catch(console.error)
+  const secretList = await fetch('https://master.vtbs.moe/private.json').then(w => w.json()).catch(console.error) as string[]
   if (body) {
     body.vtbs.push({
       uuid: SECRET_UUID,
@@ -110,7 +112,12 @@ export const getVdbTable = async () => {
   }
 }
 
-setInterval(update, 1000 * 60)
+if (cluster.isPrimary) {
+  setInterval(() => {
+    updateVDB()
+    console.log(123)
+  }, 1000 * 60)
+}
 
 export const bind = (server: Server) => {
   io = server
