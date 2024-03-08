@@ -43,8 +43,7 @@ const wsRouter = ({ socket }) => ([key, ...rest], map = []) => {
       return result
     },
     devHashRank: () => Object
-      .entries(Object
-        .values(io.of('/').connected)
+      .entries([...(io.of('/').sockets.values())]
         .map(s => metaMap.get(s))
         .map(({ hash = 'undefined' }) => hash)
         .reduce((hashs, hash) => {
