@@ -144,7 +144,7 @@ if (cluster.isPrimary) {
   })
 } else {
   setInterval(() => {
-    sendMessageToPrimary({ online: (ioRaw.engine as any).clientsCount })
+    sendMessageToPrimary({ online: (ioRaw.engine as any || {}).clientsCount || 0 })
   }, ONLINE_REPORT_INTERVAL)
   process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB, online, updateVDB }: Message) => {
     if (io) {
