@@ -134,7 +134,10 @@ export const getVdbTable = async () => {
 }
 
 if (cluster.isPrimary) {
-  setInterval(updateVDB, 1000 * 60)
+  setInterval(async ()=>{
+    await update()
+    updateVDB()
+  }, 1000 * 60)
 }
 
 export const bind = (server: Server) => {

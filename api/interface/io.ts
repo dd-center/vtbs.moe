@@ -191,8 +191,7 @@ export const to = (...ids: To) => {
   }
 }
 
-export const updateVDB = async () => {
-  await vdb.update()
+export const updateVDB = () => {
   if (cluster.isPrimary) {
     sendMessageToWorkers({ updateVDB: true })
   }
