@@ -153,7 +153,6 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     metaMap.set(socket, { ...metaMap.get(socket), cdn })
   })
 
-  console.log('a user connected')
   handler('new')
   handler('vupMacroCompressed')
   handler('vtbMacroCompressed')
@@ -171,9 +170,6 @@ export const connect = ({ PARALLEL, INTERVAL }) => async socket => {
     if (['state'].includes(room)) {
       socket.join(room)
     }
-  })
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
   })
   socket.emit('log', `ID: ${socket.id}`)
   const vtbs = await vdb.getPure()
