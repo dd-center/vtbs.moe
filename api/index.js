@@ -9,7 +9,7 @@ import { vd } from './interface/vd.js'
 import { hawk } from './interface/hawk.js'
 import * as vdb from './interface/vdb.js'
 import { socket as stateSocket } from './interface/state.js'
-import { ioRaw, connectionLimit } from './interface/io.js'
+import { ioRaw, setupConnectionLimit, setupConnectionMaster } from './interface/io.js'
 
 import snake from './snake.js'
 
@@ -19,10 +19,17 @@ import httpAPI from './http.js'
 const PARALLEL = 16
 const INTERVAL = 1000 * 60 * 5
 
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 if (cluster.isPrimary) {
   console.log('starting spider')
   spider({ INTERVAL })
   ant({ INTERVAL })
+  const server = http.createServer()
+  setupConnectionMaster(server)
+  await wait(2000)
+  server.listen(8001)
+  console.log('listening on 8001')
 } else {
   console.log('oh no, I am a worker')
   stateSocket.on('log', log => ioRaw.to('state').emit('stateLog', log))
@@ -33,6 +40,5 @@ if (cluster.isPrimary) {
   snake()
   hawk(ioRaw)
   ioRaw.on('connection', connect({ PARALLEL, INTERVAL }))
-  server.listen(8001)
-  connectionLimit(server, [ioRaw, vd])
+  setupConnectionLimit()
 }

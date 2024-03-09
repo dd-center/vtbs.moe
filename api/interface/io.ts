@@ -2,6 +2,7 @@ import cluster from 'node:cluster'
 import type { Server as HTTPServer } from 'node:http'
 
 import { Server } from 'socket.io'
+import { setupMaster, setupWorker } from '@socket.io/sticky'
 
 import * as vdb from './vdb.js'
 
@@ -36,12 +37,10 @@ type Message = {
   emitInfoArray?: boolean
   sharedDB?: ShareDB
   updateVDB?: true
-  close?: true
   online?: number
 }
 
 type MessageToPrimary = {
-  overLimit?: true
   online?: number
 }
 
@@ -118,28 +117,46 @@ const rawEmit = (emit: Emit, to: To) => {
   }
 }
 
-if (cluster.isPrimary) {
-  let online = 0
-  cluster.fork()
-
-  setInterval(() => {
-    sendMessageToWorkers({ close: true })
+const fork = () => {
+  if (Object.keys(cluster.workers).length < 6) {
     cluster.fork()
-  }, 1000 * 60 * 60)
+  }
+}
+
+if (cluster.isPrimary) {
+  cluster.setupPrimary({
+    serialization: 'advanced'
+  })
+
+  cluster.on('disconnect', worker => {
+    console.log('Worker disconnect', worker.id)
+    fork()
+  })
+
+  cluster.on('exit', worker => {
+    console.log('Worker exited', worker.id)
+    fork()
+  })
+
+  let online = 0
+
+  fork()
+  fork()
+  fork()
+  fork()
+  fork()
+  fork()
 
   setInterval(async () => {
     sendMessageToWorkers({ online })
   }, ONLINE_REPORT_INTERVAL * 0.7)
 
   cluster.on('message', (_, message: MessageToPrimary) => {
-    if (message.overLimit) {
-      cluster.fork()
-    }
     if (message.online !== undefined) {
       online += message.online
       setTimeout(() => {
         online -= message.online
-      }, ONLINE_REPORT_INTERVAL);
+      }, ONLINE_REPORT_INTERVAL)
     }
   })
 } else {
@@ -197,45 +214,10 @@ export const updateVDB = () => {
   }
 }
 
-const sumOnline = (ios: Server[]) => ios.reduce((sum, io) => sum + (io.engine as any).clientsCount as number, 0)
+export const setupConnectionMaster = (server: HTTPServer) => {
+  setupMaster(server)
+}
 
-export const connectionLimit = (server: HTTPServer, ios: Server[]) => {
-  const worker = cluster.worker
-  let closed = false
-
-  const close = () => {
-    console.log('Closing Worker ', worker.id)
-    closed = true
-    server.close()
-    setInterval(() => {
-      if (sumOnline(ios) === 0) {
-        console.log('Killing Worker ', worker.id)
-        worker.kill()
-      }
-    }, 1000 * 60)
-    setTimeout(() => {
-      console.log('Timeout Worker ', worker.id)
-      worker.kill()
-    }, 1000 * 60 * 60 * 24)
-  }
-
-  ios.forEach(io => {
-    io.on('connection', () => {
-      if (closed) {
-        return
-      }
-      if (sumOnline(ios) >= 128) {
-        sendMessageToPrimary({ overLimit: true })
-        close()
-      }
-    })
-  })
-  process.on('message', ({ close: c }: Message) => {
-    if (c) {
-      if (closed) {
-        return
-      }
-      close()
-    }
-  })
+export const setupConnectionLimit = () => {
+  setupWorker(ioRaw)
 }

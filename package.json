@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@koa/router": "^8.0.8",
+    "@socket.io/sticky": "github:dd-center/socket.io-sticky",
     "bili-api": "^1.10.1",
     "browser-level": "^1.0.1",
     "bulma": "^0.8.0",
@@ -51,7 +52,7 @@
     "@types/koa__router": "^8.0.2",
     "@types/leveldown": "^4.0.3",
     "@types/levelup": "^5.1.2",
-    "@types/node": "^18.13.0",
+    "@types/node": "^20.11.25",
     "@types/subleveldown": "^4.1.1",
     "@vue/cli-plugin-babel": "^4.1.0",
     "@vue/cli-plugin-pwa": "~5.0.0-beta.2",
