@@ -146,7 +146,7 @@ if (cluster.isPrimary) {
   setInterval(() => {
     sendMessageToPrimary({ online: (ioRaw.engine as any).clientsCount })
   }, ONLINE_REPORT_INTERVAL)
-  process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB, online }: Message) => {
+  process.on('message', async ({ io, info, deleteOld, emitInfoArray, sharedDB, online, updateVDB }: Message) => {
     if (io) {
       const { emit, to } = io
       rawEmit(emit, to)
