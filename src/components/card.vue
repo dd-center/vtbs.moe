@@ -15,24 +15,33 @@
     <badge :status="status" v-if="info.uname"></badge>
   </div>
 
-  <div class="column is-12-mobile is-6-tablet is-6-desktop is-6-widescreen is-6-fullhd content smallBottomMarginTopBottomPadding">
-    <h4 class="noMargin">
-      <a :href="`https://live.bilibili.com/${roomid}`" class="tag is-link" v-if="liveStatus" target="_blank">
+  <div class="content column is-12-mobile is-6-tablet is-6-desktop is-6-widescreen is-6-fullhd smallBottomMarginTopBottomPadding">
+    <h4 class="is-fullwidth is-flex is-align-items-center">
+      <a :href="`https://live.bilibili.com/${roomid}`" class="tag card-badge is-link" v-if="liveStatus" target="_blank">
         直播中
       </a>
-      <a :href="`https://live.bilibili.com/${roomid}`" class="tag" v-else-if="roomid && livePage" target="_blank">
+      <a :href="`https://live.bilibili.com/${roomid}`" class="tag card-badge" v-else-if="roomid && livePage" target="_blank">
         没播
       </a>
-      {{uname}}
-      <router-link v-if="worm" to="about" class="tag" title="如何扩充名单: 关于">
+      <text-highlight style="margin: 0 2px;" :keyword="search" :text="uname.toString()" />
+      <!-- <router-link v-if="worm" to="about" class="tag" title="如何扩充名单: 关于">
+        未收录
+      </router-link> -->
+      <!-- <span>
+      <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space tag ml-auto">
+        {{mid}}
+      </a></span> -->
+    </h4>
+    <h4 class="is-fullwidth is-flex is-align-items-center is-justify-content-flex-start" >
+      <router-link v-if="worm" to="about" class="tag card-badge" title="如何扩充名单: 关于">
         未收录
       </router-link>
-      <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="space tag">
+      <a :href="`https://space.bilibili.com/${mid}`" target="_blank" class="tag card-badge ml-auto">
         {{mid}}
       </a>
     </h4>
     <span v-if="liveStatus" class="el-icon-ship">{{title}}</span>
-    <p>{{sign}}</p>
+    <text-highlight :keyword="search" :text="sign.toString()" />
     <hr class="is-hidden-tablet">
   </div>
 
@@ -46,15 +55,21 @@
 
 <script>
 import badge from '@/components/badge'
+import textHighlight from '@/components/textHighlight'
 import moment from 'moment'
 
 export default {
   components: {
     badge,
+    'text-highlight': textHighlight
   },
   props: {
     vtb: Object,
     hover: Boolean,
+    search: {
+      type: String,
+      default: ''
+    }
   },
   computed: {
     info: function() {
@@ -147,8 +162,11 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 }
 
-.noMargin {
-  margin: 0;
+.content h4:first-of-type{
+  margin-bottom: 4px;
+}
+.card-badge {
+  margin: 0 2px;
 }
 
 .smallBottomMarginTopBottomPadding {
@@ -159,10 +177,6 @@ export default {
 
 .smallMargin {
   margin-bottom: 8px;
-}
-
-.space {
-  float: right;
 }
 
 .discover {
