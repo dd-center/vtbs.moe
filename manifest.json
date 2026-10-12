@@ -1,0 +1,9 @@
+{
+  "name": "VTBs in bilibili!",
+  "short_name": "VTB",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#afd4e3"
+}
