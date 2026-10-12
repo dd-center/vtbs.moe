@@ -9,19 +9,19 @@
     <el-row>
       <el-col :xs="24" :span="12" v-loading="!vtbMacro.length">
         <h1>直播势:</h1>
-        <ve-line :data="{rows:vtbMacro}" :settings="vtb" :extend="vtbExtend" :data-zoom="dataZoomDay" :not-set-unchange="['dataZoom']"></ve-line>
+        <time-series-chart :rows="vtbMacro" :settings="vtb" :extend="vtbExtend" :data-zoom="dataZoomDay"></time-series-chart>
         <el-button size="mini" @click="loadVtbMacroAll" v-if="!fullVtb" :loading="loading" title="载入完整">(一周)</el-button>
       </el-col>
       <el-col :xs="24" :span="12" v-loading="!guardMacro.length">
         <h1>虚拟世界舰团:</h1>
-        <ve-line :data="{rows:guardMacro}" :settings="guard" :extend="guardExtend" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
+        <time-series-chart :rows="guardMacro" :settings="guard" :extend="guardExtend" :data-zoom="dataZoomWeek"></time-series-chart>
       </el-col>
     </el-row>
     <guardMarcoK></guardMarcoK>
     <el-row>
       <el-col :span="24" v-loading="!vupMacro.length">
         <h1>视频势:</h1>
-        <ve-line :data="{rows:vupMacro}" :settings="vup" :data-zoom="dataZoomWeek" :not-set-unchange="['dataZoom']"></ve-line>
+        <time-series-chart :rows="vupMacro" :settings="vup" :data-zoom="dataZoomWeek"></time-series-chart>
       </el-col>
     </el-row>
   </el-main>
@@ -34,20 +34,17 @@ import { mapMutations, mapState } from 'vuex'
 
 import { getDeflateTimeSeries } from '@/socket'
 
-import VeLine from 'v-charts/lib/line.common'
-import VeCandle from 'v-charts/lib/candle.common'
+import TimeSeriesChart from '@/components/TimeSeriesChart.vue'
 import VeWordCloud from 'v-charts/lib/wordcloud.common'
-import 'echarts/lib/component/dataZoom'
 
 import guardMarcoK from '@/components/guardMarcoK.vue'
 
-Vue.component(VeLine.name, VeLine)
-Vue.component(VeCandle.name, VeCandle)
 Vue.component(VeWordCloud.name, VeWordCloud)
 
 export default {
   components: {
     guardMarcoK,
+    TimeSeriesChart,
   },
   async mounted() {
     if (!this.vupMacro.length) {

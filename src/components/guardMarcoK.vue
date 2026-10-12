@@ -2,19 +2,21 @@
 <el-row>
   <el-col :xs="24" :span="12" v-loading="!guardMacroK.length">
     <h1>舰团日K:</h1>
-    <ve-candle :data="{rows:guardMacroK}" :settings="guardK" :not-set-unchange="['dataZoom']"></ve-candle>
+    <time-series-chart :rows="guardMacroK" :settings="guardK" type="candle"></time-series-chart>
   </el-col>
   <el-col :xs="24" :span="12" v-loading="!guardMacroWeekK.length">
     <h1>舰团周K:</h1>
-    <ve-candle :data="{rows:guardMacroWeekK}" :settings="guardWeekK" :not-set-unchange="['dataZoom']"></ve-candle>
+    <time-series-chart :rows="guardMacroWeekK" :settings="guardWeekK" type="candle"></time-series-chart>
   </el-col>
 </el-row>
 </template>
 
 <script>
 import { getMacroK, getMacroWeekK } from '@/socket'
+import TimeSeriesChart from '@/components/TimeSeriesChart.vue'
 
 export default {
+  components: { TimeSeriesChart },
   async mounted() {
     this.guardMacroK = await getMacroK()
     this.guardMacroWeekK = await getMacroWeekK()
@@ -47,8 +49,8 @@ export default {
         lowest: '最低',
         highest: '最高',
       },
-      upColor: '#ec0000',
-      downColor: '#00da3c',
+      upColor: '#e34948',
+      downColor: '#1a9e6b',
       showMA: true,
       // MA: [3],
       dimension: 'time',
@@ -66,8 +68,8 @@ export default {
       legendName: {
         日K: '周K',
       },
-      upColor: '#ec0000',
-      downColor: '#00da3c',
+      upColor: '#e34948',
+      downColor: '#1a9e6b',
       dimension: 'time',
       metrics: ['open', 'close', 'lowest', 'highest'],
     }

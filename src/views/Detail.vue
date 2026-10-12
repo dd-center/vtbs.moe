@@ -172,9 +172,8 @@
             <el-card class="box-card" shadow="hover">
               <div slot="header">
                 <span class="el-icon-star-on"></span> 关注历史 <span class="el-icon-star-on"></span>
-                <el-button size="mini" @click="loadMoreActive" v-if="activeSkip" :loading="loadingActive" title="显示更多" class="right">(一部分)</el-button>
               </div>
-              <ve-line :data="{rows:hourFollowerChange}" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :not-set-unchange="unchange" v-loading="!hourFollowerChange.length"></ve-line>
+              <time-series-chart :rows="hourFollowerChange" :settings="activeLine" :extend="activeExtend" :data-zoom="dataZoomWeek" :extent="activeExtent" :loaded-ranges="activeLoaded" :loading="loadingActive" @window="activeWindowChange" v-loading="!hourFollowerChange.length"></time-series-chart>
             </el-card>
           </el-col>
           <el-col :span="12" :xs="24" v-if="maxGuardNum">
@@ -182,7 +181,7 @@
               <div slot="header">
                 舰团变化
               </div>
-              <ve-line :data="{rows:guardFilter}" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" :not-set-unchange="['dataZoom']" v-loading="!guard.length"></ve-line>
+              <time-series-chart :rows="guardFilter" :settings="guardLine" :extend="guardExtend" :data-zoom="dataZoomMonth" v-loading="!guard.length"></time-series-chart>
             </el-card>
           </el-col>
         </el-row>
@@ -305,9 +304,8 @@ import TreeView from 'vue-json-tree-view'
 import Push from 'push.js'
 import ky from 'ky'
 
-import VeLine from 'v-charts/lib/line.common'
-
-import 'echarts/lib/component/dataZoom'
+import TimeSeriesChart from '@/components/TimeSeriesChart.vue'
+import { ActiveHistory, withGaps } from '@/charts/activeHistory'
 
 import { get, getDeflateTimeSeries } from '@/socket'
 
@@ -318,6 +316,14 @@ Vue.use(TreeView)
 export default {
   props: ['mid'],
   data: function() {
+    // Follower-history loader state; not reactive (see the mid watcher).
+    this.activeGeneration = 0
+    this.history = null
+    this.analyzed = new Map()
+    this.activeWindow = null
+    this.activeLoop = null
+    this.activeWindowTimer = null
+    this.activeRefresh = 0
     this.dataZoomWeek = [{
       type: 'slider',
       startValue: (new Date()).getTime() - 1000 * 60 * 60 * 24 * 7,
@@ -337,6 +343,7 @@ export default {
       scale: [true],
       xAxisType: 'time',
       axisSite: { right: ['change'] },
+      bars: ['change'],
     }
     this.activeExtend = {
       'series.0.symbol': 'none',
@@ -375,14 +382,15 @@ export default {
     return {
       aside: false,
       active: [],
+      activeRows: [],
+      activeExtent: null,
+      activeLoaded: null,
       activeWithFollowerChange: [],
-      activeSkip: undefined,
       info: {},
       rawLive: [],
       guard: [],
       loadingLive: false,
       loadingActive: false,
-      unchange: [],
       DD: !!JSON.parse(localStorage.getItem(this.mid)),
       fullLive: false,
       liveDisplayTime: undefined,
@@ -404,36 +412,53 @@ export default {
     }
   },
   beforeDestroy() {
+    this.activeGeneration++
+    this.history = null
+    clearTimeout(this.activeWindowTimer)
     this.liveDisplayTime = Date.now()
   },
   watch: {
     mid: {
       immediate: true,
       async handler() {
+        const generation = ++this.activeGeneration
+        this.history = null
+        this.analyzed = new Map()
         this.active = []
+        this.activeRows = []
+        this.activeExtent = null
+        this.activeLoaded = null
         this.info = {}
         this.guard = []
         let info = await get('info', this.mid)
+        if (generation !== this.activeGeneration) return
         this.info = info
-        let { recordNum, guardChange, mid, uuid } = info
+        let { recordNum, guardChange, mid } = info
 
         if (guardChange > 0) {
-          let guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
-          this.guard = guard
+          getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid }).then(guard => {
+            if (generation === this.activeGeneration) this.guard = guard
+          })
         }
 
         this.DD = !!JSON.parse(localStorage.getItem(this.mid))
 
-        this.activeSkip = recordNum
-        let active = []
-        /* beautify ignore:start */
-        for (; this.activeSkip && 7 * 24 * 60 * 60 * 1000 > ((active[active.length - 1]?.time || 0) - (active[0]?.time || 0));) {
-          this.activeSkip = Math.max(0, this.activeSkip - 500)
-          active = [...await getDeflateTimeSeries('bulkActiveRangeCompressed', { num: recordNum - active.length - this.activeSkip, skip: this.activeSkip, mid }), ...active]
-        }
-        /* beautify ignore:end */
-        this.active = await activeAnalyzer(active)
-        this.unchange = ['dataZoom']
+        if (!recordNum) return
+        // Newest records first so the chart appears quickly; the earliest
+        // record fixes the full extent for the range selector, and the rest
+        // loads in chunks as the selected window needs it.
+        const skip = Math.max(0, recordNum - 500)
+        const [latest, earliest] = await Promise.all([
+          getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip, num: recordNum - skip }),
+          skip ? getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip: 0, num: 1 }) : [],
+        ])
+        if (generation !== this.activeGeneration || !latest.length) return
+        this.history = new ActiveHistory(recordNum)
+        this.history.add(skip + 1, latest)
+        this.history.add(1, earliest)
+        this.activeExtent = { min: (earliest[0] || latest[0]).time, max: latest[latest.length - 1].time }
+        await this.refreshActive(generation)
+        this.ensureActive(generation)
       },
     },
     DD: function(newValue) {
@@ -446,11 +471,15 @@ export default {
   },
   sockets: {
     async connect() {
+      if (!this.history) return
+      const generation = this.activeGeneration
       let info = await get('info', this.mid)
+      if (generation !== this.activeGeneration) return
       this.info = info
       let { guardChange, mid, recordNum } = info
-      let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { mid, skip: this.activeSkip, num: recordNum - this.activeSkip })
-      this.active = await activeAnalyzer(active)
+      // Pick up records missed while disconnected if the window shows them.
+      this.history.total = Math.max(this.history.total, recordNum)
+      this.ensureActive(generation)
       if (guardChange > 0) {
         this.guard = await getDeflateTimeSeries('bulkGuardCompressed', { guardChange, mid })
       }
@@ -461,8 +490,8 @@ export default {
       }
     },
     async detailActive({ mid, data }) {
-      if (mid === Number(this.mid)) {
-        this.active = await activeAnalyzer([...this.active, data])
+      if (mid === Number(this.mid) && this.history && this.history.append(data)) {
+        await this.refreshActive(this.activeGeneration)
       }
     },
     detailGuard: function({ mid, data }) {
@@ -557,7 +586,7 @@ export default {
       return max
     },
     hourFollowerChange: function() {
-      return this.active
+      return this.activeRows
     },
     guardFilter() {
       return this.guard
@@ -724,7 +753,7 @@ export default {
     },
   },
   components: {
-    VeLine,
+    TimeSeriesChart,
   },
   methods: {
     durationFormatter({ duration }) {
@@ -746,14 +775,53 @@ export default {
     timeFormatter({ beginTime }) {
       return moment(beginTime * 1000).format('M月D日 H:mm')
     },
-    async loadMoreActive() {
+    activeWindowChange(window) {
+      this.activeWindow = window
+      clearTimeout(this.activeWindowTimer)
+      this.activeWindowTimer = setTimeout(() => this.ensureActive(this.activeGeneration), 300)
+    },
+    // Fetch whatever the selected window still lacks, newest chunk first,
+    // re-planning after each chunk since it sharpens the time→record estimate.
+    async ensureActive(generation) {
+      if (!this.history || !this.activeWindow || this.activeLoop === generation) return
+      if (!this.history.plan(this.activeWindow.min, this.activeWindow.max).length) return
+      this.activeLoop = generation
       this.loadingActive = true
-      const skip = Math.max(this.activeSkip - 1000, 0)
-      const num = this.activeSkip - skip
-      this.activeSkip = skip
-      let active = await getDeflateTimeSeries('bulkActiveRangeCompressed', { skip, num, mid: this.mid })
-      this.active = await activeAnalyzer([...active, ...this.active])
-      this.loadingActive = false
+      try {
+        while (generation === this.activeGeneration && this.activeWindow) {
+          const [next] = this.history.plan(this.activeWindow.min, this.activeWindow.max, 1000)
+          if (!next || !await this.loadActiveSlice(generation, next.skip, next.num)) break
+        }
+      } finally {
+        if (this.activeLoop === generation) {
+          this.activeLoop = null
+          this.loadingActive = false
+        }
+      }
+    },
+    async loadActiveSlice(generation, skip, num) {
+      const records = await getDeflateTimeSeries('bulkActiveRangeCompressed', { mid: this.mid, skip, num })
+      if (generation !== this.activeGeneration || !records.length) return false
+      this.history.add(skip + 1, records)
+      await this.refreshActive(generation)
+      return true
+    },
+    async refreshActive(generation) {
+      const refresh = ++this.activeRefresh
+      const cache = new Map()
+      const slices = await Promise.all(this.history.segments.map(({ from, records }) => {
+        const key = `${from}:${records.length}`
+        const analyzed = this.analyzed.get(key) || activeAnalyzer(records)
+        cache.set(key, analyzed)
+        return analyzed
+      }))
+      // A later refresh (live record, newer chunk) may have finished first.
+      if (generation !== this.activeGeneration || refresh !== this.activeRefresh) return
+      this.analyzed = cache
+      // The weekly table reads the newest contiguous stretch only.
+      this.active = slices[slices.length - 1] || []
+      this.activeRows = withGaps(slices)
+      this.activeLoaded = this.history.ranges()
     },
   },
 }

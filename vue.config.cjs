@@ -4,6 +4,7 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const gitRevisionPlugin = new GitRevisionPlugin()
 
 module.exports = {
+  transpileDependencies: ['uplot'],
   css: {
     sourceMap: true
   },

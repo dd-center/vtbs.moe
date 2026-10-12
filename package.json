@@ -35,6 +35,7 @@
     "socket.io-client": "^4.6.0",
     "state-center": "file:state-center",
     "subleveldown": "^5.0.0",
+    "uplot": "^1.6.32",
     "v-charts": "^1.19.0",
     "vue": "^2.6.10",
     "vue-gtag": "^1.16.1",
