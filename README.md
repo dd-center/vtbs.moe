@@ -80,5 +80,3 @@ vtbs.moe does provide some public APIs. Please do not abuse.
 有什么问题可以开 issue
 
 聊天也可以开 issue →\_→
-
-This project is tested with BrowserStack
