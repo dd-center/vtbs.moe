@@ -178,6 +178,18 @@ CDN:
   ]
   ```
 
+* #### Info (All) <https://api.vtbs.moe/v1/infoa>
+
+  => Array, `[...{mid, uname, …}]`
+
+  Return all vtb records without filtering. Similar to `/v1/info` but includes all entries in the database.
+
+  返回所有记录不过滤
+
+  **Example:** <https://api.vtbs.moe/v1/infoa>
+
+  Same format as `/v1/info`
+
 * #### Detail <https://api.vtbs.moe/v1/detail/:mid>
 
   => Object, `{mid, uname, …}`
@@ -592,6 +604,8 @@ Metadata
 * Number of guards <https://api.vtbs.moe/endpoint/guardNum>
 * Streaming now <https://api.vtbs.moe/endpoint/live>
 * Total online <https://api.vtbs.moe/endpoint/onlineSum>
+* Guard count by VTuber <https://api.vtbs.moe/endpoint/guard/:mid>
+* Online count by VTuber <https://api.vtbs.moe/endpoint/online/:mid>
 
 ## vtbs.moe api (Socket.IO)
 
