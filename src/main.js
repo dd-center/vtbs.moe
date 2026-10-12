@@ -9,6 +9,7 @@ import './registerServiceWorker'
 import '@/style/bulma.scss'
 import './plugins/element.js'
 import moment from 'moment'
+import 'moment/locale/zh-cn'
 
 import { socket } from './socket'
 

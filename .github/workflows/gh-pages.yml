@@ -13,13 +13,13 @@ jobs:
       with:
         submodules: 'recursive'
 
-    - name: Use Node.js 18
+    - name: Use Node.js 22
       uses: actions/setup-node@v3.6.0
       with:
-        node-version: 18
+        node-version: 22
 
     - name: install
-      run: npm install --legacy-peer-deps -f
+      run: npm ci
 
     - name: build
       run: npm run build

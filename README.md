@@ -44,7 +44,7 @@
 
 * 前端
   * 框架: [Vue.js](https://vuejs.org)
-    * [Vue CLI](https://cli.vuejs.org/)
+    * [Vite](https://vite.dev/)
     * [Vuex](https://vuex.vuejs.org/)
   * 组件库: [Element](https://element.eleme.cn/)
   * 图表: [ECharts](https://echarts.baidu.com)

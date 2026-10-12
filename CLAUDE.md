@@ -19,7 +19,7 @@ npm install                               # Install dependencies
 npm run serve                            # Frontend dev server with hot reload
 npm run dev                              # Compile TypeScript in watch mode
 npm run tsc                              # Compile TypeScript once
-npm run build                            # Full production build (tsc + vue build)
+npm run build                            # Full production build (tsc + Vite build)
 npm run lint                             # Lint Vue components
 npm run test                             # Run tests (alias for build)
 ```
@@ -40,7 +40,7 @@ node script/fixdb                        # Database repair utilities
 ## Architecture
 
 ### Core Components
-- **Frontend**: Vue 2.x with Vuex, Element UI, Socket.IO client
+- **Frontend**: Vue 2.7 with Vite, Vuex, Element UI, Socket.IO client
 - **Backend**: Multi-process Node.js cluster with sticky sessions
 - **Database**: LevelDB with custom abstractions (`rave-level`)
 - **Communication**: Primary via WebSocket (Socket.IO), secondary REST API
@@ -104,4 +104,4 @@ External APIs → Spider → LevelDB → WebSocket → Frontend Vuex → Compone
 - Socket.IO version must support cluster sticky sessions
 - Vue 2.x architecture (not Vue 3) 
 - LevelDB operations are async and require careful error handling
-- Node.js >= 18 required for ES modules and modern features
+- Node.js 20.19+ or 22.12+ required for Vite; Node.js 22 LTS recommended

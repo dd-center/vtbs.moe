@@ -41,17 +41,13 @@ export default {
   },
   mounted() {
     /* beautify ignore:start */
-    let vtbs = this.tieties
-      |> Object.entries
-      |> #.flatMap(([mid, tietie]) => [mid, ...tietie.flatMap(v => v)])
-        .map(String)
-      |> new Set(#)
-      |> [...#]
+    let vtbs = [...new Set(Object.entries(this.tieties)
+      .flatMap(([mid, tietie]) => [mid, ...tietie.flatMap(v => v)])
+      .map(String))]
     let nodes = vtbs.map(mid => ({ data: { id: mid, label: this.info[mid]?.uname || '' } }))
-    let directions = this.tieties
-      |> Object.entries
-      |> #.flatMap(([mid, tietie]) => tietie.flatMap(v => v).map(String).map(tie => [mid, tie]))
-        .map(([source, target]) => ({ data: { source, target }}))
+    let directions = Object.entries(this.tieties)
+      .flatMap(([mid, tietie]) => tietie.flatMap(v => v).map(String).map(tie => [mid, tie]))
+      .map(([source, target]) => ({ data: { source, target }}))
     /* beautify ignore:end */
     let styles = vtbs
       .map(mid => [mid, this.face[mid]])

@@ -1,4 +1,4 @@
-import io from 'socket.io-client'
+import { io } from 'socket.io-client'
 import { inflate } from 'pako'
 import ws from '../cdn'
 
@@ -70,11 +70,8 @@ export const ping = async ws => {
 export const get = (e, target) => new Promise(resolve => socket.emit(e, target, resolve))
 
 /* beautify ignore:start */
-export const getDeflate = async (e, target) => get(e, target)
-  |> await #
-  |> inflate
-  |> new TextDecoder().decode(#)
-  |> JSON.parse
+export const getDeflate = async (e, target) =>
+  JSON.parse(new TextDecoder().decode(inflate(await get(e, target))))
 /* beautify ignore:end */
 
 export const getDeflateTimeSeries = async (e, target) => {
@@ -89,11 +86,8 @@ export const getDeflateTimeSeries = async (e, target) => {
 const newGet = (...target) => get('new', target)
 
 /* beautify ignore:start */
-export const passDeflate = async (...target) => await newGet('deflate', ...target)
-  |> await #
-  |> inflate
-  |> new TextDecoder().decode(#)
-  |> JSON.parse
+export const passDeflate = async (...target) =>
+  JSON.parse(new TextDecoder().decode(inflate(await newGet('deflate', ...target))))
 /* beautify ignore:end */
 
 const passArrayMinimizer = async (...target) => {

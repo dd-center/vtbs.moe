@@ -2,18 +2,15 @@
 
 #### 前置要求
 
-- node 版本最新, 推荐 `18`
+- Node.js `20.19+` 或 `22.12+`，推荐 Node.js 22 LTS
+- 前端使用 Vue 2.7 + Vite
 
-Windows 可能需要先安装 `win-node-env`
-```shell
-npm install -g win-node-env
-```
 
 #### 安装依赖:
 
 ```shell
 git submodule update --init --recursive
-npm install
+npm ci
 ```
 
 ### 前端
@@ -32,7 +29,11 @@ npm run build
 
 #### Customize configuration
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+配置位于 `vite.config.js`，参考 [Vite 配置文档](https://vite.dev/config/)。
+
+`npm run build:vue` 只构建前端，`npm run build` 仍先编译后端 TypeScript。
+`npm run preview` 可预览 `dist` 中的构建结果。
+开发服务器使用端口 8080，继续通过现有 CDN 配置连接 WebSocket。
 
 ### 后端API
 
