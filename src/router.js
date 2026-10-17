@@ -50,6 +50,12 @@ export default new Router({
     component: () => import(/* webpackChunkName: "tietie" */ './views/Tietie.vue'),
     /* beautify ignore:end */
   }, {
+    path: '/detail/group/:uuid',
+    /* beautify ignore:start */
+    component: () => import(/* webpackChunkName: "groupdetail" */ './views/group/GroupDetail.vue'),
+    /* beautify ignore:end */
+    props: true,
+  }, {
     path: '/detail/:mid',
     /* beautify ignore:start */
     component: () => import(/* webpackChunkName: "detail" */ './views/Detail.vue'),
