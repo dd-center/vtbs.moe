@@ -1,131 +1,277 @@
 <template>
-  <div class="group-detail" v-loading="loading">
-    <el-button size="small" icon="el-icon-back" @click="goBack">返回</el-button>
+<div class="group-page">
+  <router-link to="/detail/" class="back"><span class="el-icon-arrow-left"></span> 全部社团</router-link>
 
-    <div v-if="group" class="header">
-      <img class="big-face" :src="group.avatar" referrerpolicy="no-referrer" alt="">
-      <div class="head-info">
-        <h2 class="gname">{{ group.displayName }}</h2>
-        <div class="head-tags">
-          <el-tag size="small" type="info">{{ group.members.length }} 位成员</el-tag>
-          <el-tag size="small" type="info">{{ group.ownAccounts.length + group.members.length }} 个账号</el-tag>
+  <progress class="progress is-small" max="100" v-if="!directory && !error"></progress>
+  <div class="error" v-else-if="error">
+    数据加载失败：{{error}}
+    <button class="button is-small" @click="load">重试</button>
+  </div>
+  <div class="error" v-else-if="!group">
+    没有找到这个社团
+  </div>
+
+  <template v-else>
+    <div class="header">
+      <img v-if="face" :src="face" class="face" alt="">
+      <div v-else class="face placeholder">{{group.name.slice(0, 1)}}</div>
+      <div class="identity">
+        <h1 class="name">{{group.name}}</h1>
+        <div class="meta">
+          {{group.vtuberCount}} 位成员 · {{group.accountCount}} 个账号
+          <span v-if="group.liveNum" class="live">· {{group.liveNum}} 直播中</span>
         </div>
       </div>
-      <div class="head-metrics">
-        <div class="hm">
-          <span class="label"><i class="el-icon-star-on star"></i> 总粉丝数</span>
-          <span class="value fans">{{ num(group.followers) }}</span>
-        </div>
-        <div class="hm">
-          <span class="label"><i class="el-icon-location-outline shield"></i> 总舰团数</span>
-          <span class="value guard">{{ num(group.guards) }}</span>
+      <div class="stats">
+        <div v-for="(text, key) in stats" :key="key" class="stat">
+          <span class="stat-label">{{text}}</span>
+          <span class="stat-value" :class="key === 'rise' && riseClass">{{key === 'rise' && group.rise > 0 ? '+' : ''}}{{group[key] | parseNumber}}</span>
         </div>
       </div>
     </div>
 
-    <template v-if="group">
-      <el-divider content-position="left">社团本体账号</el-divider>
-      <el-row :gutter="16">
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" v-for="rec in rankedOwn" :key="'own'+rec.mid">
-          <account-card :account="rec" :rank="0"></account-card>
-        </el-col>
-      </el-row>
-
-      <el-divider content-position="left">旗下成员账号（{{ group.members.length }}）</el-divider>
-
-      <div class="member-toolbar">
-        <el-button :type="memberMetric === 'follower' ? 'primary' : 'default'" size="small" icon="el-icon-star-on" @click="memberMetric = 'follower'">粉丝</el-button>
-        <el-button :type="memberMetric === 'guardNum' ? 'primary' : 'default'" size="small" icon="el-icon-location-outline" @click="memberMetric = 'guardNum'">舰团</el-button>
-        <el-button :type="memberDesc ? 'primary' : 'default'" size="small" @click="memberDesc = true">降序</el-button>
-        <el-button :type="!memberDesc ? 'primary' : 'default'" size="small" @click="memberDesc = false">升序</el-button>
+    <template v-if="group.own.length">
+      <h2 class="section">社团账号</h2>
+      <div class="grid">
+        <account-card v-for="account in own" :key="account.mid" :account="account" :highlight="sort.key"></account-card>
       </div>
-
-      <el-row :gutter="16">
-        <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" v-for="(rec, idx) in rankedMembers" :key="'mem'+rec.mid">
-          <account-card :account="rec" :rank="idx + 1"></account-card>
-        </el-col>
-      </el-row>
     </template>
-  </div>
+
+    <div class="section-bar">
+      <h2 class="section">成员账号 <span class="count">{{group.members.length}}</span></h2>
+      <sort-bar :options="sortable" :value="sortValue" @input="setSort"></sort-bar>
+    </div>
+    <div class="grid">
+      <account-card v-for="(account, index) in members" :key="account.mid" :account="account" :rank="index + 1" :highlight="sort.key"></account-card>
+    </div>
+    <div v-if="!group.members.length" class="empty">暂无成员账号</div>
+  </template>
+</div>
 </template>
 
 <script>
-import { loadModel, num, sortRows } from './data'
 import AccountCard from './AccountCard.vue'
+import SortBar from './SortBar.vue'
+import { loadDirectory, faceUrl, parseSort, sortBy } from './data'
 
 export default {
   props: {
-    uuid: { type: String, required: true },
+    uuid: String,
   },
-  components: { AccountCard },
+  components: {
+    AccountCard,
+    SortBar,
+  },
   data() {
+    this.stats = {
+      follower: '总关注',
+      rise: '日增',
+      guardNum: '总舰团',
+      archiveView: '总播放',
+      video: '总视频',
+    }
+    this.sortable = {
+      follower: '关注',
+      rise: '日增',
+      guardNum: '舰团',
+      archiveView: '播放',
+      video: '视频',
+    }
     return {
-      num,
-      loading: true,
-      model: null,
-      memberMetric: 'follower',
-      memberDesc: true,
+      directory: undefined,
+      error: undefined,
     }
   },
   computed: {
     group() {
-      if (!this.model) return null
-      return this.model.groupRows.find(g => g.uuid === this.uuid) || null
+      return this.directory.groupTable[this.uuid]
     },
-    rankedOwn() {
-      if (!this.group) return []
-      return sortRows(this.group.ownAccounts, this.memberMetric, true)
+    face() {
+      return faceUrl(this.group.face, 256)
     },
-    rankedMembers() {
-      if (!this.group) return []
-      return sortRows(this.group.members, this.memberMetric, this.memberDesc)
+    sortValue() {
+      const { key } = parseSort(this.$route.query.sort)
+      return this.sortable[key] ? this.$route.query.sort : 'follower'
+    },
+    sort() {
+      return parseSort(this.sortValue)
+    },
+    own() {
+      return sortBy(this.group.own, this.sort)
+    },
+    members() {
+      return sortBy(this.group.members, this.sort)
+    },
+    riseClass() {
+      if (this.group.rise > 0) {
+        return 'more'
+      }
+      if (this.group.rise < 0) {
+        return 'less'
+      }
+      return ''
     },
   },
-  created() {
-    loadModel()
-      .then(m => { this.model = m })
-      .catch(e => { console.error(e) })
-      .finally(() => { this.loading = false })
+  mounted() {
+    this.load()
   },
   methods: {
-    goBack() {
-      this.$router.push('/detail/')
+    async load() {
+      this.error = undefined
+      try {
+        this.directory = await loadDirectory()
+      } catch (e) {
+        console.error(e)
+        this.error = e.message || String(e)
+      }
+    },
+    setSort(sort) {
+      this.$router.push({ query: { ...this.$route.query, sort: sort === 'follower' ? undefined : sort } })
     },
   },
 }
 </script>
 
 <style scoped>
-.group-detail { padding: 10px 16px 40px; }
+.group-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 20px 48px;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #606266;
+  font-size: 14px;
+}
+
+.back:hover {
+  color: #409eff;
+}
+
 .header {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  background: #fff;
-  border: 1px solid #e4e7ed;
-  border-radius: 10px;
-  padding: 18px 22px;
-  margin-top: 12px;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.06);
 }
-.big-face {
-  width: 78px;
-  height: 78px;
-  border-radius: 16px;
+
+.face {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
   object-fit: cover;
-  background: #f0f0f0;
+  background: #f2f3f5;
 }
-.head-info { flex: 1; min-width: 180px; }
-.gname { margin: 0 0 8px; font-size: 24px; color: #303133; }
-.head-tags { display: flex; gap: 8px; }
-.head-metrics { display: flex; gap: 28px; }
-.hm { display: flex; flex-direction: column; gap: 6px; }
-.hm .label { font-size: 13px; color: #909399; }
-.hm .label .star { color: #f48fb1; font-style: normal; }
-.hm .label .shield { color: #e6a23c; font-style: normal; }
-.hm .value { font-size: 26px; font-weight: 700; }
-.hm .value.fans { color: #f48fb1; }
-.hm .value.guard { color: #e6a23c; }
-.member-toolbar { display: flex; gap: 8px; margin-bottom: 16px; }
-.el-col { margin-bottom: 16px; }
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.identity {
+  flex: 1;
+  min-width: 200px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.meta {
+  margin-top: 4px;
+  color: #909399;
+  font-size: 13px;
+}
+
+.meta .live {
+  color: #3273dc;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  color: #909399;
+  font-size: 12px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.section-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 28px 0 14px;
+}
+
+.section {
+  margin: 28px 0 14px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.section-bar .section {
+  margin: 0;
+}
+
+.count {
+  margin-left: 4px;
+  color: #909399;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 16px;
+}
+
+.error {
+  padding: 16px 20px;
+  border-radius: 6px;
+  background: #fef0f0;
+  color: #f56c6c;
+}
+
+.empty {
+  padding: 40px;
+  text-align: center;
+  color: #909399;
+}
+
+.more {
+  color: #00b33c;
+}
+
+.less {
+  color: #ec0000;
+}
 </style>

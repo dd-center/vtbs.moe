@@ -1,169 +1,176 @@
 <template>
-  <div class="acc-card">
-    <div class="rank-badge" v-if="rank">
-      {{ rank }}
-    </div>
-    <div class="acc-head">
-      <img :src="face" class="acc-face" referrerpolicy="no-referrer" @click="goSpace">
-      <div class="acc-id">
-        <div class="acc-name" :title="uname">{{ uname || mid }}</div>
-        <div class="acc-sign" :title="sign">{{ sign || '暂无签名' }}</div>
+<router-link :to="`/detail/${account.mid}`" class="account-card">
+  <div class="head">
+    <img v-if="face" :src="face" class="face" loading="lazy" alt="">
+    <div v-else class="face"></div>
+    <div class="identity">
+      <div class="name-row">
+        <span v-if="rank" class="rank">#{{rank}}</span>
+        <span class="uname" :title="account.uname">{{account.uname || account.mid}}</span>
+        <span v-if="account.liveStatus" class="tag is-link is-small live" title="打开直播间" @click.prevent.stop="openLive">直播中</span>
       </div>
-    </div>
-    <div class="acc-metrics">
-      <div class="m m-follow">
-        <i class="el-icon-star-on m-icon"></i>
-        <span class="m-label">粉丝</span>
-        <span class="m-val">{{ num(follower) }}</span>
-      </div>
-      <div class="m m-guard">
-        <i class="el-icon-location-outline m-icon"></i>
-        <span class="m-label">舰团</span>
-        <span class="m-val">{{ num(guardNum) }}</span>
-      </div>
-    </div>
-    <div class="acc-links">
-      <a :href="spaceUrl" target="_blank" rel="noopener">空间</a>
-      <a v-if="roomid" :href="liveUrl" target="_blank" rel="noopener">直播间</a>
+      <div class="sign" :title="account.sign">{{account.sign || '这个人很懒，什么都没有写'}}</div>
     </div>
   </div>
+  <div class="stats">
+    <div v-for="(text, key) in stats" :key="key" class="stat" :class="{ highlight: key === highlight }">
+      <span class="stat-label">{{text}}</span>
+      <span class="stat-value" :class="key === 'rise' && riseClass">{{key === 'rise' && account.rise > 0 ? '+' : ''}}{{account[key] | parseNumber}}</span>
+    </div>
+  </div>
+</router-link>
 </template>
 
 <script>
-import { num } from './data'
+import { faceUrl } from './data'
 
 export default {
-  name: 'AccountCard',
   props: {
-    account: { type: Object, required: true },
-    rank: { type: [Number, String], default: 0 },
+    account: Object,
+    rank: Number,
+    highlight: String,
+  },
+  data() {
+    this.stats = {
+      follower: '关注',
+      rise: '日增',
+      guardNum: '舰团',
+      archiveView: '播放',
+      video: '视频',
+    }
+    return {}
   },
   computed: {
-    mid() { return this.account.mid },
-    uname() { return this.account.uname },
-    sign() { return (this.account.sign || '').trim() },
     face() {
-      const f = this.account.face || ''
-      if (f && !f.includes('@')) return f + '@256w_256h'
-      return f
+      return faceUrl(this.account.face)
     },
-    follower() { return this.account.follower },
-    guardNum() { return this.account.guardNum },
-    roomid() { return this.account.roomid },
-    spaceUrl() { return 'https://space.bilibili.com/' + this.mid },
-    liveUrl() { return 'https://live.bilibili.com/' + this.roomid },
+    riseClass() {
+      if (this.account.rise > 0) {
+        return 'more'
+      }
+      if (this.account.rise < 0) {
+        return 'less'
+      }
+      return ''
+    },
   },
   methods: {
-    num,
-    goSpace() {
-      window.open(this.spaceUrl, '_blank')
+    openLive() {
+      window.open(`https://live.bilibili.com/${this.account.roomid}`, '_blank')
     },
   },
 }
 </script>
 
 <style scoped>
-.acc-card {
-  position: relative;
-  border: 1px solid #e3e8ee;
-  border-radius: 8px;
-  background: #fff;
-  padding: 14px;
+.account-card {
+  display: block;
   height: 100%;
-  transition: box-shadow .2s, transform .2s;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  color: inherit;
+  transition: box-shadow 0.2s, border-color 0.2s;
 }
-.acc-card:hover {
-  box-shadow: 0 6px 18px rgba(0, 0, 0, .1);
-  transform: translateY(-2px);
+
+.account-card:hover {
+  border-color: #c6e2ff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
 }
-.rank-badge {
-  position: absolute;
-  top: -10px;
-  left: -10px;
-  min-width: 30px;
-  height: 30px;
-  padding: 0 6px;
-  border-radius: 8px;
-  background: #409eff;
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(64, 158, 255, .4);
-}
-.acc-head {
+
+.head {
   display: flex;
   gap: 12px;
-  align-items: flex-start;
 }
-.acc-face {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  flex: 0 0 64px;
+
+.face {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  border-radius: 5px;
+  background: #f2f3f5;
   object-fit: cover;
-  cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,.12);
 }
-.acc-id {
-  flex: 1;
+
+.identity {
   min-width: 0;
+  flex: 1;
 }
-.acc-name {
-  font-size: 16px;
-  font-weight: 700;
-  color: #222;
-  white-space: nowrap;
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rank {
+  color: #909399;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.uname {
+  font-weight: 600;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
-.acc-sign {
+
+.live {
+  flex-shrink: 0;
+  height: 1.6em;
+}
+
+.sign {
   margin-top: 4px;
+  color: #909399;
   font-size: 12px;
-  color: #888;
-  line-height: 1.4;
+  line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   word-break: break-all;
 }
-.acc-metrics {
-  display: flex;
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
   justify-content: space-between;
-  gap: 10px;
   margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #f2f3f5;
 }
-.m {
-  flex: 1;
+
+.stat {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
 }
-.m-icon { font-size: 16px; }
-.m-label {
+
+.stat-label {
+  color: #909399;
   font-size: 12px;
-  color: #999;
 }
-.m-val {
-  font-weight: 700;
-  margin-left: auto;
-  font-size: 16px;
-}
-.m-follow .m-icon,
-.m-follow .m-val { color: #f78fb3; }
-.m-guard .m-icon,
-.m-guard .m-val { color: #e8a33d; }
-.acc-links {
-  display: flex;
-  gap: 14px;
-  margin-top: 10px;
-  justify-content: center;
-}
-.acc-links a {
+
+.stat-value {
   font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat.highlight .stat-value {
+  font-weight: 600;
+}
+
+.stat.highlight .stat-value:not(.more):not(.less) {
   color: #409eff;
+}
+
+.more {
+  color: #00b33c;
+}
+
+.less {
+  color: #ec0000;
 }
 </style>
